@@ -1,0 +1,78 @@
+import dbConnect from "@/lib/dbConnect";
+import Product from "@/models/Product";
+import { notFound } from "next/navigation";
+import AddToCartSection from "@/components/AddToCartSection";
+
+// 1. Update the type definition to expect a Promise
+export default async function ProductDetailsPage({ 
+  params 
+}: { 
+  params: Promise<{ id: string }> 
+}) {
+  // 2. Await the params to unwrap them
+  const resolvedParams = await params;
+  
+  await dbConnect();
+  
+  // 3. Use the unwrapped ID to fetch the product
+  const product = await Product.findById(resolvedParams.id).lean();
+
+  if (!product) {
+    notFound();
+  }
+
+  const serializedProduct = {
+    _id: product._id.toString(),
+    name: product.name,
+    description: product.description,
+    price: product.price,
+    category: product.category,
+    imageUrl: product.imageUrl,
+    stock: product.stock,
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2">
+        
+        {/* Left Side: Product Image */}
+        <div className="bg-gray-100 h-96 md:h-auto relative">
+          <img
+            src={serializedProduct.imageUrl || "https://via.placeholder.com/600"}
+            alt={serializedProduct.name}
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
+
+        {/* Right Side: Product Details */}
+        <div className="p-8 md:p-12 flex flex-col justify-center">
+          <div className="mb-2">
+            <span className="text-xs font-bold tracking-widest text-blue-600 uppercase">
+              {serializedProduct.category}
+            </span>
+          </div>
+          
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            {serializedProduct.name}
+          </h1>
+          
+          <div className="text-3xl font-bold text-gray-900 mb-6">
+            ${serializedProduct.price.toFixed(2)}
+          </div>
+          
+          <p className="text-gray-600 mb-8 leading-relaxed">
+            {serializedProduct.description}
+          </p>
+
+          <div className="border-t border-gray-200 pt-8">
+            <AddToCartSection 
+              productId={serializedProduct._id} 
+              stock={serializedProduct.stock} 
+            />
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
