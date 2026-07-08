@@ -14,7 +14,7 @@ export async function GET() {
       name: "Connection Test User",
       email: testEmail,
       password: "dummy_hashed_password", 
-      role: "User"
+      role: "user"
     });
 
     // 3. Interact via Mongoose Abstraction (Read Operation)
