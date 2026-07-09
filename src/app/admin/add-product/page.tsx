@@ -15,6 +15,7 @@ const productSchema = z.object({
   price: z.coerce.number().min(0.01, "Price must be greater than 0"),
   stock: z.coerce.number().min(0, "Stock cannot be negative"),
   category: z.string().min(1, "Please select a category"),
+  isFeatured: z.boolean().default(false),
 });
 
 type ProductFormInput = z.input<typeof productSchema>;
@@ -188,6 +189,18 @@ export default function AddProductPage() {
                 <option value="Toys">Toys</option>
               </select>
               {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
+            </div>
+
+            <div className="md:col-span-2 flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+              <input
+                type="checkbox"
+                id="isFeatured"
+                {...register("isFeatured")}
+                className="w-5 h-5 text-brand-600 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 rounded focus:ring-brand-500"
+              />
+              <label htmlFor="isFeatured" className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
+                Feature this product on the home page
+              </label>
             </div>
 
             <div className="md:col-span-2">

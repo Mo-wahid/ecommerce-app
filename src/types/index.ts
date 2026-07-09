@@ -13,6 +13,7 @@ export interface IProduct {
   category: string;
   imageUrl: string;
   stock: number;
+  isFeatured?: boolean;
   createdAt?: string;
   updatedAt?: string;
 }

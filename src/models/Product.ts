@@ -24,6 +24,10 @@ const ProductSchema = new Schema({
     imageUrl: { 
         type: String, 
         required: true 
+    },
+    isFeatured: {
+        type: Boolean,
+        default: false,
     }
 }, {timestamps: true},
 )
