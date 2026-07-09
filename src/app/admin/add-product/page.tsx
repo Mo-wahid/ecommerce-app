@@ -16,7 +16,8 @@ const productSchema = z.object({
   category: z.string().min(1, "Please select a category"),
 });
 
-type ProductFormValues = z.infer<typeof productSchema>;
+type ProductFormInput = z.input<typeof productSchema>;
+type ProductFormOutput = z.output<typeof productSchema>;
 
 export default function AddProductPage() {
   const router = useRouter();
@@ -28,14 +29,14 @@ export default function AddProductPage() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<ProductFormValues>({
+  } = useForm<ProductFormInput, unknown, ProductFormOutput>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       category: "Electronics",
     },
   });
 
-  const onSubmit = async (data: ProductFormValues) => {
+  const onSubmit = async (data: ProductFormOutput) => {
     if (!imageFile) {
       toast.error("Please select an image for the product.");
       return;
@@ -88,8 +89,9 @@ export default function AddProductPage() {
       setImageFile(null);
       
       setTimeout(() => router.push("/products"), 2000);
-    } catch (err: any) {
-      toast.error(err.message || "An unexpected error occurred.", { id: loadingToastId });
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred.";
+      toast.error(errorMessage, { id: loadingToastId });
     } finally {
       setLoading(false);
     }

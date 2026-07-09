@@ -53,8 +53,12 @@ export default function LoginPage() {
       router.push("/");
       // Force a hard refresh so the Navbar can update its state
       router.refresh(); 
-    } catch (err: any) {
-      toast.error(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message);
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     } finally {
       setLoading(false);
     }

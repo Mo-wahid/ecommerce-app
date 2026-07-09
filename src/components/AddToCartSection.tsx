@@ -52,8 +52,12 @@ export default function AddToCartSection({ productId, stock }: AddToCartProps) {
       }
 
       toast.success("Item added to cart successfully!", { id: toastId });
-    } catch (error: any) {
-      toast.error(error.message, { id: toastId });
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message, { id: toastId });
+      } else {
+        toast.error("An unexpected error occurred", { id: toastId });
+      }
     } finally {
       setLoading(false);
     }

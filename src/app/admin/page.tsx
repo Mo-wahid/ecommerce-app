@@ -41,8 +41,12 @@ export default function AdminDashboard() {
         }
 
         setStats(json.data);
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError("An unknown error occurred");
+        }
       } finally {
         setLoading(false);
       }
@@ -111,7 +115,7 @@ export default function AdminDashboard() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200 text-sm text-gray-900">
-                {stats.recentOrders.map((order: any) => (
+                {stats.recentOrders.map((order: import("@/types").IOrder) => (
                   <tr key={order._id} className="hover:bg-gray-50 transition-colors">
                     <td className="p-4 font-mono text-xs">{order._id.substring(0, 10)}...</td>
                     <td className="p-4">

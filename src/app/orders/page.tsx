@@ -8,8 +8,8 @@ import { Package, Clock, CheckCircle2, XCircle, Truck, Loader2 } from "lucide-re
 
 export default function OrdersPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [orders, setOrders] = useState<any[]>([]);
+  const [user, setUser] = useState<import("@/types").IUser | null>(null);
+  const [orders, setOrders] = useState<import("@/types").IOrder[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -122,7 +122,7 @@ export default function OrdersPage() {
               <div className="p-6">
                 <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-4">Items in this order</h3>
                 <div className="space-y-6">
-                  {order.orderedProducts.map((item: any, index: number) => {
+                  {order.orderItems.map((item: import("@/types").IOrderProduct, index: number) => {
                     // Handle case where product might have been deleted from DB
                     if (!item.product) return null;
                     

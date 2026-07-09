@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 
 export default function CartPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [cart, setCart] = useState<any[]>([]);
+  const [user, setUser] = useState<import("@/types").IUser | null>(null);
+  const [cart, setCart] = useState<import("@/types").ICartItem[]>([]);
   const [subtotal, setSubtotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -40,6 +40,7 @@ export default function CartPage() {
 
   // 2. Remove an item completely
   const removeItem = async (productId: string) => {
+    if (!user) return;
     try {
       const res = await fetch("/api/cart", {
         method: "DELETE",
@@ -54,6 +55,7 @@ export default function CartPage() {
 
   // 3. Clear the whole cart
   const clearCart = async () => {
+    if (!user) return;
     try {
       const res = await fetch("/api/cart", {
         method: "DELETE",

@@ -3,10 +3,11 @@ import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
 
 // GET: Fetch a single product by ID (Public)
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
-    const product = await Product.findById(params.id);
+    const { id } = await params;
+    const product = await Product.findById(id);
     
     if (!product) {
       return NextResponse.json({ success: false, message: "Product not found." }, { status: 404 });
@@ -19,13 +20,14 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // PUT: Update an existing product (Admin)
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
+    const { id } = await params;
     const body = await request.json();
     
     // findByIdAndUpdate returns the old document by default. { new: true } returns the updated one.
-    const product = await Product.findByIdAndUpdate(params.id, body, { 
+    const product = await Product.findByIdAndUpdate(id, body, { 
       new: true, 
       runValidators: true 
     });
@@ -41,10 +43,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }
 
 // DELETE: Remove a product (Admin)
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     await dbConnect();
-    const product = await Product.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const product = await Product.findByIdAndDelete(id);
     
     if (!product) {
       return NextResponse.json({ success: false, message: "Product not found." }, { status: 404 });

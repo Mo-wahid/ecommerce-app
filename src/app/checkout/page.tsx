@@ -6,8 +6,8 @@ import Link from "next/link";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
-  const [cart, setCart] = useState<any[]>([]);
+  const [user, setUser] = useState<import("@/types").IUser | null>(null);
+  const [cart, setCart] = useState<import("@/types").ICartItem[]>([]);
   const [subtotal, setSubtotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [placingOrder, setPlacingOrder] = useState(false);
@@ -53,12 +53,13 @@ export default function CheckoutPage() {
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     setError("");
     setPlacingOrder(true);
 
     try {
       // Format the products to match the Order API expectation
-      const orderedProducts = cart.map((item) => ({
+      const orderItems = cart.map((item) => ({
         product: item.product._id,
         quantity: item.quantity,
         price: item.product.price,
@@ -69,7 +70,7 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           userId: user.id,
-          orderedProducts,
+          orderItems,
           totalAmount: subtotal,
           // If you updated your Order model to include shipping details, 
           // you would also pass formData here.
@@ -87,8 +88,12 @@ export default function CheckoutPage() {
       
       // Redirect to a success or orders page
       router.push("/orders");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
       setPlacingOrder(false);
     }
   };

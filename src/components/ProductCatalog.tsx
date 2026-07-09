@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import ProductCard from "./ProductCard";
 
-export default function ProductCatalog({ initialProducts }: { initialProducts: any[] }) {
+export default function ProductCatalog({ initialProducts }: { initialProducts: import("@/types").IProduct[] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 

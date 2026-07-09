@@ -11,7 +11,7 @@ export const metadata = {
 };
 
 export default async function Home() {
-  let products = [];
+  let products: import("@/types").IProduct[] = [];
   let error = null;
 
   try {
@@ -19,13 +19,22 @@ export default async function Home() {
     // Fetch all products, sort by newest, and convert Mongoose documents to plain objects
     const result = await Product.find({}).sort({ createdAt: -1 }).lean();
     
+    type RawProduct = Omit<import("@/types").IProduct, "_id" | "createdAt" | "updatedAt"> & {
+      _id: import("mongoose").Types.ObjectId;
+      createdAt?: Date;
+      updatedAt?: Date;
+    };
+
     // Convert ObjectIds to strings to pass them safely to Client Components
-    products = result.map((doc: any) => ({
-      ...doc,
-      _id: doc._id.toString(),
-      createdAt: doc.createdAt?.toISOString(),
-      updatedAt: doc.updatedAt?.toISOString(),
-    }));
+    products = result.map((doc: unknown) => {
+      const raw = doc as RawProduct;
+      return {
+        ...raw,
+        _id: raw._id.toString(),
+        createdAt: raw.createdAt ? raw.createdAt.toISOString() : undefined,
+        updatedAt: raw.updatedAt ? raw.updatedAt.toISOString() : undefined,
+      };
+    });
   } catch (err) {
     error = "Failed to load products. Please check your database connection.";
     console.error(err);

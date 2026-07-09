@@ -23,7 +23,7 @@ export async function GET(request: Request) {
 
     // Calculate subtotal
     let subtotal = 0;
-    cart.products.forEach((item: any) => {
+    cart.products.forEach((item: { product: { _id: string; price: number }, quantity: number }) => {
       subtotal += item.quantity * item.product.price;
     });
 
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
       });
     } else {
       // Check if product is already in the cart
-      const itemIndex = cart.products.findIndex((p: any) => p.product.toString() === productId);
+      const itemIndex = cart.products.findIndex((p: { product: import("mongoose").Types.ObjectId }) => p.product.toString() === productId);
 
       if (itemIndex > -1) {
         // Update quantity
@@ -94,7 +94,7 @@ export async function DELETE(request: Request) {
 
     if (productId) {
       // Remove specific product from cart
-      cart.products = cart.products.filter((p: any) => p.product.toString() !== productId);
+      cart.products = cart.products.filter((p: { product: import("mongoose").Types.ObjectId }) => p.product.toString() !== productId);
       await cart.save();
       return NextResponse.json({ success: true, message: "Item removed from cart.", data: cart }, { status: 200 });
     } else {

@@ -14,9 +14,9 @@ export async function GET(request: Request) {
       return NextResponse.json({ message: "User ID is required." }, { status: 400 });
     }
 
-    // Fetch orders and populate the product details within the orderedProducts array
+    // Fetch orders and populate the product details within the orderItems array
     const orders = await Order.find({ user: userId })
-      .populate("orderedProducts.product")
+      .populate("orderItems.product")
       .sort({ createdAt: -1 });
 
     return NextResponse.json({ success: true, data: orders }, { status: 200 });
@@ -29,16 +29,16 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     await dbConnect();
-    const { userId, orderedProducts, totalAmount } = await request.json();
+    const { userId, orderItems, totalAmount } = await request.json();
 
-    if (!userId || !orderedProducts || orderedProducts.length === 0) {
+    if (!userId || !orderItems || orderItems.length === 0) {
       return NextResponse.json({ message: "Invalid order data." }, { status: 400 });
     }
 
     // 1. Create the new order
     const newOrder = await Order.create({
       user: userId,
-      orderedProducts,
+      orderItems,
       totalAmount,
       orderStatus: "Pending",
     });
