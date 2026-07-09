@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
+import StatusDropdown from "@/components/StatusDropdown";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -13,6 +15,7 @@ export default function AdminDashboard() {
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
+    pendingOrders: 0,
     totalUsers: 0,
     recentOrders: [],
   });
@@ -52,6 +55,30 @@ export default function AdminDashboard() {
     }
   }, [status, user, router]);
 
+  const handleStatusChange = async (orderId: string, newStatus: string) => {
+    try {
+      const res = await fetch(`/api/orders/${orderId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderStatus: newStatus }),
+      });
+      
+      if (!res.ok) {
+        throw new Error("Failed to update order status");
+      }
+      
+      setStats((prev) => ({
+        ...prev,
+        recentOrders: prev.recentOrders.map((o: any) =>
+          o._id === orderId ? { ...o, orderStatus: newStatus } : o
+        ) as any,
+      }));
+      toast.success("Order status updated");
+    } catch (err) {
+      toast.error("Failed to update order status");
+    }
+  };
+
   if (status === "loading" || loading) {
     return <div className="text-center py-12 text-gray-600">Loading dashboard data...</div>;
   }
@@ -70,15 +97,9 @@ export default function AdminDashboard() {
         <div className="flex space-x-4">
           <Link 
             href="/admin/products" 
-            className="bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 px-4 py-2 rounded-md font-medium transition-colors"
+            className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-md font-medium transition-colors shadow-sm"
           >
             Manage Products
-          </Link>
-          <Link 
-            href="/admin/add-product" 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-          >
-            + Add New Product
           </Link>
         </div>
       </div>
@@ -86,12 +107,12 @@ export default function AdminDashboard() {
       {/* Top Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
-          <h3 className="text-gray-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Total Products</h3>
-          <div className="text-4xl font-bold text-gray-900 dark:text-slate-100">{stats.totalProducts}</div>
+          <h3 className="text-gray-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Total Orders</h3>
+          <div className="text-4xl font-bold text-gray-900 dark:text-slate-100">{stats.totalOrders}</div>
         </div>
         <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
-          <h3 className="text-gray-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Total Orders</h3>
-          <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">{stats.totalOrders}</div>
+          <h3 className="text-gray-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Pending Orders</h3>
+          <div className="text-4xl font-bold text-blue-600 dark:text-blue-400">{stats.pendingOrders}</div>
         </div>
         <div className="bg-white dark:bg-slate-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
           <h3 className="text-gray-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider mb-2">Registered Users</h3>
@@ -134,14 +155,10 @@ export default function AdminDashboard() {
                       ${order.totalAmount.toFixed(2)}
                     </td>
                     <td className="p-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-semibold
-                        ${order.orderStatus === "Pending" ? "bg-yellow-100 dark:bg-yellow-900/20 text-yellow-800 dark:text-yellow-400" : ""}
-                        ${order.orderStatus === "Delivered" ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400" : ""}
-                        ${order.orderStatus === "Cancelled" ? "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400" : ""}
-                        ${!["Pending", "Delivered", "Cancelled"].includes(order.orderStatus) ? "bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-400" : ""}
-                      `}>
-                        {order.orderStatus}
-                      </span>
+                      <StatusDropdown
+                        currentStatus={order.orderStatus}
+                        onStatusChange={(newStatus) => handleStatusChange(order._id, newStatus)}
+                      />
                     </td>
                   </tr>
                 ))}

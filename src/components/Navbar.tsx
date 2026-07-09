@@ -38,13 +38,17 @@ export default function Navbar() {
             </Link>
           </div>
           <div className="flex items-center space-x-6">
-            <Link href="/products" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
-              Products
-            </Link>
-            <Link href="/cart" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1">
-              <ShoppingCart className="w-4 h-4" />
-              <span>Cart</span>
-            </Link>
+            {user?.role !== "admin" && (
+              <>
+                <Link href="/products" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
+                  Products
+                </Link>
+                <Link href="/cart" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1">
+                  <ShoppingCart className="w-4 h-4" />
+                  <span>Cart</span>
+                </Link>
+              </>
+            )}
 
             {mounted && (
               <button
@@ -58,10 +62,12 @@ export default function Navbar() {
 
             {status === "loading" ? null : user ? (
               <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700">
-                <Link href="/orders" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-2">
-                  <Package className="w-4 h-4" />
-                  <span>Orders</span>
-                </Link>
+                {user.role !== "admin" && (
+                  <Link href="/orders" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-2">
+                    <Package className="w-4 h-4" />
+                    <span>Orders</span>
+                  </Link>
+                )}
                 <span className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
                   <User className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                   <span className="text-slate-900 dark:text-slate-100">{user.name}</span>

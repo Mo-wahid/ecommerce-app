@@ -16,9 +16,10 @@ export async function GET() {
     await dbConnect();
 
     // Run all database count queries in parallel for better performance
-    const [totalProducts, totalOrders, totalUsers, recentOrders] = await Promise.all([
+    const [totalProducts, totalOrders, pendingOrders, totalUsers, recentOrders] = await Promise.all([
       Product.countDocuments(),
       Order.countDocuments(),
+      Order.countDocuments({ orderStatus: "Pending" }),
       User.countDocuments(),
       Order.find()
         .populate("user", "name email") 
@@ -32,6 +33,7 @@ export async function GET() {
         data: {
           totalProducts,
           totalOrders,
+          pendingOrders,
           totalUsers,
           recentOrders,
         },
