@@ -3,89 +3,108 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
+
+const loginSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(1, "Password is required"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({ email: "", password: "" });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  const onSubmit = async (data: LoginFormValues) => {
     setLoading(true);
 
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(data),
       });
 
-      const data = await res.json();
+      const resData = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.message || "Invalid credentials");
+        throw new Error(resData.message || "Invalid credentials");
       }
 
       // Store user session data locally
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem("user", JSON.stringify(resData.user));
 
+      toast.success(`Welcome back, ${resData.user.name}!`);
+      
       // Redirect to the home page
       router.push("/");
-      // Force a hard refresh so the Navbar can update its state (if we add auth state there later)
+      // Force a hard refresh so the Navbar can update its state
       router.refresh(); 
     } catch (err: any) {
-      setError(err.message);
+      toast.error(err.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-[70vh]">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md border border-gray-100">
-        <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">Welcome Back</h2>
-        
-        {error && (
-          <div className="bg-red-50 text-red-600 p-3 rounded mb-4 text-sm text-center">
-            {error}
-          </div>
-        )}
+    <div className="flex justify-center items-center min-h-[70vh] py-12">
+      <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 w-full max-w-md border border-slate-100">
+        <h2 className="text-3xl font-black text-center text-slate-900 mb-8 tracking-tight">Welcome Back</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
             <input
               type="email"
-              required
-              className="w-full px-4 py-2 border border-gray-300 text-gray-900 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              {...register("email")}
+              className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                errors.email ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+              }`}
+              placeholder="you@example.com"
             />
+            {errors.email && <p className="text-red-500 text-xs mt-1.5">{errors.email.message}</p>}
           </div>
+
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
             <input
               type="password"
-              required
-              className="w-full px-4 py-2 border border-gray-300 text-gray-900 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              {...register("password")}
+              className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                errors.password ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+              }`}
+              placeholder="••••••••"
             />
+            {errors.password && <p className="text-red-500 text-xs mt-1.5">{errors.password.message}</p>}
           </div>
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 transition-colors"
+            className="w-full flex justify-center items-center gap-2 bg-brand-600 text-white py-2.5 px-4 rounded-lg hover:bg-brand-700 disabled:bg-brand-400 disabled:cursor-not-allowed transition-all font-medium mt-6 shadow-md shadow-brand-600/20"
           >
+            {loading && <Loader2 className="w-5 h-5 animate-spin" />}
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-600">
+        <p className="mt-8 text-center text-sm text-slate-600">
           Don't have an account?{" "}
-          <Link href="/register" className="text-blue-600 hover:underline">
+          <Link href="/register" className="text-brand-600 hover:text-brand-700 font-semibold hover:underline">
             Register here
           </Link>
         </p>

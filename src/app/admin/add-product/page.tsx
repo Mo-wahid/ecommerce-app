@@ -2,36 +2,47 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import toast from "react-hot-toast";
+import { Loader2, UploadCloud } from "lucide-react";
+
+const productSchema = z.object({
+  name: z.string().min(3, "Product name is required (min 3 characters)"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  price: z.coerce.number().min(0.01, "Price must be greater than 0"),
+  stock: z.coerce.number().min(0, "Stock cannot be negative"),
+  category: z.string().min(1, "Please select a category"),
+});
+
+type ProductFormValues = z.infer<typeof productSchema>;
 
 export default function AddProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
-  // State for the standard text/number fields
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    category: "Electronics", // Setting a default category
-    stock: "",
-  });
-
-  // Separate state specifically for the file
   const [imageFile, setImageFile] = useState<File | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setSuccess("");
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ProductFormValues>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      category: "Electronics",
+    },
+  });
 
+  const onSubmit = async (data: ProductFormValues) => {
     if (!imageFile) {
-      setError("Please select an image for the product.");
+      toast.error("Please select an image for the product.");
       return;
     }
 
     setLoading(true);
+    const loadingToastId = toast.loading("Uploading image...");
 
     try {
       // 1. Upload the Image to Cloudinary via our API route
@@ -51,6 +62,8 @@ export default function AddProductPage() {
 
       const imageUrl = uploadJson.url;
 
+      toast.loading("Saving product details...", { id: loadingToastId });
+
       // 2. Save the Product to MongoDB with the new Cloudinary URL
       const productRes = await fetch("/api/products", {
         method: "POST",
@@ -58,12 +71,8 @@ export default function AddProductPage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: formData.name,
-          description: formData.description,
-          price: Number(formData.price),
-          category: formData.category,
-          stock: Number(formData.stock),
-          imageUrl: imageUrl, 
+          ...data,
+          imageUrl,
         }),
       });
 
@@ -73,118 +82,142 @@ export default function AddProductPage() {
         throw new Error(productJson.message || "Failed to save product");
       }
 
-      setSuccess("Product added successfully!");
+      toast.success("Product added successfully!", { id: loadingToastId });
       
-      // Reset form after success
-      setFormData({ name: "", description: "", price: "", category: "Electronics", stock: "" });
+      reset();
       setImageFile(null);
       
-      // Optional: Redirect back to the products page after a short delay
       setTimeout(() => router.push("/products"), 2000);
-
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred.");
+      toast.error(err.message || "An unexpected error occurred.", { id: loadingToastId });
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-100">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Add New Product</h1>
+    <div className="max-w-3xl mx-auto py-12">
+      <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100">
+        <h1 className="text-3xl font-black text-slate-900 mb-8 tracking-tight border-b border-slate-100 pb-4">Add New Product</h1>
 
-      {error && <div className="bg-red-50 text-red-600 p-4 rounded mb-4">{error}</div>}
-      {success && <div className="bg-green-50 text-green-600 p-4 rounded mb-4">{success}</div>}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Product Name</label>
+              <input
+                type="text"
+                {...register("name")}
+                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.name ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                }`}
+                placeholder="e.g. Wireless Headphones"
+              />
+              {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name.message}</p>}
+            </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-          <input
-            type="text"
-            required
-            className="w-full px-4 py-2 text-gray-900 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-        </div>
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+              <textarea
+                {...register("description")}
+                rows={4}
+                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.description ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                }`}
+                placeholder="Detailed description of the product..."
+              />
+              {errors.description && <p className="text-red-500 text-xs mt-1.5">{errors.description.message}</p>}
+            </div>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-          <textarea
-            required
-            rows={4}
-            className="w-full px-4 py-2 text-gray-900 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          />
-        </div>
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Price ($)</label>
+              <input
+                type="number"
+                step="0.01"
+                {...register("price")}
+                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.price ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                }`}
+                placeholder="99.99"
+              />
+              {errors.price && <p className="text-red-500 text-xs mt-1.5">{errors.price.message}</p>}
+            </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Price ($)</label>
-            <input
-              type="number"
-              step="0.01"
-              min="0"
-              required
-              className="w-full px-4 py-2 text-gray-900 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              value={formData.price}
-              onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-            />
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Stock Quantity</label>
+              <input
+                type="number"
+                {...register("stock")}
+                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.stock ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                }`}
+                placeholder="100"
+              />
+              {errors.stock && <p className="text-red-500 text-xs mt-1.5">{errors.stock.message}</p>}
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Category</label>
+              <select
+                {...register("category")}
+                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.category ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                }`}
+              >
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Books">Books</option>
+                <option value="Home & Garden">Home & Garden</option>
+                <option value="Toys">Toys</option>
+              </select>
+              {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
+            </div>
+
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">Product Image</label>
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg hover:bg-slate-50 transition-colors">
+                <div className="space-y-1 text-center">
+                  <UploadCloud className="mx-auto h-12 w-12 text-slate-400" />
+                  <div className="flex text-sm text-slate-600 justify-center">
+                    <label
+                      htmlFor="file-upload"
+                      className="relative cursor-pointer bg-transparent rounded-md font-medium text-brand-600 hover:text-brand-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-brand-500"
+                    >
+                      <span>Upload a file</span>
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={(e) => {
+                          if (e.target.files && e.target.files.length > 0) {
+                            setImageFile(e.target.files[0]);
+                          }
+                        }}
+                      />
+                    </label>
+                    <p className="pl-1">or drag and drop</p>
+                  </div>
+                  <p className="text-xs text-slate-500">PNG, JPG, GIF up to 10MB</p>
+                  {imageFile && (
+                    <p className="text-sm font-semibold text-emerald-600 mt-2">
+                      Selected: {imageFile.name}
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
-            <input
-              type="number"
-              min="0"
-              required
-              className="w-full px-4 py-2 text-gray-900 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-              value={formData.stock}
-              onChange={(e) => setFormData({ ...formData, stock: e.target.value })}
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-          <select
-            required
-            className="w-full px-4 py-2 text-gray-900 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-            value={formData.category}
-            onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full flex justify-center items-center gap-2 bg-brand-600 text-white py-3 px-4 rounded-xl hover:bg-brand-700 disabled:bg-brand-400 disabled:cursor-not-allowed transition-all font-bold mt-8 shadow-md shadow-brand-600/20 text-lg"
           >
-            <option value="Electronics">Electronics</option>
-            <option value="Clothing">Clothing</option>
-            <option value="Books">Books</option>
-            <option value="Home & Garden">Home & Garden</option>
-            <option value="Toys">Toys</option>
-          </select>
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            required
-            className="w-full text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-            onChange={(e) => {
-              if (e.target.files && e.target.files.length > 0) {
-                setImageFile(e.target.files[0]);
-              }
-            }}
-          />
-        </div>
-
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 disabled:bg-blue-400 font-bold transition-colors"
-        >
-          {loading ? "Uploading & Saving..." : "Add Product"}
-        </button>
-      </form>
+            {loading && <Loader2 className="w-5 h-5 animate-spin" />}
+            {loading ? "Saving Product..." : "Add Product"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

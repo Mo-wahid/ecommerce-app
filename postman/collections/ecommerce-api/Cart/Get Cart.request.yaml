@@ -1,0 +1,25 @@
+$kind: http-request
+name: Get Cart
+order: 1000
+method: GET
+url: '{{baseUrl}}/api/cart'
+queryParams:
+  - key: userId
+    value: '{{userId}}'
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", function() {
+        pm.response.to.have.status(200);
+      });
+      pm.test("Response has success: true", function() {
+        pm.expect(pm.response.json().success).to.be.true;
+      });
+      pm.test("Response data has products array", function() {
+        pm.expect(pm.response.json().data).to.have.property("products");
+        pm.expect(pm.response.json().data.products).to.be.an("array");
+      });
+      pm.test("Response data has subtotal", function() {
+        pm.expect(pm.response.json().data).to.have.property("subtotal");
+      });

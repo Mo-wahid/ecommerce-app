@@ -1,0 +1,28 @@
+$kind: http-request
+name: Remove Item from Cart
+order: 3000
+method: DELETE
+url: '{{baseUrl}}/api/cart'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "userId": "{{userId}}",
+      "productId": "{{productId}}"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", function() {
+        pm.response.to.have.status(200);
+      });
+      pm.test("Response has success: true", function() {
+        pm.expect(pm.response.json().success).to.be.true;
+      });
+      pm.test('Response has message "Item removed from cart."', function() {
+        pm.expect(pm.response.json().message).to.eql("Item removed from cart.");
+      });

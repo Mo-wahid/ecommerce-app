@@ -1,0 +1,36 @@
+$kind: http-request
+name: Login User
+order: 2000
+method: POST
+url: '{{baseUrl}}/api/auth/login'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "testuser@example.com",
+      "password": "password123"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 200", function() {
+        pm.response.to.have.status(200);
+      });
+      pm.test('Response has message "Login successful."', function() {
+        pm.expect(pm.response.json().message).to.eql("Login successful.");
+      });
+      pm.test("Response has user.id field", function() {
+        pm.expect(pm.response.json().user).to.have.property("id");
+      });
+      pm.test("Response has user.email field", function() {
+        pm.expect(pm.response.json().user).to.have.property("email");
+      });
+      pm.test("Response has user.role field", function() {
+        pm.expect(pm.response.json().user).to.have.property("role");
+      });
+      var jsonData = pm.response.json();
+      pm.environment.set("userId", jsonData.user.id);

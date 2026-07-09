@@ -1,0 +1,43 @@
+$kind: http-request
+name: Place Order
+order: 2000
+method: POST
+url: '{{baseUrl}}/api/orders'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "userId": "{{userId}}",
+      "orderedProducts": [
+        {
+          "product": "{{productId}}",
+          "quantity": 1
+        }
+      ],
+      "totalAmount": 999.99
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 201", function() {
+        pm.response.to.have.status(201);
+      });
+      pm.test("Response has success: true", function() {
+        pm.expect(pm.response.json().success).to.be.true;
+      });
+      pm.test('Response has message "Order placed successfully."', function() {
+        pm.expect(pm.response.json().message).to.eql("Order placed successfully.");
+      });
+      pm.test("Response data has _id field", function() {
+        pm.expect(pm.response.json().data).to.have.property("_id");
+      });
+      pm.test("Response data has orderStatus field", function() {
+        pm.expect(pm.response.json().data).to.have.property("orderStatus");
+      });
+      pm.test('Response data.orderStatus equals "Pending"', function() {
+        pm.expect(pm.response.json().data.orderStatus).to.eql("Pending");
+      });

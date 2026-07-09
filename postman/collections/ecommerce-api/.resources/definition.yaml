@@ -1,0 +1,6 @@
+$kind: collection
+name: E-Commerce API
+description: Full test suite for the e-commerce Next.js app
+variables:
+  - key: baseUrl
+    value: 'http://localhost:3000'

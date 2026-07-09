@@ -131,13 +131,16 @@ export default function CartPage() {
               <span>Shipping</span>
               <span>Calculated at checkout</span>
             </div>
-            <div className="border-t pt-4 flex justify-between font-bold text-lg text-gray-900 mb-6">
+            <div className="border-t pt-4 flex justify-between font-bold text-lg text-slate-900 mb-6">
               <span>Total</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
-            <button className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700 font-bold transition-colors">
+            <Link 
+              href="/checkout"
+              className="w-full flex justify-center items-center bg-brand-600 text-white py-3.5 rounded-xl hover:bg-brand-700 font-bold transition-colors shadow-md shadow-brand-600/20 text-lg"
+            >
               Proceed to Checkout
-            </button>
+            </Link>
           </div>
         </div>
       )}

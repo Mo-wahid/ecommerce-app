@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { ShoppingCart, User, LogOut, Package } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -10,17 +11,15 @@ export default function Navbar() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
-  // 1. Hide the navbar completely on auth pages
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
-  // 2. Fetch the user from localStorage when the component mounts on the client
   useEffect(() => {
     setIsMounted(true);
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
-  }, [pathname]); // Re-run if the route changes to catch fresh logins
+  }, [pathname]);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
@@ -29,44 +28,55 @@ export default function Navbar() {
   };
 
   if (isAuthPage) {
-    return null; // Renders nothing on /login and /register
+    return null;
   }
 
   return (
-    <nav className="bg-gray-900 text-white shadow-md">
+    <nav className="fixed w-full z-50 top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold tracking-wider">
+            <Link href="/" className="text-xl font-black tracking-tight text-brand-600 hover:text-brand-700 transition-colors">
               E-COMMERCE
             </Link>
           </div>
-          <div className="flex items-center space-x-4">
-            <Link href="/products" className="hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
+          <div className="flex items-center space-x-6">
+            <Link href="/products" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors">
               Products
             </Link>
-            <Link href="/cart" className="hover:text-gray-300 px-3 py-2 rounded-md text-sm font-medium">
-              Cart
+            <Link href="/cart" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors flex items-center gap-1">
+              <ShoppingCart className="w-4 h-4" />
+              <span>Cart</span>
             </Link>
 
-            {/* 3. Conditionally render User Info or Login Button */}
             {isMounted && user ? (
-              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-gray-700">
-                <span className="text-sm font-medium text-gray-300">
-                  Welcome, <span className="text-white font-bold">{user.name}</span>
+              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200">
+                <Link href="/orders" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors flex items-center gap-1 mr-2">
+                  <Package className="w-4 h-4" />
+                  <span>Orders</span>
+                </Link>
+                <span className="text-sm font-medium text-slate-500 flex items-center gap-2">
+                  <User className="w-4 h-4 text-slate-400" />
+                  <span className="text-slate-900">{user.name}</span>
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                  className="text-slate-500 hover:text-red-600 transition-colors flex items-center gap-1 text-sm font-medium"
                 >
-                  Logout
+                  <LogOut className="w-4 h-4" />
+                  <span>Logout</span>
                 </button>
               </div>
             ) : (
               isMounted && (
-                <Link href="/login" className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium transition-colors ml-4">
-                  Login
-                </Link>
+                <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200">
+                  <Link href="/login" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors">
+                    Login
+                  </Link>
+                  <Link href="/register" className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm">
+                    Sign Up
+                  </Link>
+                </div>
               )
             )}
           </div>

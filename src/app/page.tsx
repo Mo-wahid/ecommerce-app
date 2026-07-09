@@ -5,6 +5,11 @@ import ProductCatalog from "@/components/ProductCatalog";
 // Revalidate the page every 60 seconds so it updates when new products are added
 export const revalidate = 60; 
 
+export const metadata = {
+  title: "Premium Products | E-Commerce",
+  description: "Browse our latest collection of industry-leading products. Find exactly what you need.",
+};
+
 export default async function Home() {
   let products = [];
   let error = null;

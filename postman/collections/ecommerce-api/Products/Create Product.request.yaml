@@ -1,0 +1,40 @@
+$kind: http-request
+name: Create Product
+order: 2000
+method: POST
+url: '{{baseUrl}}/api/products'
+headers:
+  - key: Content-Type
+    value: application/json
+body:
+  type: json
+  content: |-
+    {
+      "name": "Test Laptop",
+      "description": "A powerful test laptop",
+      "price": 999.99,
+      "category": "Electronics",
+      "stock": 50,
+      "imageUrl": "https://example.com/laptop.jpg"
+    }
+scripts:
+  - type: afterResponse
+    language: text/javascript
+    code: |-
+      pm.test("Status is 201", function() {
+        pm.response.to.have.status(201);
+      });
+      pm.test("Response has success: true", function() {
+        pm.expect(pm.response.json().success).to.be.true;
+      });
+      pm.test("Response data has _id field", function() {
+        pm.expect(pm.response.json().data).to.have.property("_id");
+      });
+      pm.test("Response data has name field", function() {
+        pm.expect(pm.response.json().data).to.have.property("name");
+      });
+      pm.test("Response data has price field", function() {
+        pm.expect(pm.response.json().data).to.have.property("price");
+      });
+      var jsonData = pm.response.json();
+      pm.environment.set("productId", jsonData.data._id);
