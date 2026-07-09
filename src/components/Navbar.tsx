@@ -21,10 +21,17 @@ export default function Navbar() {
     }
   }, [pathname]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    router.push("/login");
+  const handleLogout = async () => {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+      });
+      localStorage.removeItem("user");
+      setUser(null);
+      router.push("/login");
+    } catch (error) {
+      console.error("Failed to log out properly:", error);
+    }
   };
 
   if (isAuthPage) {
