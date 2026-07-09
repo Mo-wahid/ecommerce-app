@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 // GET: Fetch a single product by ID (Public)
 export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -22,6 +24,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
 // PUT: Update an existing product (Admin)
 export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user?.role !== "admin") {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    }
+
     await dbConnect();
     const { id } = await params;
     const body = await request.json();
@@ -45,6 +52,11 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
 // DELETE: Remove a product (Admin)
 export async function DELETE(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
+    const session = await getServerSession(authOptions);
+    if (!session || session.user?.role !== "admin") {
+      return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    }
+
     await dbConnect();
     const { id } = await params;
     const product = await Product.findByIdAndDelete(id);

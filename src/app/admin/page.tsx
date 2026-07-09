@@ -67,12 +67,20 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
           <p className="text-gray-500 mt-2">Overview of your store's performance.</p>
         </div>
-        <Link 
-          href="/admin/add-product" 
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-        >
-          + Add New Product
-        </Link>
+        <div className="flex space-x-4">
+          <Link 
+            href="/admin/products" 
+            className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-md font-medium transition-colors"
+          >
+            Manage Products
+          </Link>
+          <Link 
+            href="/admin/add-product" 
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+          >
+            + Add New Product
+          </Link>
+        </div>
       </div>
 
       {/* Top Stat Cards */}
