@@ -74,7 +74,7 @@ export default function AddToCartSection({ productId, stock }: AddToCartProps) {
   return (
     <div className="space-y-6 mt-6 pt-6 border-t border-slate-100">
       <div className="flex items-center justify-between">
-        <label className="text-slate-700 font-semibold">Quantity</label>
+        <label className="text-slate-700 dark:text-slate-300 font-semibold">Quantity</label>
         <div className="flex items-center gap-3">
           <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white">
             <button

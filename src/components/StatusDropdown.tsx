@@ -38,7 +38,7 @@ export default function StatusDropdown({ currentStatus, onStatusChange }: Status
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={`inline-flex items-center justify-between w-36 px-4 py-2 rounded-lg text-sm font-semibold border shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 ${getStatusClasses(currentStatus)}`}
+        className={`inline-flex items-center justify-between w-36 px-4 py-2 rounded-lg text-sm font-semibold border shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-brand-500 cursor-pointer ${getStatusClasses(currentStatus)}`}
       >
         <span>{currentStatus}</span>
         <ChevronDown className={`w-4 h-4 ml-2 opacity-70 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
@@ -54,7 +54,7 @@ export default function StatusDropdown({ currentStatus, onStatusChange }: Status
                   onStatusChange(status);
                   setIsOpen(false);
                 }}
-                className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50
+                className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/50 cursor-pointer
                   ${status === currentStatus ? "bg-slate-50 dark:bg-slate-700/30 text-brand-600 dark:text-brand-400" : "text-slate-700 dark:text-slate-300"}
                 `}
               >

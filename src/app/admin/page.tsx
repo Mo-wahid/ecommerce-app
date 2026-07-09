@@ -67,12 +67,25 @@ export default function AdminDashboard() {
         throw new Error("Failed to update order status");
       }
       
-      setStats((prev) => ({
-        ...prev,
-        recentOrders: prev.recentOrders.map((o: any) =>
-          o._id === orderId ? { ...o, orderStatus: newStatus } : o
-        ) as any,
-      }));
+      setStats((prev) => {
+        const orderToUpdate = prev.recentOrders.find((o: any) => o._id === orderId) as any;
+        const oldStatus = orderToUpdate?.orderStatus;
+        let newPending = prev.pendingOrders;
+        
+        if (oldStatus === "Pending" && newStatus !== "Pending") {
+          newPending = Math.max(0, newPending - 1);
+        } else if (oldStatus !== "Pending" && newStatus === "Pending") {
+          newPending += 1;
+        }
+
+        return {
+          ...prev,
+          pendingOrders: newPending,
+          recentOrders: prev.recentOrders.map((o: any) =>
+            o._id === orderId ? { ...o, orderStatus: newStatus } : o
+          ) as any,
+        };
+      });
       toast.success("Order status updated");
     } catch (err) {
       toast.error("Failed to update order status");

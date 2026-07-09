@@ -178,6 +178,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 <input
                   type="number"
                   step="0.01"
+                  onWheel={(e) => e.currentTarget.blur()}
                   {...register("price")}
                   className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
                     errors.price ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
@@ -191,6 +192,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Stock Quantity</label>
                 <input
                   type="number"
+                  onWheel={(e) => e.currentTarget.blur()}
                   {...register("stock")}
                   className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
                     errors.stock ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
