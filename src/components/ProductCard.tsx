@@ -14,7 +14,7 @@ interface ProductProps {
 
 export default function ProductCard({ product }: ProductProps) {
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-xl dark:hover:shadow-brand-900/20 transition-all duration-300 group flex flex-col h-full">
+    <Link href={`/products/${product._id}`} className="block bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden hover:shadow-xl dark:hover:shadow-brand-900/20 transition-all duration-300 group flex flex-col h-full cursor-pointer">
       <div className="h-56 w-full bg-slate-100 dark:bg-slate-900 relative overflow-hidden">
         <Image
           src={product.imageUrl || "https://via.placeholder.com/400?text=No+Image"}
@@ -43,14 +43,13 @@ export default function ProductCard({ product }: ProductProps) {
             <span className={`w-2 h-2 rounded-full ${product.stock > 0 ? 'bg-emerald-500 dark:bg-emerald-400 animate-pulse' : 'bg-red-500 dark:bg-red-400'}`}></span>
             {product.stock > 0 ? `${product.stock} left` : 'Sold Out'}
           </span>
-          <Link 
-            href={`/products/${product._id}`}
-            className="bg-slate-900 dark:bg-brand-600 hover:bg-brand-600 dark:hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm"
+          <span 
+            className="bg-slate-900 dark:bg-brand-600 group-hover:bg-brand-600 dark:group-hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors shadow-sm"
           >
             Details
-          </Link>
+          </span>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -37,7 +37,7 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
         </div>
         <div className="sm:w-64">
           <select
-            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
