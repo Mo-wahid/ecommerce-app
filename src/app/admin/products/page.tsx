@@ -5,7 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import { Loader2, Edit, Trash2 } from "lucide-react";
+import { Loader2, Edit, Trash2, ArrowLeft, Plus } from "lucide-react";
+import ProductFormModal from "@/components/ProductFormModal";
+import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 
 export default function ManageProductsPage() {
   const router = useRouter();
@@ -14,6 +16,15 @@ export default function ManageProductsPage() {
 
   const [products, setProducts] = useState<import("@/types").IProduct[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Modal states
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<import("@/types").IProduct | null>(null);
+  const [deleteModalState, setDeleteModalState] = useState<{ isOpen: boolean; product: import("@/types").IProduct | null; isDeleting: boolean }>({
+    isOpen: false,
+    product: null,
+    isDeleting: false,
+  });
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -42,14 +53,28 @@ export default function ManageProductsPage() {
     }
   };
 
-  const handleDelete = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
-      return;
-    }
+  const openAddModal = () => {
+    setEditingProduct(null);
+    setIsFormModalOpen(true);
+  };
 
-    const toastId = toast.loading("Deleting product...");
+  const openEditModal = (product: import("@/types").IProduct) => {
+    setEditingProduct(product);
+    setIsFormModalOpen(true);
+  };
+
+  const confirmDelete = (product: import("@/types").IProduct) => {
+    setDeleteModalState({ isOpen: true, product, isDeleting: false });
+  };
+
+  const handleDelete = async () => {
+    const product = deleteModalState.product;
+    if (!product) return;
+
+    setDeleteModalState(prev => ({ ...prev, isDeleting: true }));
+    
     try {
-      const res = await fetch(`/api/products/${id}`, {
+      const res = await fetch(`/api/products/${product._id}`, {
         method: "DELETE",
       });
 
@@ -57,12 +82,13 @@ export default function ManageProductsPage() {
         throw new Error("Failed to delete product");
       }
 
-      toast.success("Product deleted successfully", { id: toastId });
-      // Remove product from local state
-      setProducts(products.filter((p) => p._id !== id));
+      toast.success("Product deleted successfully");
+      setProducts(products.filter((p) => p._id !== product._id));
+      setDeleteModalState({ isOpen: false, product: null, isDeleting: false });
     } catch (error) {
       console.error(error);
-      toast.error("Error deleting product", { id: toastId });
+      toast.error("Error deleting product");
+      setDeleteModalState(prev => ({ ...prev, isDeleting: false }));
     }
   };
 
@@ -77,23 +103,27 @@ export default function ManageProductsPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <div className="flex justify-between items-center border-b dark:border-slate-800 pb-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Products</h1>
-          <p className="text-gray-500 dark:text-slate-400 mt-2">Update or delete your store's products.</p>
+        <div className="flex items-center gap-4">
+          <Link
+            href="/admin"
+            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+            title="Back to Dashboard"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </Link>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Products</h1>
+            <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">Update or delete your store's products.</p>
+          </div>
         </div>
-        <div className="flex space-x-4">
-          <Link 
-            href="/admin" 
-            className="bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 px-4 py-2 rounded-md font-medium transition-colors"
+        <div>
+          <button 
+            onClick={openAddModal}
+            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm shadow-brand-600/20"
           >
-            Back to Dashboard
-          </Link>
-          <Link 
-            href="/admin/add-product" 
-            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
-          >
-            + Add New Product
-          </Link>
+            <Plus className="w-5 h-5" />
+            <span>Add New Product</span>
+          </button>
         </div>
       </div>
 
@@ -134,21 +164,21 @@ export default function ManageProductsPage() {
                       </span>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center justify-end space-x-3">
-                        <Link 
-                          href={`/admin/edit-product/${product._id}`}
-                          className="text-blue-600 hover:text-blue-800 flex items-center gap-1"
+                      <div className="flex items-center justify-end space-x-4">
+                        <button 
+                          onClick={() => openEditModal(product)}
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-2 rounded-full transition-colors flex items-center justify-center"
                           title="Edit Product"
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className="w-5 h-5" />
                           <span className="sr-only">Edit</span>
-                        </Link>
+                        </button>
                         <button 
-                          onClick={() => handleDelete(product._id, product.name)}
-                          className="text-red-600 hover:text-red-800 flex items-center gap-1"
+                          onClick={() => confirmDelete(product)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-colors flex items-center justify-center"
                           title="Delete Product"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-5 h-5" />
                           <span className="sr-only">Delete</span>
                         </button>
                       </div>
@@ -160,6 +190,22 @@ export default function ManageProductsPage() {
           </div>
         )}
       </div>
+
+      {/* Modals */}
+      <ProductFormModal 
+        isOpen={isFormModalOpen} 
+        onClose={() => setIsFormModalOpen(false)}
+        onSuccess={fetchProducts}
+        product={editingProduct}
+      />
+
+      <DeleteConfirmModal 
+        isOpen={deleteModalState.isOpen}
+        productName={deleteModalState.product?.name || ""}
+        isDeleting={deleteModalState.isDeleting}
+        onConfirm={handleDelete}
+        onCancel={() => setDeleteModalState({ isOpen: false, product: null, isDeleting: false })}
+      />
     </div>
   );
 }
