@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
 import { Loader2, UploadCloud } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 const productSchema = z.object({
   name: z.string().min(3, "Product name is required (min 3 characters)"),
@@ -21,8 +22,19 @@ type ProductFormOutput = z.output<typeof productSchema>;
 
 export default function AddProductPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const user = session?.user;
+  
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (status === "authenticated" && user?.role !== "admin") {
+      router.push("/");
+    }
+  }, [status, user, router]);
 
   const {
     register,
@@ -96,6 +108,10 @@ export default function AddProductPage() {
       setLoading(false);
     }
   };
+
+  if (status === "loading") {
+    return <div className="text-center py-12 text-gray-600">Loading...</div>;
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-12">

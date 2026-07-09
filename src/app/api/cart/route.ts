@@ -2,17 +2,19 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Cart from "@/models/Cart";
 import Product from "@/models/Product";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
 
 // GET: View Cart & Subtotal
 export async function GET(request: Request) {
   try {
-    await dbConnect();
-    const { searchParams } = new URL(request.url);
-    const userId = searchParams.get("userId");
-
-    if (!userId) {
-      return NextResponse.json({ message: "User ID is required." }, { status: 400 });
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+    const userId = session.user.id;
+
+    await dbConnect();
 
     // Fetch cart and populate product details to calculate the subtotal
     const cart = await Cart.findOne({ user: userId }).populate("products.product");
@@ -36,11 +38,17 @@ export async function GET(request: Request) {
 // POST: Add Item or Update Quantity
 export async function POST(request: Request) {
   try {
-    await dbConnect();
-    const { userId, productId, quantity } = await request.json();
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+    }
+    const userId = session.user.id;
 
-    if (!userId || !productId || !quantity) {
-      return NextResponse.json({ message: "Missing required fields." }, { status: 400 });
+    await dbConnect();
+    const { productId, quantity } = await request.json();
+
+    if (!productId || !quantity) {
+      return NextResponse.json({ message: "Invalid data." }, { status: 400 });
     }
 
     // Ensure the product exists and has enough stock
@@ -80,12 +88,14 @@ export async function POST(request: Request) {
 // DELETE: Remove a single item OR Clear the whole cart
 export async function DELETE(request: Request) {
   try {
-    await dbConnect();
-    const { userId, productId } = await request.json();
-
-    if (!userId) {
-      return NextResponse.json({ message: "User ID is required." }, { status: 400 });
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+    const userId = session.user.id;
+
+    await dbConnect();
+    const { productId } = await request.json();
 
     const cart = await Cart.findOne({ user: userId });
     if (!cart) {

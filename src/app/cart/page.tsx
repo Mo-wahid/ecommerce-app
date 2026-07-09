@@ -3,29 +3,28 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function CartPage() {
   const router = useRouter();
-  const [user, setUser] = useState<import("@/types").IUser | null>(null);
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const [cart, setCart] = useState<import("@/types").ICartItem[]>([]);
   const [subtotal, setSubtotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
   // 1. Check for logged-in user and fetch their cart
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      fetchCart(parsedUser.id);
-    } else {
+    if (status === "unauthenticated") {
       setLoading(false);
+    } else if (status === "authenticated" && user) {
+      fetchCart();
     }
-  }, []);
+  }, [status, user]);
 
-  const fetchCart = async (userId: string) => {
+  const fetchCart = async () => {
     try {
-      const res = await fetch(`/api/cart?userId=${userId}`);
+      const res = await fetch(`/api/cart`);
       const json = await res.json();
       if (json.success && json.data.cart) {
         setCart(json.data.cart.products);
@@ -45,9 +44,9 @@ export default function CartPage() {
       const res = await fetch("/api/cart", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id, productId }),
+        body: JSON.stringify({ productId }),
       });
-      if (res.ok) fetchCart(user.id);
+      if (res.ok) fetchCart();
     } catch (error) {
       console.error("Failed to remove item:", error);
     }
@@ -60,15 +59,15 @@ export default function CartPage() {
       const res = await fetch("/api/cart", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: user.id }), // Omitting productId clears everything
+        body: JSON.stringify({}), // Omitting productId clears everything
       });
-      if (res.ok) fetchCart(user.id);
+      if (res.ok) fetchCart();
     } catch (error) {
       console.error("Failed to clear cart:", error);
     }
   };
 
-  if (loading) return <div className="text-center py-12">Loading cart...</div>;
+  if (status === "loading" || loading) return <div className="text-center py-12">Loading cart...</div>;
 
   if (!user) {
     return (

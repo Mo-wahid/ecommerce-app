@@ -2,36 +2,20 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useSession, signOut } from "next-auth/react";
 import { ShoppingCart, User, LogOut, Package } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
-
+  const { data: session, status } = useSession();
+  
+  const user = session?.user;
   const isAuthPage = pathname === "/login" || pathname === "/register";
 
-  useEffect(() => {
-    setIsMounted(true);
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, [pathname]);
-
   const handleLogout = async () => {
-    try {
-      await fetch("/api/auth/logout", {
-        method: "POST",
-      });
-      localStorage.removeItem("user");
-      setUser(null);
-      router.push("/login");
-    } catch (error) {
-      console.error("Failed to log out properly:", error);
-    }
+    await signOut({ redirect: false });
+    router.push("/login");
   };
 
   if (isAuthPage) {
@@ -56,7 +40,7 @@ export default function Navbar() {
               <span>Cart</span>
             </Link>
 
-            {isMounted && user ? (
+            {status === "loading" ? null : user ? (
               <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200">
                 <Link href="/orders" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors flex items-center gap-1 mr-2">
                   <Package className="w-4 h-4" />
@@ -75,16 +59,14 @@ export default function Navbar() {
                 </button>
               </div>
             ) : (
-              isMounted && (
-                <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200">
-                  <Link href="/login" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors">
-                    Login
-                  </Link>
-                  <Link href="/register" className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm">
-                    Sign Up
-                  </Link>
-                </div>
-              )
+              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200">
+                <Link href="/login" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors">
+                  Login
+                </Link>
+                <Link href="/register" className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm">
+                  Sign Up
+                </Link>
+              </div>
             )}
           </div>
         </div>

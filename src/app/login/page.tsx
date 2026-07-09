@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 const loginSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -32,22 +33,17 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
       });
 
-      const resData = await res.json();
-
-      if (!res.ok) {
-        throw new Error(resData.message || "Invalid credentials");
+      if (res?.error) {
+        throw new Error(res.error);
       }
 
-      // Store user session data locally
-      localStorage.setItem("user", JSON.stringify(resData.user));
-
-      toast.success(`Welcome back, ${resData.user.name}!`);
+      toast.success("Welcome back!");
       
       // Redirect to the home page
       router.push("/");

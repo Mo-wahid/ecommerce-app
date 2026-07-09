@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const [user, setUser] = useState<import("@/types").IUser | null>(null);
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const [cart, setCart] = useState<import("@/types").ICartItem[]>([]);
   const [subtotal, setSubtotal] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -23,21 +25,17 @@ export default function CheckoutPage() {
   });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      // Pre-fill the name if we have it
-      setFormData((prev) => ({ ...prev, fullName: parsedUser.name || "" }));
-      fetchCart(parsedUser.id);
-    } else {
+    if (status === "unauthenticated") {
       router.push("/login");
+    } else if (status === "authenticated" && user) {
+      setFormData((prev) => ({ ...prev, fullName: user.name || "" }));
+      fetchCart();
     }
-  }, [router]);
+  }, [status, user, router]);
 
-  const fetchCart = async (userId: string) => {
+  const fetchCart = async () => {
     try {
-      const res = await fetch(`/api/cart?userId=${userId}`);
+      const res = await fetch(`/api/cart`);
       const json = await res.json();
       if (json.success && json.data.cart) {
         setCart(json.data.cart.products);
@@ -69,7 +67,6 @@ export default function CheckoutPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: user.id,
           orderItems,
           totalAmount: subtotal,
           // If you updated your Order model to include shipping details, 
@@ -98,7 +95,7 @@ export default function CheckoutPage() {
     }
   };
 
-  if (loading) return <div className="text-center py-12">Loading checkout...</div>;
+  if (status === "loading" || loading) return <div className="text-center py-12">Loading checkout...</div>;
 
   if (cart.length === 0) {
     return (

@@ -3,9 +3,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const user = session?.user;
+
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
@@ -16,21 +20,6 @@ export default function AdminDashboard() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    // 1. Basic Client-Side Auth Check
-    const storedUser = localStorage.getItem("user");
-    if (!storedUser) {
-      router.push("/login");
-      return;
-    }
-
-    const parsedUser = JSON.parse(storedUser);
-    if (parsedUser.role !== "Admin") {
-      // If they aren't an admin, kick them back to the home page
-      router.push("/");
-      return;
-    }
-
-    // 2. Fetch the Dashboard Statistics
     const fetchDashboardData = async () => {
       try {
         const res = await fetch("/api/dashboard");
@@ -52,10 +41,18 @@ export default function AdminDashboard() {
       }
     };
 
-    fetchDashboardData();
-  }, [router]);
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (status === "authenticated" && user) {
+      if (user.role !== "admin") {
+        router.push("/");
+      } else {
+        fetchDashboardData();
+      }
+    }
+  }, [status, user, router]);
 
-  if (loading) {
+  if (status === "loading" || loading) {
     return <div className="text-center py-12 text-gray-600">Loading dashboard data...</div>;
   }
 

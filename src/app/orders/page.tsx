@@ -5,27 +5,26 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Package, Clock, CheckCircle2, XCircle, Truck, Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 export default function OrdersPage() {
   const router = useRouter();
-  const [user, setUser] = useState<import("@/types").IUser | null>(null);
+  const { data: session, status } = useSession();
+  const user = session?.user;
   const [orders, setOrders] = useState<import("@/types").IOrder[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
-      setUser(parsedUser);
-      fetchOrders(parsedUser.id);
-    } else {
+    if (status === "unauthenticated") {
       router.push("/login");
+    } else if (status === "authenticated" && user) {
+      fetchOrders();
     }
-  }, [router]);
+  }, [status, user, router]);
 
-  const fetchOrders = async (userId: string) => {
+  const fetchOrders = async () => {
     try {
-      const res = await fetch(`/api/orders?userId=${userId}`);
+      const res = await fetch(`/api/orders`);
       const json = await res.json();
       if (json.success && json.data) {
         setOrders(json.data);
@@ -52,7 +51,7 @@ export default function OrdersPage() {
     }
   };
 
-  if (loading) {
+  if (status === "loading" || loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
         <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
