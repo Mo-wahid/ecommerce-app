@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { ShoppingCart, User, LogOut, Package } from "lucide-react";
+import { ShoppingCart, User, LogOut, Package, Sun, Moon } from "lucide-react";
+import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -12,6 +14,10 @@ export default function Navbar() {
   
   const user = session?.user;
   const isAuthPage = pathname === "/login" || pathname === "/register";
+
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
@@ -23,44 +29,54 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed w-full z-50 top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 transition-all duration-300">
+    <nav className="fixed w-full z-50 top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-black tracking-tight text-brand-600 hover:text-brand-700 transition-colors">
+            <Link href="/" className="text-xl font-black tracking-tight text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
               E-COMMERCE
             </Link>
           </div>
           <div className="flex items-center space-x-6">
-            <Link href="/products" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors">
+            <Link href="/products" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
               Products
             </Link>
-            <Link href="/cart" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors flex items-center gap-1">
+            <Link href="/cart" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1">
               <ShoppingCart className="w-4 h-4" />
               <span>Cart</span>
             </Link>
 
+            {mounted && (
+              <button
+                onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                className="text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center"
+                aria-label="Toggle Dark Mode"
+              >
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </button>
+            )}
+
             {status === "loading" ? null : user ? (
-              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200">
-                <Link href="/orders" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors flex items-center gap-1 mr-2">
+              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700">
+                <Link href="/orders" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-2">
                   <Package className="w-4 h-4" />
                   <span>Orders</span>
                 </Link>
-                <span className="text-sm font-medium text-slate-500 flex items-center gap-2">
-                  <User className="w-4 h-4 text-slate-400" />
-                  <span className="text-slate-900">{user.name}</span>
+                <span className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                  <User className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                  <span className="text-slate-900 dark:text-slate-100">{user.name}</span>
                 </span>
                 <button
                   onClick={handleLogout}
-                  className="text-slate-500 hover:text-red-600 transition-colors flex items-center gap-1 text-sm font-medium"
+                  className="text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center gap-1 text-sm font-medium"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200">
-                <Link href="/login" className="text-slate-600 hover:text-brand-600 font-medium text-sm transition-colors">
+              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700">
+                <Link href="/login" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Login
                 </Link>
                 <Link href="/register" className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm">

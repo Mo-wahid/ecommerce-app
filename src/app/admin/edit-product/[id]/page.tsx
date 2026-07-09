@@ -141,66 +141,66 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         </Link>
       </div>
 
-      <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 border border-slate-100">
-        <h1 className="text-3xl font-black text-slate-900 mb-8 tracking-tight border-b border-slate-100 pb-4">Edit Product</h1>
+      <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-700 transition-colors">
+        <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 mb-8 tracking-tight border-b border-slate-100 dark:border-slate-700 pb-4">Edit Product</h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Product Name</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Product Name</label>
               <input
                 type="text"
                 {...register("name")}
-                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
-                  errors.name ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.name ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900"
                 }`}
               />
               {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name.message}</p>}
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Description</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Description</label>
               <textarea
                 {...register("description")}
                 rows={4}
-                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
-                  errors.description ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.description ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900"
                 }`}
               />
               {errors.description && <p className="text-red-500 text-xs mt-1.5">{errors.description.message}</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Price ($)</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Price ($)</label>
               <input
                 type="number"
                 step="0.01"
                 {...register("price")}
-                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
-                  errors.price ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.price ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900"
                 }`}
               />
               {errors.price && <p className="text-red-500 text-xs mt-1.5">{errors.price.message}</p>}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Stock Quantity</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Stock Quantity</label>
               <input
                 type="number"
                 {...register("stock")}
-                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
-                  errors.stock ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.stock ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900"
                 }`}
               />
               {errors.stock && <p className="text-red-500 text-xs mt-1.5">{errors.stock.message}</p>}
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Category</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Category</label>
               <select
                 {...register("category")}
-                className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
-                  errors.category ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+                className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                  errors.category ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900"
                 }`}
               >
                 <option value="Electronics">Electronics</option>
@@ -213,19 +213,19 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-slate-700 mb-1.5">Product Image</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Product Image</label>
               
               {existingImageUrl && !imageFile && (
                 <div className="mb-4">
-                  <p className="text-xs text-slate-500 mb-2">Current Image:</p>
-                  <img src={existingImageUrl} alt="Current" className="w-32 h-32 object-cover rounded-lg border border-slate-200" />
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-2">Current Image:</p>
+                  <img src={existingImageUrl} alt="Current" className="w-32 h-32 object-cover rounded-lg border border-slate-200 dark:border-slate-700" />
                 </div>
               )}
 
-              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-lg hover:bg-slate-50 transition-colors">
+              <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                 <div className="space-y-1 text-center">
                   <UploadCloud className="mx-auto h-12 w-12 text-slate-400" />
-                  <div className="flex text-sm text-slate-600 justify-center">
+                  <div className="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
                     <label
                       htmlFor="file-upload"
                       className="relative cursor-pointer bg-transparent rounded-md font-medium text-brand-600 hover:text-brand-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-brand-500"

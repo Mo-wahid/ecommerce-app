@@ -25,19 +25,19 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
   return (
     <div>
       {/* Search and Filter Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8 bg-white p-4 rounded-lg shadow-sm border border-gray-100">
+      <div className="flex flex-col sm:flex-row gap-4 mb-8 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
         <div className="flex-1">
           <input
             type="text"
             placeholder="Search products..."
-            className="w-full px-4 py-2 border border-gray-300 text-gray-900 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-blue-500 focus:border-blue-500 transition-colors"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <div className="sm:w-64">
           <select
-            className="w-full px-4 py-2 border border-gray-300 text-gray-900 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-blue-500 focus:border-blue-500 transition-colors"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -58,8 +58,8 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-white rounded-lg border border-gray-100">
-          <p className="text-gray-500 text-lg">No products found matching your criteria.</p>
+        <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 transition-colors">
+          <p className="text-gray-500 dark:text-slate-400 text-lg">No products found matching your criteria.</p>
         </div>
       )}
     </div>

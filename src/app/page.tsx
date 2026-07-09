@@ -42,9 +42,9 @@ export default async function Home() {
 
   return (
     <div className="space-y-6">
-      <div className="border-b pb-4">
-        <h1 className="text-3xl font-bold text-gray-900">Featured Products</h1>
-        <p className="text-gray-500 mt-2">Browse our latest collection</p>
+      <div className="border-b border-gray-200 dark:border-slate-800 pb-4">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Featured Products</h1>
+        <p className="text-gray-500 dark:text-slate-400 mt-2">Browse our latest collection</p>
       </div>
 
       {error ? (

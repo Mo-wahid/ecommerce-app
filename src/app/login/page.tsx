@@ -62,17 +62,17 @@ export default function LoginPage() {
 
   return (
     <div className="flex justify-center items-center min-h-[70vh] py-12">
-      <div className="bg-white p-8 rounded-2xl shadow-xl shadow-slate-200/50 w-full max-w-md border border-slate-100">
-        <h2 className="text-3xl font-black text-center text-slate-900 mb-8 tracking-tight">Welcome Back</h2>
+      <div className="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-xl shadow-slate-200/50 dark:shadow-none w-full max-w-md border border-slate-100 dark:border-slate-700 transition-colors">
+        <h2 className="text-3xl font-black text-center text-slate-900 dark:text-slate-100 mb-8 tracking-tight">Welcome Back</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Email</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Email</label>
             <input
               type="email"
               {...register("email")}
-              className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
-                errors.email ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+              className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                errors.email ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900"
               }`}
               placeholder="you@example.com"
             />
@@ -80,12 +80,12 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1.5">Password</label>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Password</label>
             <input
               type="password"
               {...register("password")}
-              className={`w-full px-4 py-2.5 text-slate-900 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
-                errors.password ? "border-red-500 bg-red-50" : "border-slate-200 bg-slate-50"
+              className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all ${
+                errors.password ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900"
               }`}
               placeholder="••••••••"
             />
@@ -102,9 +102,9 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="mt-8 text-center text-sm text-slate-600">
+        <p className="mt-8 text-center text-sm text-slate-600 dark:text-slate-400">
           Don't have an account?{" "}
-          <Link href="/register" className="text-brand-600 hover:text-brand-700 font-semibold hover:underline">
+          <Link href="/register" className="text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 font-semibold hover:underline">
             Register here
           </Link>
         </p>

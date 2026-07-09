@@ -32,11 +32,11 @@ export default async function ProductDetailsPage({
   };
 
   return (
-    <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mt-8">
+    <div className="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden mt-8 transition-colors">
       <div className="grid grid-cols-1 md:grid-cols-2">
         
         {/* Left Side: Product Image */}
-        <div className="bg-gray-100 h-96 md:h-auto relative">
+        <div className="bg-gray-100 dark:bg-slate-900 h-96 md:h-auto relative">
           <img
             src={serializedProduct.imageUrl || "https://via.placeholder.com/600"}
             alt={serializedProduct.name}
@@ -47,24 +47,24 @@ export default async function ProductDetailsPage({
         {/* Right Side: Product Details */}
         <div className="p-8 md:p-12 flex flex-col justify-center">
           <div className="mb-2">
-            <span className="text-xs font-bold tracking-widest text-blue-600 uppercase">
+            <span className="text-xs font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase">
               {serializedProduct.category}
             </span>
           </div>
           
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-slate-100 mb-4">
             {serializedProduct.name}
           </h1>
           
-          <div className="text-3xl font-bold text-gray-900 mb-6">
+          <div className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-6">
             ${serializedProduct.price.toFixed(2)}
           </div>
           
-          <p className="text-gray-600 mb-8 leading-relaxed">
+          <p className="text-gray-600 dark:text-slate-300 mb-8 leading-relaxed">
             {serializedProduct.description}
           </p>
 
-          <div className="border-t border-gray-200 pt-8">
+          <div className="border-t border-gray-200 dark:border-slate-700 pt-8">
             <AddToCartSection 
               productId={serializedProduct._id} 
               stock={serializedProduct.stock} 

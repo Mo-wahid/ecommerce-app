@@ -76,15 +76,15 @@ export default function ManageProductsPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      <div className="flex justify-between items-center border-b pb-4">
+      <div className="flex justify-between items-center border-b dark:border-slate-800 pb-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Manage Products</h1>
-          <p className="text-gray-500 mt-2">Update or delete your store's products.</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Products</h1>
+          <p className="text-gray-500 dark:text-slate-400 mt-2">Update or delete your store's products.</p>
         </div>
         <div className="flex space-x-4">
           <Link 
             href="/admin" 
-            className="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-md font-medium transition-colors"
+            className="bg-white dark:bg-slate-800 border border-gray-300 dark:border-slate-700 text-gray-700 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 px-4 py-2 rounded-md font-medium transition-colors"
           >
             Back to Dashboard
           </Link>
@@ -97,14 +97,14 @@ export default function ManageProductsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
         {products.length === 0 ? (
-          <div className="p-6 text-center text-gray-500">No products found.</div>
+          <div className="p-6 text-center text-gray-500 dark:text-slate-400">No products found.</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200 text-xs text-gray-600 uppercase tracking-wider">
+                <tr className="bg-gray-50 dark:bg-slate-900/50 border-b border-gray-200 dark:border-slate-700 text-xs text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                   <th className="p-4 font-medium">Image</th>
                   <th className="p-4 font-medium">Name</th>
                   <th className="p-4 font-medium">Category</th>
@@ -113,11 +113,11 @@ export default function ManageProductsPage() {
                   <th className="p-4 font-medium text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200 text-sm text-gray-900">
+              <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-gray-900 dark:text-slate-100">
                 {products.map((product) => (
-                  <tr key={product._id} className="hover:bg-gray-50 transition-colors">
+                  <tr key={product._id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                     <td className="p-4">
-                      <div className="w-12 h-12 bg-gray-100 rounded overflow-hidden">
+                      <div className="w-12 h-12 bg-gray-100 dark:bg-slate-900 rounded overflow-hidden">
                         <img 
                           src={product.imageUrl || "https://via.placeholder.com/150"} 
                           alt={product.name}
@@ -126,10 +126,10 @@ export default function ManageProductsPage() {
                       </div>
                     </td>
                     <td className="p-4 font-medium">{product.name}</td>
-                    <td className="p-4 text-gray-500">{product.category}</td>
+                    <td className="p-4 text-gray-500 dark:text-slate-400">{product.category}</td>
                     <td className="p-4 font-bold">${product.price.toFixed(2)}</td>
                     <td className="p-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400" : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400"}`}>
                         {product.stock} in stock
                       </span>
                     </td>

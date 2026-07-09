@@ -71,10 +71,10 @@ export default function CartPage() {
 
   if (!user) {
     return (
-      <div className="text-center py-16 bg-white rounded-lg border border-gray-100 shadow-sm">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is waiting!</h2>
-        <p className="text-gray-600 mb-6">Please log in to view and manage your cart.</p>
-        <Link href="/login" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+      <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm transition-colors">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4">Your cart is waiting!</h2>
+        <p className="text-gray-600 dark:text-slate-400 mb-6">Please log in to view and manage your cart.</p>
+        <Link href="/login" className="bg-brand-600 text-white px-6 py-2 rounded hover:bg-brand-700">
           Login Now
         </Link>
       </div>
@@ -83,12 +83,12 @@ export default function CartPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900 border-b pb-4">Shopping Cart</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 border-b dark:border-slate-800 pb-4">Shopping Cart</h1>
 
       {cart.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-lg border border-gray-100">
-          <p className="text-gray-500 mb-4 text-lg">Your cart is currently empty.</p>
-          <Link href="/products" className="text-blue-600 hover:underline">
+        <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 transition-colors">
+          <p className="text-gray-500 dark:text-slate-400 mb-4 text-lg">Your cart is currently empty.</p>
+          <Link href="/products" className="text-brand-600 hover:underline">
             Browse Products
           </Link>
         </div>
@@ -97,19 +97,19 @@ export default function CartPage() {
           {/* Cart Items List */}
           <div className="lg:col-span-2 space-y-4">
             {cart.map((item) => (
-              <div key={item.product._id} className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200 shadow-sm">
+              <div key={item.product._id} className="flex items-center justify-between p-4 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm transition-colors">
                 <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-gray-100 rounded flex-shrink-0">
+                  <div className="w-16 h-16 bg-gray-100 dark:bg-slate-900 rounded flex-shrink-0">
                     <img src={item.product.imageUrl || "https://via.placeholder.com/64"} alt={item.product.name} className="w-full h-full object-cover rounded" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900">{item.product.name}</h3>
-                    <p className="text-gray-500 text-sm">Qty: {item.quantity}</p>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{item.product.name}</h3>
+                    <p className="text-gray-500 dark:text-slate-400 text-sm">Qty: {item.quantity}</p>
                   </div>
                 </div>
                 <div className="flex flex-col items-end space-y-2">
-                  <span className="font-bold text-gray-900">${(item.product.price * item.quantity).toFixed(2)}</span>
-                  <button onClick={() => removeItem(item.product._id)} className="text-red-500 hover:text-red-700 text-sm font-medium">
+                  <span className="font-bold text-gray-900 dark:text-slate-100">${(item.product.price * item.quantity).toFixed(2)}</span>
+                  <button onClick={() => removeItem(item.product._id)} className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 text-sm font-medium">
                     Remove
                   </button>
                 </div>
@@ -122,17 +122,17 @@ export default function CartPage() {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm h-fit">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
-            <div className="flex justify-between mb-2 text-gray-600">
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm h-fit transition-colors">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">Order Summary</h2>
+            <div className="flex justify-between mb-2 text-gray-600 dark:text-slate-400">
               <span>Subtotal</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between mb-4 text-gray-600">
+            <div className="flex justify-between mb-4 text-gray-600 dark:text-slate-400">
               <span>Shipping</span>
               <span>Calculated at checkout</span>
             </div>
-            <div className="border-t pt-4 flex justify-between font-bold text-lg text-slate-900 mb-6">
+            <div className="border-t dark:border-slate-700 pt-4 flex justify-between font-bold text-lg text-slate-900 dark:text-slate-100 mb-6">
               <span>Total</span>
               <span>${subtotal.toFixed(2)}</span>
             </div>
