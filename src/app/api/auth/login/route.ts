@@ -31,13 +31,23 @@ export async function POST(request: Request) {
       );
     }
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       { 
         message: "Login successful.", 
         user: { id: user._id, name: user.name, email: user.email, role: user.role } 
       },
       { status: 200 }
     );
+    // Attach an HTTP-only cookie for the Middleware to read securely
+    response.cookies.set("userRole", user.role, {
+      httpOnly: true, // Prevents client-side JS from accessing the cookie
+      secure: process.env.NODE_ENV === "production", // Only uses HTTPS in production
+      path: "/", // Available across the entire site
+      maxAge: 60 * 60 * 24 * 7, // Expires in 1 week
+    });
+
+    return response;
+
   } catch (error) {
     return NextResponse.json(
       { message: "An error occurred during login." },
