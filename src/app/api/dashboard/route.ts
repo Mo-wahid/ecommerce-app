@@ -24,7 +24,6 @@ export async function GET() {
       Order.find()
         .populate("user", "name email") 
         .sort({ createdAt: -1 })
-        .limit(5), 
     ]);
 
     return NextResponse.json(
