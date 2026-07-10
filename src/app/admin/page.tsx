@@ -134,15 +134,15 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Orders Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
-        <div className="p-6 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50">
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
+        <div className="p-6 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 rounded-t-lg">
           <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">Recent Orders</h2>
         </div>
         
         {stats.recentOrders.length === 0 ? (
           <div className="p-6 text-center text-gray-500 dark:text-slate-400">No orders have been placed yet.</div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="w-full">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 text-sm text-gray-600 dark:text-slate-400 uppercase tracking-wider">
