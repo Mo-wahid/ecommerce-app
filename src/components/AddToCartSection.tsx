@@ -10,9 +10,10 @@ import { useAuthModal } from "@/context/AuthModalContext";
 interface AddToCartProps {
   productId: string;
   stock: number;
+  price: number;
 }
 
-export default function AddToCartSection({ productId, stock }: AddToCartProps) {
+export default function AddToCartSection({ productId, stock, price }: AddToCartProps) {
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user as any;
@@ -47,10 +48,16 @@ export default function AddToCartSection({ productId, stock }: AddToCartProps) {
         throw new Error(data.message || "Failed to add to cart");
       }
 
-      toast.success("Item added to cart successfully!", { id: toastId });
-      setTimeout(() => {
-        router.back();
-      }, 500);
+      const totalItemsInCart = data.data.products.reduce((sum: number, item: any) => sum + item.quantity, 0);
+
+      toast.success(`Added to cart! You now have ${totalItemsInCart} items in your cart.`, { 
+        id: toastId,
+        position: 'bottom-right'
+      });
+      // We don't necessarily want to go back immediately as it might disrupt their browsing.
+      // setTimeout(() => {
+      //   router.back();
+      // }, 500);
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message, { id: toastId });
@@ -78,7 +85,7 @@ export default function AddToCartSection({ productId, stock }: AddToCartProps) {
           <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium"
+              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer"
               disabled={quantity <= 1}
             >
               -
@@ -88,20 +95,25 @@ export default function AddToCartSection({ productId, stock }: AddToCartProps) {
             </span>
             <button
               onClick={() => setQuantity(Math.min(stock, quantity + 1))}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium"
+              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer"
               disabled={quantity >= stock}
             >
               +
             </button>
           </div>
-          <span className="text-sm font-medium text-slate-500">({stock} left)</span>
+          <span className="text-sm font-medium text-slate-500">({stock - quantity} left)</span>
         </div>
+      </div>
+
+      <div className="flex items-center justify-between text-lg font-bold text-slate-900 dark:text-slate-100">
+        <span>Total Price:</span>
+        <span>${(price * quantity).toFixed(2)}</span>
       </div>
 
       <button
         onClick={handleAddToCart}
         disabled={loading}
-        className="w-full flex justify-center items-center gap-2 bg-brand-600 text-white py-3.5 rounded-xl hover:bg-brand-700 font-bold transition-all disabled:bg-brand-400 disabled:cursor-not-allowed shadow-md shadow-brand-600/20 text-lg"
+        className="cursor-pointer w-full flex justify-center items-center gap-2 bg-brand-600 text-white py-3.5 rounded-xl hover:bg-brand-700 font-bold transition-all disabled:bg-brand-400 disabled:cursor-not-allowed shadow-md shadow-brand-600/20 text-lg"
       >
         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingCart className="w-5 h-5" />}
         {loading ? "Adding..." : "Add to Cart"}

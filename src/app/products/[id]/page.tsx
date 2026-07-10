@@ -68,6 +68,7 @@ export default async function ProductDetailsPage({
             <AddToCartSection 
               productId={serializedProduct._id} 
               stock={serializedProduct.stock} 
+              price={serializedProduct.price}
             />
           </div>
         </div>
