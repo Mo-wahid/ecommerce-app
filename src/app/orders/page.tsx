@@ -16,8 +16,8 @@ export default function OrdersPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
-    } else if (status === "authenticated" && user) {
+      router.push("/");
+    } else if (status === "authenticated" && session?.user) {
       fetchOrders();
     }
   }, [status, user, router]);

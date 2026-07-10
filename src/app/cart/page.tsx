@@ -74,7 +74,7 @@ export default function CartPage() {
       <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm transition-colors">
         <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4">Your cart is waiting!</h2>
         <p className="text-gray-600 dark:text-slate-400 mb-6">Please log in to view and manage your cart.</p>
-        <Link href="/login" className="bg-brand-600 text-white px-6 py-2 rounded hover:bg-brand-700">
+        <Link href="/?login=true" className="bg-brand-600 text-white px-6 py-2 rounded hover:bg-brand-700">
           Login Now
         </Link>
       </div>

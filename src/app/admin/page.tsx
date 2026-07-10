@@ -45,7 +45,7 @@ export default function AdminDashboard() {
     };
 
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push("/");
     } else if (status === "authenticated" && user) {
       if (user.role !== "admin") {
         router.push("/");

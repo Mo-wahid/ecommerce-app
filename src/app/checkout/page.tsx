@@ -26,9 +26,9 @@ export default function CheckoutPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
-    } else if (status === "authenticated" && user) {
-      setFormData((prev) => ({ ...prev, fullName: user.name || "" }));
+      router.push("/");
+    } else if (status === "authenticated" && session?.user) {
+      setFormData((prev) => ({ ...prev, fullName: user?.name || "" }));
       fetchCart();
     }
   }, [status, user, router]);

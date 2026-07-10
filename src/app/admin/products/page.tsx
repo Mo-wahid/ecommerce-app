@@ -28,7 +28,7 @@ export default function ManageProductsPage() {
 
   useEffect(() => {
     if (status === "unauthenticated") {
-      router.push("/login");
+      router.push("/");
     } else if (status === "authenticated" && user) {
       if (user.role !== "admin") {
         router.push("/");
