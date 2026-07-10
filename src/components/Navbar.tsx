@@ -37,15 +37,15 @@ export default function Navbar() {
               E-COMMERCE
             </Link>
           </div>
-          <div className="flex items-center space-x-6">
+          <div className="flex items-center space-x-3 sm:space-x-6">
             {user?.role !== "admin" && (
               <>
                 <Link href="/products" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Products
                 </Link>
-                <Link href="/cart" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1">
-                  <ShoppingCart className="w-4 h-4" />
-                  <span>Cart</span>
+                <Link href="/cart" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1" aria-label="Cart">
+                  <ShoppingCart className="w-5 h-5 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Cart</span>
                 </Link>
               </>
             )}
@@ -61,31 +61,32 @@ export default function Navbar() {
             )}
 
             {status === "loading" ? null : user ? (
-              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700">
+              <div className="flex items-center space-x-3 sm:space-x-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-700">
                 {user.role !== "admin" && (
-                  <Link href="/orders" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-2">
-                    <Package className="w-4 h-4" />
-                    <span>Orders</span>
+                  <Link href="/orders" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-1 sm:mr-2" aria-label="Orders">
+                    <Package className="w-5 h-5 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Orders</span>
                   </Link>
                 )}
                 <span className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                  <User className="w-4 h-4 text-slate-400 dark:text-slate-500" />
-                  <span className="text-slate-900 dark:text-slate-100">{user.name}</span>
+                  <User className="w-5 h-5 sm:w-4 sm:h-4 text-slate-400 dark:text-slate-500" />
+                  <span className="hidden sm:inline text-slate-900 dark:text-slate-100">{user.name}</span>
                 </span>
                 <button
                   onClick={handleLogout}
                   className="text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center gap-1 text-sm font-medium"
+                  aria-label="Logout"
                 >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
+                  <LogOut className="w-5 h-5 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">Logout</span>
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-4 ml-4 pl-4 border-l border-slate-200 dark:border-slate-700">
+              <div className="flex items-center space-x-3 sm:space-x-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-700">
                 <Link href="/login" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Login
                 </Link>
-                <Link href="/register" className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-full text-sm font-medium transition-colors shadow-sm">
+                <Link href="/register" className="bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors shadow-sm">
                   Sign Up
                 </Link>
               </div>

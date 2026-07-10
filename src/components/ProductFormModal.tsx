@@ -131,7 +131,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
       <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-700">
         
         {/* Header */}
-        <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-slate-700 shrink-0 bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 shrink-0 bg-slate-50/50 dark:bg-slate-900/50">
           <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
             {isEditing ? "Edit Product" : "Add New Product"}
           </h2>
@@ -144,7 +144,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         </div>
         
         {/* Scrollable Form Content */}
-        <div className="overflow-y-auto p-6 custom-scrollbar">
+        <div className="overflow-y-auto p-4 sm:p-6 custom-scrollbar">
           <form id="product-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
@@ -280,12 +280,12 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         </div>
 
         {/* Footer actions */}
-        <div className="flex justify-end gap-3 p-6 border-t border-slate-100 dark:border-slate-700 shrink-0 bg-slate-50/50 dark:bg-slate-900/50 rounded-b-2xl">
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-slate-700 shrink-0 bg-slate-50/50 dark:bg-slate-900/50 rounded-b-2xl">
           <button
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="px-5 py-2.5 rounded-xl font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
           >
             Cancel
           </button>
@@ -293,7 +293,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
             type="submit"
             form="product-form"
             disabled={loading}
-            className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 min-w-[140px]"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 sm:min-w-[140px]"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isEditing ? "Save Changes" : "Add Product")}
           </button>

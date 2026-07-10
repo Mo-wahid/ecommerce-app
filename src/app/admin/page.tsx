@@ -142,8 +142,8 @@ export default function AdminDashboard() {
         {stats.recentOrders.length === 0 ? (
           <div className="p-6 text-center text-gray-500 dark:text-slate-400">No orders have been placed yet.</div>
         ) : (
-          <div className="w-full">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto pb-32 lg:pb-0 lg:overflow-visible">
+            <table className="w-full text-left border-collapse min-w-[700px]">
               <thead>
                 <tr className="bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700 text-sm text-gray-600 dark:text-slate-400 uppercase tracking-wider">
                   <th className="p-4 font-medium">Order ID</th>
