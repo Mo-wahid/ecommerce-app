@@ -145,14 +145,14 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         
         {/* Scrollable Form Content */}
         <div className="overflow-y-auto p-4 sm:p-6 custom-scrollbar">
-          <form id="product-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form id="product-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Product Name</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Product Name</label>
                 <input
                   type="text"
                   {...register("name")}
-                  className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
+                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
                     errors.name ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
                   }`}
                   placeholder="e.g. Wireless Headphones"
@@ -161,11 +161,11 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Description</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Description</label>
                 <textarea
                   {...register("description")}
-                  rows={3}
-                  className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
+                  rows={2}
+                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
                     errors.description ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
                   }`}
                   placeholder="Detailed description of the product..."
@@ -174,13 +174,13 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Price ($)</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Price ($)</label>
                 <input
                   type="number"
                   step="0.01"
                   onWheel={(e) => e.currentTarget.blur()}
                   {...register("price")}
-                  className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
+                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
                     errors.price ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
                   }`}
                   placeholder="99.99"
@@ -189,12 +189,12 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Stock Quantity</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Stock Quantity</label>
                 <input
                   type="number"
                   onWheel={(e) => e.currentTarget.blur()}
                   {...register("stock")}
-                  className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
+                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
                     errors.stock ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
                   }`}
                   placeholder="100"
@@ -203,10 +203,10 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Category</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Category</label>
                 <select
                   {...register("category")}
-                  className={`w-full px-4 py-2.5 text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none cursor-pointer ${
+                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none cursor-pointer ${
                     errors.category ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
                   }`}
                 >
@@ -222,7 +222,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
               </div>
 
-              <div className="md:col-span-2 flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="md:col-span-2 flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
                 <input
                   type="checkbox"
                   id="isFeatured"
@@ -235,7 +235,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Product Image</label>
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Product Image</label>
                 
                 {isEditing && product?.imageUrl && !imageFile && (
                   <div className="mb-4">
@@ -244,9 +244,9 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                   </div>
                 )}
 
-                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                <div className="mt-1 flex justify-center px-4 pt-4 pb-4 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                   <div className="space-y-1 text-center">
-                    <UploadCloud className="mx-auto h-12 w-12 text-slate-400" />
+                    <UploadCloud className="mx-auto h-8 w-8 text-slate-400" />
                     <div className="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
                       <label
                         htmlFor="file-upload"
