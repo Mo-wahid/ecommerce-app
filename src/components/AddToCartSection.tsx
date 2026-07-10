@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Loader2, ShoppingCart } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 interface AddToCartProps {
   productId: string;
@@ -12,17 +13,10 @@ interface AddToCartProps {
 
 export default function AddToCartSection({ productId, stock }: AddToCartProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const user = session?.user as any;
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState<{ id: string } | null>(null);
-
-  // Grab the logged-in user from local storage
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
 
   const handleAddToCart = async () => {
     if (!user) {
