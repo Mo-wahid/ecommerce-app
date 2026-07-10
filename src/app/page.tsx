@@ -4,6 +4,9 @@ import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
 import ProductCard from "@/components/ProductCard";
 import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/authOptions";
+import { redirect } from "next/navigation";
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -36,6 +39,12 @@ const CATEGORIES = [
 ];
 
 export default async function LandingPage() {
+  const session = await getServerSession(authOptions);
+
+  if (session?.user?.role === "admin") {
+    redirect("/admin");
+  }
+
   const featuredProducts = await getFeaturedProducts();
 
   return (
