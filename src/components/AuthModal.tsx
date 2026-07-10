@@ -36,7 +36,8 @@ function AuthModalInner() {
   if (!isOpen) return null;
 
   const isLogin = type === "login";
-  const callbackUrl = searchParams?.get("callbackUrl") || (typeof window !== 'undefined' ? window.location.pathname : "/");
+  const explicitCallback = searchParams?.get("callbackUrl");
+  const currentPath = typeof window !== 'undefined' ? window.location.pathname : "/";
 
   const handleClose = () => {
     closeModal();
@@ -68,7 +69,20 @@ function AuthModalInner() {
         } else {
           toast.success("Successfully logged in!");
           closeModal();
-          router.push(callbackUrl);
+          
+          // Check role to route admin appropriately
+          const sessionRes = await fetch("/api/auth/session");
+          const sessionData = await sessionRes.json();
+          const role = sessionData?.user?.role;
+
+          if (explicitCallback) {
+            router.push(explicitCallback);
+          } else if (role === "admin") {
+            router.push("/admin");
+          } else {
+            router.push(currentPath);
+          }
+          
           router.refresh();
         }
       } else {
@@ -97,7 +111,19 @@ function AuthModalInner() {
           });
           if (!loginRes?.error) {
             closeModal();
-            router.push(callbackUrl);
+            
+            const sessionRes = await fetch("/api/auth/session");
+            const sessionData = await sessionRes.json();
+            const role = sessionData?.user?.role;
+
+            if (explicitCallback) {
+              router.push(explicitCallback);
+            } else if (role === "admin") {
+              router.push("/admin");
+            } else {
+              router.push(currentPath);
+            }
+            
             router.refresh();
           }
         } else {
