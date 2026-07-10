@@ -35,7 +35,7 @@ function AuthModalInner() {
   if (!isOpen) return null;
 
   const isLogin = type === "login";
-  const callbackUrl = searchParams?.get("callbackUrl") || "/dashboard";
+  const callbackUrl = searchParams?.get("callbackUrl") || (typeof window !== 'undefined' ? window.location.pathname : "/");
 
   const handleClose = () => {
     closeModal();
