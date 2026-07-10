@@ -147,7 +147,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         <div className="overflow-y-auto p-4 sm:p-6 custom-scrollbar">
           <form id="product-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
+              <div className="md:col-span-1">
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Product Name</label>
                 <input
                   type="text"
@@ -158,6 +158,26 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                   placeholder="e.g. Wireless Headphones"
                 />
                 {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name.message}</p>}
+              </div>
+
+              <div className="md:col-span-1">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Category</label>
+                <select
+                  {...register("category")}
+                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none cursor-pointer ${
+                    errors.category ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
+                  }`}
+                >
+                  <option value="Electronics">Electronics</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Books">Books</option>
+                  <option value="Home & Garden">Home & Garden</option>
+                  <option value="Toys">Toys</option>
+                  <option value="Sports & Outdoors">Sports & Outdoors</option>
+                  <option value="Beauty & Personal Care">Beauty & Personal Care</option>
+                  <option value="Automotive">Automotive</option>
+                </select>
+                {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
               </div>
 
               <div className="md:col-span-2">
@@ -202,25 +222,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 {errors.stock && <p className="text-red-500 text-xs mt-1.5">{errors.stock.message}</p>}
               </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Category</label>
-                <select
-                  {...register("category")}
-                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none cursor-pointer ${
-                    errors.category ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
-                  }`}
-                >
-                  <option value="Electronics">Electronics</option>
-                  <option value="Clothing">Clothing</option>
-                  <option value="Books">Books</option>
-                  <option value="Home & Garden">Home & Garden</option>
-                  <option value="Toys">Toys</option>
-                  <option value="Sports & Outdoors">Sports & Outdoors</option>
-                  <option value="Beauty & Personal Care">Beauty & Personal Care</option>
-                  <option value="Automotive">Automotive</option>
-                </select>
-                {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
-              </div>
+
 
               <div className="md:col-span-2 flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
                 <input
