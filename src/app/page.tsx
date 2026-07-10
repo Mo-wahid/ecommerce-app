@@ -91,8 +91,30 @@ export default async function LandingPage() {
         </div>
       </section>
 
+
+      {/* 2. FEATURED PRODUCTS */}
+      <section id="featured" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Featured Collection</h2>
+          <div className="h-1 w-24 bg-brand-600 mx-auto mt-4 rounded-full"></div>
+          <p className="mt-4 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Hand-picked by our experts. These top-tier items are currently trending and heavily requested.</p>
+        </div>
+
+        {featuredProducts.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {featuredProducts.map((product: any) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center p-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
+            <p className="text-slate-500 dark:text-slate-400">No featured products currently available.</p>
+          </div>
+        )}
+      </section>
+
       {/* STATS SECTION */}
-      <section className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+      <section className="border-y border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
             <div className="flex flex-col items-center p-6">
@@ -120,27 +142,6 @@ export default async function LandingPage() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* 2. FEATURED PRODUCTS */}
-      <section id="featured" className="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Featured Collection</h2>
-          <div className="h-1 w-24 bg-brand-600 mx-auto mt-4 rounded-full"></div>
-          <p className="mt-4 text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">Hand-picked by our experts. These top-tier items are currently trending and heavily requested.</p>
-        </div>
-
-        {featuredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredProducts.map((product: any) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center p-12 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm">
-            <p className="text-slate-500 dark:text-slate-400">No featured products currently available.</p>
-          </div>
-        )}
       </section>
 
       {/* 3. CATEGORIES */}
