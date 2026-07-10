@@ -215,6 +215,9 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                   <option value="Books">Books</option>
                   <option value="Home & Garden">Home & Garden</option>
                   <option value="Toys">Toys</option>
+                  <option value="Sports & Outdoors">Sports & Outdoors</option>
+                  <option value="Beauty & Personal Care">Beauty & Personal Care</option>
+                  <option value="Automotive">Automotive</option>
                 </select>
                 {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
               </div>

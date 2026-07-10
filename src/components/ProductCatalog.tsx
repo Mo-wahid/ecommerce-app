@@ -1,11 +1,20 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import ProductCard from "./ProductCard";
 
 export default function ProductCatalog({ initialProducts }: { initialProducts: import("@/types").IProduct[] }) {
+  const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+
+  useEffect(() => {
+    const category = searchParams.get("category");
+    if (category) {
+      setSelectedCategory(category);
+    }
+  }, [searchParams]);
 
   // Extract unique categories for the dropdown filter
   const categories = useMemo(() => {

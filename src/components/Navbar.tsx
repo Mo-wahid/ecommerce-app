@@ -17,7 +17,29 @@ export default function Navbar() {
 
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
+  const [activeSection, setActiveSection] = useState("hero");
+
+  useEffect(() => {
+    setMounted(true);
+    
+    if (pathname !== "/") return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
+          }
+        });
+      },
+      { rootMargin: "-50% 0px -50% 0px" }
+    );
+
+    const sections = document.querySelectorAll("section[id]");
+    sections.forEach((s) => observer.observe(s));
+
+    return () => sections.forEach((s) => observer.unobserve(s));
+  }, [pathname]);
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
@@ -37,7 +59,17 @@ export default function Navbar() {
               E-COMMERCE
             </Link>
           </div>
-          <div className="flex items-center space-x-3 sm:space-x-6">
+
+          {pathname === "/" && (
+            <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 -translate-x-1/2">
+              <Link href="#hero" className={`text-sm font-bold transition-colors ${activeSection === 'hero' ? 'text-brand-600 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}`}>Home</Link>
+              <Link href="#featured" className={`text-sm font-bold transition-colors ${activeSection === 'featured' ? 'text-brand-600 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}`}>Featured</Link>
+              <Link href="#categories" className={`text-sm font-bold transition-colors ${activeSection === 'categories' ? 'text-brand-600 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}`}>Categories</Link>
+              <Link href="#contact" className={`text-sm font-bold transition-colors ${activeSection === 'contact' ? 'text-brand-600 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}`}>Contact</Link>
+            </div>
+          )}
+
+          <div className="flex items-center space-x-3 sm:space-x-6 relative z-10">
             {user?.role !== "admin" && (
               <>
                 <Link href="/products" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
@@ -62,16 +94,10 @@ export default function Navbar() {
 
             {status === "loading" ? null : user ? (
               <div className="flex items-center space-x-3 sm:space-x-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-700">
-                {user.role !== "admin" && (
-                  <Link href="/orders" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-1 sm:mr-2" aria-label="Orders">
-                    <Package className="w-5 h-5 sm:w-4 sm:h-4" />
-                    <span className="hidden sm:inline">Orders</span>
-                  </Link>
-                )}
-                <span className="text-sm font-medium text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                  <User className="w-5 h-5 sm:w-4 sm:h-4 text-slate-400 dark:text-slate-500" />
-                  <span className="hidden sm:inline text-slate-900 dark:text-slate-100">{user.name}</span>
-                </span>
+                <Link href={user.role === "admin" ? "/admin" : "/dashboard"} className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-1 sm:mr-2">
+                  <User className="w-5 h-5 sm:w-4 sm:h-4" />
+                  <span className="hidden sm:inline">{user.role === "admin" ? "Admin" : "Account"}</span>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center gap-1 text-sm font-medium"

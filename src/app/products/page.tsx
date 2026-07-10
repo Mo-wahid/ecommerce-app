@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
 import ProductCatalog from "@/components/ProductCatalog";
@@ -42,7 +43,9 @@ export default async function ProductsPage() {
       {error ? (
         <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
       ) : (
-        <ProductCatalog initialProducts={products} />
+        <Suspense fallback={<div className="text-center py-12 text-gray-500">Loading catalog...</div>}>
+          <ProductCatalog initialProducts={products} />
+        </Suspense>
       )}
     </div>
   );
