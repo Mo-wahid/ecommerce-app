@@ -25,21 +25,21 @@ async function getFeaturedProducts() {
 }
 
 const CATEGORIES = [
-  { name: "Electronics", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=600&auto=format&fit=crop" },
-  { name: "Clothing", image: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?q=80&w=600&auto=format&fit=crop" },
-  { name: "Books", image: "https://images.unsplash.com/photo-1495640388908-05fd920c33f2?q=80&w=600&auto=format&fit=crop" },
-  { name: "Home & Garden", image: "https://images.unsplash.com/photo-1416879598553-300021c37d04?q=80&w=600&auto=format&fit=crop" },
-  { name: "Toys", image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?q=80&w=600&auto=format&fit=crop" },
-  { name: "Sports & Outdoors", image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=600&auto=format&fit=crop" },
-  { name: "Beauty & Personal Care", image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?q=80&w=600&auto=format&fit=crop" },
-  { name: "Automotive", image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=600&auto=format&fit=crop" },
+  { name: "Electronics", image: "/images/cat_electronics.png" },
+  { name: "Clothing", image: "/images/cat_clothing.png" },
+  { name: "Books", image: "/images/cat_books.png" },
+  { name: "Home & Garden", image: "/images/cat_home.png" },
+  { name: "Toys", image: "/images/cat_toys.png" },
+  { name: "Sports & Outdoors", image: "/images/cat_sports.png" },
+  { name: "Beauty & Personal Care", image: "/images/cat_beauty.png" },
+  { name: "Automotive", image: "/images/cat_auto.png" },
 ];
 
 export default async function LandingPage() {
   const featuredProducts = await getFeaturedProducts();
 
   return (
-    <main className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors">
+    <main className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 transition-colors">
       
       {/* 1. HERO SECTION */}
       <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -133,6 +133,13 @@ export default async function LandingPage() {
               </Link>
             ))}
           </div>
+          
+          <div className="mt-16 text-center">
+            <Link href="/products" className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-lg hover:-translate-y-1">
+              View All Products
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+          </div>
         </div>
       </section>
 
@@ -210,7 +217,7 @@ export default async function LandingPage() {
       </section>
 
       {/* 5. FOOTER */}
-      <footer className="bg-slate-950 text-slate-400 py-12 border-t border-slate-800">
+      <footer className="mt-auto bg-slate-950 text-slate-400 py-12 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="text-2xl font-black tracking-tight text-brand-500 mb-4 inline-block">
