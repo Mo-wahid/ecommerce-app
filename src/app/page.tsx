@@ -67,23 +67,23 @@ export default async function LandingPage() {
         </div>
 
         {/* Hero Content */}
-        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-black text-white tracking-tight mb-8 drop-shadow-lg animate-in slide-in-from-bottom-8 duration-700">
-            Elevate Your <span className="text-brand-400">Lifestyle</span>
+        <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto mt-16 sm:mt-0">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white tracking-tight mb-6 sm:mb-8 drop-shadow-lg animate-in slide-in-from-bottom-8 duration-700 leading-tight">
+            Elevate Your <br className="block sm:hidden" /><span className="text-brand-400">Lifestyle</span>
           </h1>
-          <p className="mt-4 text-xl md:text-2xl text-slate-200 mb-10 max-w-3xl mx-auto font-light drop-shadow-md animate-in slide-in-from-bottom-10 duration-700 delay-150">
+          <p className="mt-4 text-lg sm:text-xl md:text-2xl text-slate-200 mb-8 sm:mb-10 max-w-3xl mx-auto font-light drop-shadow-md animate-in slide-in-from-bottom-10 duration-700 delay-150 px-4">
             Discover premium products curated just for you. From high-tech electronics to essential daily wear, experience shopping reimagined.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in slide-in-from-bottom-12 duration-700 delay-300">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in slide-in-from-bottom-12 duration-700 delay-300 w-full px-4 sm:px-0">
             <Link
               href="#featured"
-              className="bg-brand-600 hover:bg-brand-500 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-lg shadow-brand-600/30 hover:shadow-brand-600/50 hover:-translate-y-1"
+              className="w-full sm:w-auto bg-brand-600 hover:bg-brand-500 text-white px-8 py-3.5 sm:py-4 rounded-full font-bold text-base sm:text-lg transition-all shadow-lg shadow-brand-600/30 hover:shadow-brand-600/50 hover:-translate-y-1"
             >
               Shop Featured
             </Link>
             <Link
               href="/products"
-              className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1"
+              className="w-full sm:w-auto bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 px-8 py-3.5 sm:py-4 rounded-full font-bold text-base sm:text-lg transition-all hover:-translate-y-1"
             >
               Browse Catalog
             </Link>

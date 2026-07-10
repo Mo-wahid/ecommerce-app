@@ -102,15 +102,15 @@ export default function ManageProductsPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      <div className="flex justify-between items-center border-b dark:border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b dark:border-slate-800 pb-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Products</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Products</h1>
           <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">Update or delete your store's products.</p>
         </div>
-        <div>
+        <div className="w-full sm:w-auto">
           <button 
             onClick={openAddModal}
-            className="flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm shadow-brand-600/20"
+            className="w-full sm:w-auto flex justify-center items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm shadow-brand-600/20"
           >
             <Plus className="w-5 h-5" />
             <span>Add New Product</span>
