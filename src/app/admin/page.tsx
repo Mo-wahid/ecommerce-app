@@ -142,8 +142,8 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Orders Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 transition-colors flex flex-col h-[500px]">
-        <div className="p-5 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 rounded-t-xl shrink-0 flex justify-between items-center">
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 transition-colors flex flex-col max-h-[600px] overflow-hidden">
+        <div className="p-5 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 shrink-0 flex justify-between items-center">
           <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">
             {showAllOrders ? "All Orders" : "Recent Orders (Last 24h)"}
           </h2>
@@ -155,7 +155,7 @@ export default function AdminDashboard() {
           </button>
         </div>
         
-        <div className="overflow-y-auto flex-1 min-h-0">
+        <div className="overflow-auto w-full">
           {displayedOrders.length === 0 ? (
             <div className="p-12 text-center flex flex-col items-center justify-center h-full">
               <p className="text-gray-500 dark:text-slate-400 text-lg">
