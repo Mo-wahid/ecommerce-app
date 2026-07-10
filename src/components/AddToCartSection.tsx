@@ -48,6 +48,9 @@ export default function AddToCartSection({ productId, stock }: AddToCartProps) {
       }
 
       toast.success("Item added to cart successfully!", { id: toastId });
+      setTimeout(() => {
+        router.back();
+      }, 500);
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message, { id: toastId });

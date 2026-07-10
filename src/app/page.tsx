@@ -103,9 +103,9 @@ export default async function LandingPage() {
       </section>
 
       {/* 3. CATEGORIES */}
-      <section id="categories" className="py-24 bg-white dark:bg-slate-800 transition-colors">
+      <section id="categories" className="py-12 bg-white dark:bg-slate-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-10">
             <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Shop by Category</h2>
             <div className="h-1 w-24 bg-brand-600 mx-auto mt-4 rounded-full"></div>
           </div>

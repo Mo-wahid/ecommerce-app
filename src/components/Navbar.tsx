@@ -77,10 +77,12 @@ export default function Navbar() {
                 <Link href="/products" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Products
                 </Link>
-                <Link href="/cart" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1" aria-label="Cart">
-                  <ShoppingCart className="w-5 h-5 sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">Cart</span>
-                </Link>
+                {pathname !== "/" && (
+                  <Link href="/cart" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1" aria-label="Cart">
+                    <ShoppingCart className="w-5 h-5 sm:w-4 sm:h-4" />
+                    <span className="hidden sm:inline">Cart</span>
+                  </Link>
+                )}
               </>
             )}
 
@@ -98,7 +100,7 @@ export default function Navbar() {
               <div className="flex items-center space-x-3 sm:space-x-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-700">
                 <Link href={user.role === "admin" ? "/admin" : "/profile"} className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-1 sm:mr-2">
                   <User className="w-5 h-5 sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">{user.role === "admin" ? "Admin" : "Account"}</span>
+                  <span className="hidden sm:inline">{user.role === "admin" ? "Admin" : user?.name || "Account"}</span>
                 </Link>
                 <button
                   onClick={handleLogout}
