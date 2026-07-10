@@ -20,7 +20,7 @@ export default function AdminSidebar() {
     { name: "Products", href: "/admin/products", icon: Package },
     { name: "Categories", href: "/admin/categories", icon: ListTree },
     { name: "Users", href: "/admin/users", icon: Users },
-    { name: "Settings", href: "/profile", icon: Settings },
+    { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
   return (

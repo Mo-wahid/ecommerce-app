@@ -201,7 +201,7 @@ export default function ManageProductsPage() {
 
       <DeleteConfirmModal 
         isOpen={deleteModalState.isOpen}
-        productName={deleteModalState.product?.name || ""}
+        itemName={deleteModalState.product?.name || ""}
         isDeleting={deleteModalState.isDeleting}
         onConfirm={handleDelete}
         onCancel={() => setDeleteModalState({ isOpen: false, product: null, isDeleting: false })}

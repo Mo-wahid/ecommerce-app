@@ -2,7 +2,7 @@ import { Loader2, AlertTriangle, X } from "lucide-react";
 
 interface DeleteConfirmModalProps {
   isOpen: boolean;
-  productName: string;
+  itemName: string;
   isDeleting: boolean;
   onConfirm: () => void;
   onCancel: () => void;
@@ -10,7 +10,7 @@ interface DeleteConfirmModalProps {
 
 export default function DeleteConfirmModal({
   isOpen,
-  productName,
+  itemName,
   isDeleting,
   onConfirm,
   onCancel,
@@ -23,7 +23,7 @@ export default function DeleteConfirmModal({
         <div className="flex justify-between items-center p-5 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50">
           <div className="flex items-center gap-2 text-red-600 dark:text-red-500">
             <AlertTriangle className="w-5 h-5" />
-            <h3 className="font-bold text-lg">Delete Product</h3>
+            <h3 className="font-bold text-lg">Delete Item</h3>
           </div>
           <button 
             onClick={onCancel}
@@ -36,10 +36,10 @@ export default function DeleteConfirmModal({
         
         <div className="p-6">
           <p className="text-slate-700 dark:text-slate-300 mb-2">
-            Are you sure you want to delete <span className="font-semibold text-slate-900 dark:text-slate-100">"{productName}"</span>?
+            Are you sure you want to delete <span className="font-semibold text-slate-900 dark:text-slate-100">"{itemName}"</span>?
           </p>
           <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-100 dark:border-red-900/50">
-            This action cannot be undone. This will permanently remove the product and its data from the server.
+            This action cannot be undone. This will permanently remove the item and its data from the server.
           </p>
         </div>
         
