@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Loader2, ShoppingCart } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { useAuthModal } from "@/context/AuthModalContext";
 
 interface AddToCartProps {
   productId: string;
@@ -17,11 +18,12 @@ export default function AddToCartSection({ productId, stock }: AddToCartProps) {
   const user = session?.user as any;
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
+  const { openModal } = useAuthModal();
 
   const handleAddToCart = async () => {
     if (!user) {
       toast.error("Please log in to add items to your cart.");
-      router.push("/login");
+      openModal("login");
       return;
     }
 
