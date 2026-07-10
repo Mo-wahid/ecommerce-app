@@ -4,6 +4,8 @@ import { Toaster } from "react-hot-toast";
 import AuthProvider from "@/components/AuthProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import MainWrapper from "@/components/MainWrapper";
+import { AuthModalProvider } from "@/context/AuthModalContext";
+import AuthModal from "@/components/AuthModal";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -28,11 +30,14 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <Toaster position="top-center" toastOptions={{ duration: 4000, style: { background: '#333', color: '#fff' } }} />
-            <Navbar />
-            <MainWrapper>
-              {children}
-            </MainWrapper>
+            <AuthModalProvider>
+              <Toaster position="top-center" toastOptions={{ duration: 4000, style: { background: '#333', color: '#fff' } }} />
+              <Navbar />
+              <AuthModal />
+              <MainWrapper>
+                {children}
+              </MainWrapper>
+            </AuthModalProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

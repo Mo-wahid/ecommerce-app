@@ -16,7 +16,7 @@ export default withAuth(
     },
     secret: process.env.NEXTAUTH_SECRET || "fallback_secret_for_development_only",
     pages: {
-      signIn: "/login",
+      signIn: "/?login=true",
     },
   }
 );

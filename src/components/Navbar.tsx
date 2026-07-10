@@ -6,6 +6,7 @@ import { useSession, signOut } from "next-auth/react";
 import { ShoppingCart, User, LogOut, Package, Sun, Moon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { useAuthModal } from "@/context/AuthModalContext";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -18,6 +19,7 @@ export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const { openModal } = useAuthModal();
 
   useEffect(() => {
     setMounted(true);
@@ -43,7 +45,7 @@ export default function Navbar() {
 
   const handleLogout = async () => {
     await signOut({ redirect: false });
-    router.push("/login");
+    router.push("/");
   };
 
   if (isAuthPage) {
@@ -109,12 +111,12 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center space-x-3 sm:space-x-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-700">
-                <Link href="/login" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
+                <button onClick={() => openModal("login")} className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Login
-                </Link>
-                <Link href="/register" className="bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors shadow-sm">
+                </button>
+                <button onClick={() => openModal("register")} className="bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors shadow-sm">
                   Sign Up
-                </Link>
+                </button>
               </div>
             )}
           </div>
