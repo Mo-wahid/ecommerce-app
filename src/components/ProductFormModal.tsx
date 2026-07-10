@@ -127,8 +127,8 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-700">
+    <div className="fixed inset-0 z-50 flex items-center justify-center sm:p-6 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="bg-white dark:bg-slate-800 w-full h-full sm:h-auto sm:rounded-2xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border-0 sm:border sm:border-slate-200 dark:sm:border-slate-700">
         
         {/* Header */}
         <div className="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 shrink-0 bg-slate-50/50 dark:bg-slate-900/50">
@@ -280,7 +280,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         </div>
 
         {/* Footer actions */}
-        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-slate-700 shrink-0 bg-slate-50/50 dark:bg-slate-900/50 rounded-b-2xl">
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-slate-700 shrink-0 bg-slate-50/50 dark:bg-slate-900/50 sm:rounded-b-2xl mt-auto">
           <button
             type="button"
             onClick={onClose}
