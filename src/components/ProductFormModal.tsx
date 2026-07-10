@@ -146,8 +146,10 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         {/* Scrollable Form Content */}
         <div className="overflow-y-auto p-4 sm:p-6 custom-scrollbar">
           <form id="product-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-1">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+              
+              {/* Row 1: Name & Price */}
+              <div className="md:col-span-8">
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Product Name</label>
                 <input
                   type="text"
@@ -160,7 +162,37 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name.message}</p>}
               </div>
 
-              <div className="md:col-span-1">
+              <div className="md:col-span-4">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Price ($)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  onWheel={(e) => e.currentTarget.blur()}
+                  {...register("price")}
+                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
+                    errors.price ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
+                  }`}
+                  placeholder="99.99"
+                />
+                {errors.price && <p className="text-red-500 text-xs mt-1.5">{errors.price.message}</p>}
+              </div>
+
+              {/* Row 2: Quantity, Category, Checkbox */}
+              <div className="md:col-span-4">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Stock Quantity</label>
+                <input
+                  type="number"
+                  onWheel={(e) => e.currentTarget.blur()}
+                  {...register("stock")}
+                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
+                    errors.stock ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
+                  }`}
+                  placeholder="100"
+                />
+                {errors.stock && <p className="text-red-500 text-xs mt-1.5">{errors.stock.message}</p>}
+              </div>
+
+              <div className="md:col-span-4">
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Category</label>
                 <select
                   {...register("category")}
@@ -180,7 +212,22 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
               </div>
 
-              <div className="md:col-span-2">
+              <div className="md:col-span-4 flex items-end">
+                <div className="w-full h-[38px] flex items-center justify-center space-x-2 bg-slate-50 dark:bg-slate-900/50 rounded-lg border border-slate-200 dark:border-slate-700">
+                  <input
+                    type="checkbox"
+                    id="isFeatured"
+                    {...register("isFeatured")}
+                    className="w-4 h-4 text-brand-600 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 rounded focus:ring-brand-500"
+                  />
+                  <label htmlFor="isFeatured" className="text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
+                    Feature on home page
+                  </label>
+                </div>
+              </div>
+
+              {/* Row 3: Description */}
+              <div className="md:col-span-12">
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Description</label>
                 <textarea
                   {...register("description")}
@@ -193,50 +240,8 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 {errors.description && <p className="text-red-500 text-xs mt-1.5">{errors.description.message}</p>}
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Price ($)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  onWheel={(e) => e.currentTarget.blur()}
-                  {...register("price")}
-                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
-                    errors.price ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
-                  }`}
-                  placeholder="99.99"
-                />
-                {errors.price && <p className="text-red-500 text-xs mt-1.5">{errors.price.message}</p>}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Stock Quantity</label>
-                <input
-                  type="number"
-                  onWheel={(e) => e.currentTarget.blur()}
-                  {...register("stock")}
-                  className={`w-full px-3 py-2 text-sm text-slate-900 dark:text-slate-100 border rounded-lg focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
-                    errors.stock ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50 dark:bg-slate-900/50"
-                  }`}
-                  placeholder="100"
-                />
-                {errors.stock && <p className="text-red-500 text-xs mt-1.5">{errors.stock.message}</p>}
-              </div>
-
-
-
-              <div className="md:col-span-2 flex items-center space-x-3 bg-slate-50 dark:bg-slate-900/50 p-3 rounded-lg border border-slate-200 dark:border-slate-700">
-                <input
-                  type="checkbox"
-                  id="isFeatured"
-                  {...register("isFeatured")}
-                  className="w-5 h-5 text-brand-600 bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 rounded focus:ring-brand-500"
-                />
-                <label htmlFor="isFeatured" className="text-sm font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
-                  Feature this product on the home page
-                </label>
-              </div>
-
-              <div className="md:col-span-2">
+              {/* Row 4: Image */}
+              <div className="md:col-span-12">
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Product Image</label>
                 
                 {isEditing && product?.imageUrl && !imageFile && (
