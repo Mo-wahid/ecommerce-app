@@ -8,6 +8,7 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [priceRange, setPriceRange] = useState("All");
 
   useEffect(() => {
     const category = searchParams.get("category");
@@ -22,14 +23,20 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
     return ["All", ...Array.from(new Set(allCategories))];
   }, [initialProducts]);
 
-  // Filter products based on search and category
+  // Filter products based on search, category, and price
   const filteredProducts = useMemo(() => {
     return initialProducts.filter((product) => {
       const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesCategory = selectedCategory === "All" || product.category === selectedCategory;
-      return matchesSearch && matchesCategory;
+      
+      let matchesPrice = true;
+      if (priceRange === "Under $50") matchesPrice = product.price < 50;
+      else if (priceRange === "$50 to $100") matchesPrice = product.price >= 50 && product.price <= 100;
+      else if (priceRange === "Over $100") matchesPrice = product.price > 100;
+
+      return matchesSearch && matchesCategory && matchesPrice;
     });
-  }, [initialProducts, searchQuery, selectedCategory]);
+  }, [initialProducts, searchQuery, selectedCategory, priceRange]);
 
   return (
     <div>
@@ -44,17 +51,28 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <div className="sm:w-64">
+        <div className="flex flex-col sm:flex-row gap-4 sm:w-auto">
           <select
-            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-blue-500 focus:border-blue-500 transition-colors cursor-pointer"
+            className="w-full sm:w-48 px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
             {categories.map((cat) => (
               <option key={cat} value={cat}>
-                {cat}
+                {cat === "All" ? "All Categories" : cat}
               </option>
             ))}
+          </select>
+          
+          <select
+            className="w-full sm:w-48 px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer"
+            value={priceRange}
+            onChange={(e) => setPriceRange(e.target.value)}
+          >
+            <option value="All">All Prices</option>
+            <option value="Under $50">Under $50</option>
+            <option value="$50 to $100">$50 to $100</option>
+            <option value="Over $100">Over $100</option>
           </select>
         </div>
       </div>

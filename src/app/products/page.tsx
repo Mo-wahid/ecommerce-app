@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
 import ProductCatalog from "@/components/ProductCatalog";
+import Footer from "@/components/Footer";
 
 export const revalidate = 60;
 
@@ -34,19 +35,34 @@ export default async function ProductsPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="border-b pb-4">
-        <h1 className="text-3xl font-bold text-gray-900">All Products</h1>
-        <p className="text-gray-500 mt-2">Use the search and filters to find what you need.</p>
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 transition-colors">
+      
+      {/* Banner Header */}
+      <div className="bg-brand-700 text-white py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-brand-600 opacity-50 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-brand-800 opacity-50 blur-3xl"></div>
+        <div className="relative z-10 max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 drop-shadow-md">
+            Discover Our Collection
+          </h1>
+          <p className="text-lg md:text-xl text-brand-100 max-w-2xl mx-auto font-light">
+            Browse through our extensive catalog of premium products. Use the filters below to find exactly what you're looking for at the right price.
+          </p>
+        </div>
       </div>
 
-      {error ? (
-        <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
-      ) : (
-        <Suspense fallback={<div className="text-center py-12 text-gray-500">Loading catalog...</div>}>
-          <ProductCatalog initialProducts={products} />
-        </Suspense>
-      )}
+      {/* Main Content */}
+      <div className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+        {error ? (
+          <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
+        ) : (
+          <Suspense fallback={<div className="text-center py-12 text-slate-500">Loading catalog...</div>}>
+            <ProductCatalog initialProducts={products} />
+          </Suspense>
+        )}
+      </div>
+
+      <Footer />
     </div>
   );
 }
