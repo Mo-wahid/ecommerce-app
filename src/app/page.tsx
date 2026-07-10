@@ -4,7 +4,7 @@ import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
 import ProductCard from "@/components/ProductCard";
 import Footer from "@/components/Footer";
-import { ArrowRight, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowRight, Mail, MapPin, Phone, Truck, ShoppingBag, Users } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
 import { redirect } from "next/navigation";
@@ -87,6 +87,37 @@ export default async function LandingPage() {
             >
               Browse Catalog
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* STATS SECTION */}
+      <section className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
+            <div className="flex flex-col items-center p-6">
+              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
+                <Truck className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+              </div>
+              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">12,500+</h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">Items Shipped Globally</p>
+            </div>
+            
+            <div className="flex flex-col items-center p-6">
+              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
+                <ShoppingBag className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+              </div>
+              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">4,800+</h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">Premium Products</p>
+            </div>
+            
+            <div className="flex flex-col items-center p-6">
+              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
+                <Users className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+              </div>
+              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">99.8%</h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">Customer Satisfaction</p>
+            </div>
           </div>
         </div>
       </section>
