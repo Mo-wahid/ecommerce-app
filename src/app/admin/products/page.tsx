@@ -103,18 +103,9 @@ export default function ManageProductsPage() {
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <div className="flex justify-between items-center border-b dark:border-slate-800 pb-4">
-        <div className="flex items-center gap-4">
-          <Link
-            href="/admin"
-            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
-            title="Back to Dashboard"
-          >
-            <ArrowLeft className="w-6 h-6" />
-          </Link>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Products</h1>
-            <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">Update or delete your store's products.</p>
-          </div>
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Products</h1>
+          <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">Update or delete your store's products.</p>
         </div>
         <div>
           <button 
