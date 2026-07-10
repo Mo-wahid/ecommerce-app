@@ -15,7 +15,7 @@ async function getFeaturedProducts() {
   try {
     await dbConnect();
     const result = await Product.find({ isFeatured: true }).limit(4).sort({ createdAt: -1 }).lean();
-    
+
     return result.map((doc: any) => ({
       ...doc,
       _id: doc._id.toString(),
@@ -50,14 +50,14 @@ export default async function LandingPage() {
 
   return (
     <main className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 transition-colors">
-      
+
       {/* 1. HERO SECTION */}
       <section id="hero" className="relative h-screen flex items-center justify-center overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
-          <Image 
-            src="/images/hero.png" 
-            alt="Hero Background" 
+          <Image
+            src="/images/hero.png"
+            alt="Hero Background"
             fill
             className="object-cover object-center"
             priority
@@ -75,14 +75,14 @@ export default async function LandingPage() {
             Discover premium products curated just for you. From high-tech electronics to essential daily wear, experience shopping reimagined.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-in slide-in-from-bottom-12 duration-700 delay-300">
-            <Link 
-              href="#featured" 
+            <Link
+              href="#featured"
               className="bg-brand-600 hover:bg-brand-500 text-white px-8 py-4 rounded-full font-bold text-lg transition-all shadow-lg shadow-brand-600/30 hover:shadow-brand-600/50 hover:-translate-y-1"
             >
               Shop Featured
             </Link>
-            <Link 
-              href="/products" 
+            <Link
+              href="/products"
               className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-full font-bold text-lg transition-all hover:-translate-y-1"
             >
               Browse Catalog
@@ -113,37 +113,6 @@ export default async function LandingPage() {
         )}
       </section>
 
-      {/* STATS SECTION */}
-      <section className="border-y border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
-            <div className="flex flex-col items-center p-6">
-              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
-                <Truck className="w-8 h-8 text-brand-600 dark:text-brand-400" />
-              </div>
-              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">12,500+</h3>
-              <p className="text-slate-500 dark:text-slate-400 font-medium">Items Shipped Globally</p>
-            </div>
-            
-            <div className="flex flex-col items-center p-6">
-              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
-                <ShoppingBag className="w-8 h-8 text-brand-600 dark:text-brand-400" />
-              </div>
-              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">4,800+</h3>
-              <p className="text-slate-500 dark:text-slate-400 font-medium">Premium Products</p>
-            </div>
-            
-            <div className="flex flex-col items-center p-6">
-              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
-                <Users className="w-8 h-8 text-brand-600 dark:text-brand-400" />
-              </div>
-              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">99.8%</h3>
-              <p className="text-slate-500 dark:text-slate-400 font-medium">Customer Satisfaction</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* 3. CATEGORIES */}
       <section id="categories" className="py-12 bg-white dark:bg-slate-800 transition-colors">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -151,18 +120,18 @@ export default async function LandingPage() {
             <h2 className="text-4xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">Shop by Category</h2>
             <div className="h-1 w-24 bg-brand-600 mx-auto mt-4 rounded-full"></div>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {CATEGORIES.map((category) => (
-              <Link 
-                href={`/products?category=${encodeURIComponent(category.name)}`} 
+              <Link
+                href={`/products?category=${encodeURIComponent(category.name)}`}
                 key={category.name}
                 className="group relative h-64 rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all hover:-translate-y-1"
               >
-                <Image 
-                  src={category.image} 
-                  alt={category.name} 
-                  fill 
+                <Image
+                  src={category.image}
+                  alt={category.name}
+                  fill
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent"></div>
@@ -175,12 +144,43 @@ export default async function LandingPage() {
               </Link>
             ))}
           </div>
-          
+
           <div className="mt-16 text-center">
             <Link href="/products" className="inline-flex items-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-full font-bold text-lg transition-all shadow-lg hover:-translate-y-1">
               View All Products
               <ArrowRight className="w-5 h-5" />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* STATS SECTION */}
+      <section className="border-y border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
+            <div className="flex flex-col items-center p-6">
+              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
+                <Truck className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+              </div>
+              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">12,500+</h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">Items Shipped Globally</p>
+            </div>
+
+            <div className="flex flex-col items-center p-6">
+              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
+                <ShoppingBag className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+              </div>
+              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">4,800+</h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">Premium Products</p>
+            </div>
+
+            <div className="flex flex-col items-center p-6">
+              <div className="w-16 h-16 bg-brand-100 dark:bg-brand-900/30 rounded-full flex items-center justify-center mb-4">
+                <Users className="w-8 h-8 text-brand-600 dark:text-brand-400" />
+              </div>
+              <h3 className="text-4xl font-black text-slate-900 dark:text-white mb-2">99.8%</h3>
+              <p className="text-slate-500 dark:text-slate-400 font-medium">Customer Satisfaction</p>
+            </div>
           </div>
         </div>
       </section>
@@ -191,11 +191,11 @@ export default async function LandingPage() {
           <div className="lg:w-1/2 p-12 lg:p-16 text-white bg-brand-700 relative overflow-hidden">
             <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-brand-600 opacity-50 blur-3xl"></div>
             <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-brand-800 opacity-50 blur-3xl"></div>
-            
+
             <div className="relative z-10">
               <h2 className="text-4xl font-bold mb-6">Get in Touch</h2>
               <p className="text-brand-100 mb-12 text-lg">Have questions about our products or need support with your order? Our team is here to help 24/7.</p>
-              
+
               <div className="space-y-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full bg-brand-600 flex items-center justify-center shrink-0">
@@ -206,7 +206,7 @@ export default async function LandingPage() {
                     <p className="text-brand-200">123 Commerce Avenue, NY 10001</p>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full bg-brand-600 flex items-center justify-center shrink-0">
                     <Phone className="w-6 h-6 text-white" />
@@ -229,7 +229,7 @@ export default async function LandingPage() {
               </div>
             </div>
           </div>
-          
+
           <div className="lg:w-1/2 p-12 lg:p-16 bg-white dark:bg-slate-800 transition-colors">
             <form className="space-y-6">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
