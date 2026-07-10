@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, Suspense, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { X, Eye, EyeOff, Loader2 } from "lucide-react";
@@ -21,11 +21,16 @@ function AuthModalInner() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const hasAutoOpened = useRef(false);
+
   useEffect(() => {
-    if (searchParams?.get("login") === "true" && !isOpen) {
+    if (searchParams?.get("login") === "true" && !hasAutoOpened.current) {
       openModal("login");
+      hasAutoOpened.current = true;
+    } else if (searchParams?.get("login") !== "true") {
+      hasAutoOpened.current = false;
     }
-  }, [searchParams, isOpen, openModal]);
+  }, [searchParams, openModal]);
 
   if (!isOpen) return null;
 
@@ -61,7 +66,7 @@ function AuthModalInner() {
           toast.error(res.error);
         } else {
           toast.success("Successfully logged in!");
-          handleClose();
+          closeModal();
           router.push(callbackUrl);
           router.refresh();
         }
@@ -84,7 +89,7 @@ function AuthModalInner() {
             password,
           });
           if (!loginRes?.error) {
-            handleClose();
+            closeModal();
             router.push(callbackUrl);
             router.refresh();
           }
