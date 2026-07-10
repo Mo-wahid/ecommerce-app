@@ -89,7 +89,7 @@ export default function Navbar() {
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center"
+                className="cursor-pointer text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center"
                 aria-label="Toggle Dark Mode"
               >
                 {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -104,7 +104,7 @@ export default function Navbar() {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center gap-1 text-sm font-medium"
+                  className="cursor-pointer text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center gap-1 text-sm font-medium"
                   aria-label="Logout"
                 >
                   <LogOut className="w-5 h-5 sm:w-4 sm:h-4" />
@@ -113,10 +113,10 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center space-x-3 sm:space-x-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-700">
-                <button onClick={() => openModal("login")} className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
+                <button onClick={() => openModal("login")} className="cursor-pointer text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Login
                 </button>
-                <button onClick={() => openModal("register")} className="bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors shadow-sm">
+                <button onClick={() => openModal("register")} className="cursor-pointer bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors shadow-sm">
                   Sign Up
                 </button>
               </div>
