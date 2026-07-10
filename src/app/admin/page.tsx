@@ -126,7 +126,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Top Stat Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-brand-50 dark:bg-brand-900/20 p-6 rounded-xl shadow-sm border border-brand-100 dark:border-brand-800/30 transition-colors">
           <h3 className="text-brand-600 dark:text-brand-400 text-sm font-bold uppercase tracking-wider mb-2">Total Orders</h3>
           <div className="text-4xl font-black text-brand-900 dark:text-brand-100">{stats.totalOrders}</div>
@@ -138,6 +138,10 @@ export default function AdminDashboard() {
         <div className="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl shadow-sm border border-emerald-100 dark:border-emerald-800/30 transition-colors">
           <h3 className="text-emerald-600 dark:text-emerald-400 text-sm font-bold uppercase tracking-wider mb-2">Registered Users</h3>
           <div className="text-4xl font-black text-emerald-900 dark:text-emerald-100">{stats.totalUsers}</div>
+        </div>
+        <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl shadow-sm border border-purple-100 dark:border-purple-800/30 transition-colors">
+          <h3 className="text-purple-600 dark:text-purple-400 text-sm font-bold uppercase tracking-wider mb-2">Total Products</h3>
+          <div className="text-4xl font-black text-purple-900 dark:text-purple-100">{stats.totalProducts}</div>
         </div>
       </div>
 
