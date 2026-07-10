@@ -48,6 +48,7 @@ function AuthModalInner() {
   };
 
   const handleGoogleSignIn = () => {
+    const callbackUrl = explicitCallback || currentPath;
     signIn("google", { callbackUrl });
   };
 
