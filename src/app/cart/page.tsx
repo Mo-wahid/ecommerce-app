@@ -99,12 +99,14 @@ export default function CartPage() {
             {cart.map((item) => (
               <div key={item.product._id} className="flex items-center justify-between p-4 bg-white dark:bg-slate-800 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm transition-colors">
                 <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-gray-100 dark:bg-slate-900 rounded flex-shrink-0">
-                    <img src={item.product.imageUrl || "https://via.placeholder.com/64"} alt={item.product.name} className="w-full h-full object-cover rounded" />
-                  </div>
+                  <Link href={`/products/${item.product._id}`} className="w-16 h-16 bg-gray-100 dark:bg-slate-900 rounded flex-shrink-0 block overflow-hidden group">
+                    <img src={item.product.imageUrl || "https://via.placeholder.com/64"} alt={item.product.name} className="w-full h-full object-cover rounded group-hover:scale-105 transition-transform" />
+                  </Link>
                   <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-slate-100">{item.product.name}</h3>
-                    <p className="text-gray-500 dark:text-slate-400 text-sm">Qty: {item.quantity}</p>
+                    <Link href={`/products/${item.product._id}`} className="text-lg font-semibold text-gray-900 dark:text-slate-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors block">
+                      {item.product.name}
+                    </Link>
+                    <p className="text-gray-500 dark:text-slate-400 text-sm mt-1">Qty: {item.quantity}</p>
                   </div>
                 </div>
                 <div className="flex flex-col items-end space-y-2">

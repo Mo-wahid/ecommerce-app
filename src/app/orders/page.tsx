@@ -79,13 +79,13 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-7xl mx-auto space-y-8">
       <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-6">
         <Package className="w-8 h-8 text-brand-600" />
         <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Your Orders</h1>
       </div>
 
-      <div className="space-y-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {orders.map((order) => {
           const StatusIcon = getStatusConfig(order.orderStatus).icon;
           const statusColors = getStatusConfig(order.orderStatus);
@@ -93,57 +93,44 @@ export default function OrdersPage() {
           return (
             <div key={order._id} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-all">
               {/* Order Header */}
-              <div className="bg-slate-50 dark:bg-slate-900/50 px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <div className="flex flex-wrap gap-x-8 gap-y-2 text-sm">
-                  <div>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium mb-0.5">Order Placed</p>
-                    <p className="font-semibold text-slate-900 dark:text-slate-100">
-                      {new Date(order.createdAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}
-                    </p>
-                  </div>
-                  <div>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium mb-0.5">Total Amount</p>
-                    <p className="font-semibold text-brand-600 dark:text-brand-400">${order.totalAmount.toFixed(2)}</p>
-                  </div>
-                  <div className="hidden sm:block">
-                    <p className="text-slate-500 dark:text-slate-400 font-medium mb-0.5">Order ID</p>
-                    <p className="font-semibold text-slate-900 dark:text-slate-100">{order._id.substring(order._id.length - 8).toUpperCase()}</p>
-                  </div>
+              <div className="bg-slate-50 dark:bg-slate-900/50 px-5 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-start gap-4">
+                <div className="text-sm space-y-1.5">
+                  <p className="text-slate-500 dark:text-slate-400">Placed: <span className="font-semibold text-slate-900 dark:text-slate-100">{new Date(order.createdAt).toLocaleDateString()}</span></p>
+                  <p className="text-slate-500 dark:text-slate-400">Total: <span className="font-semibold text-brand-600 dark:text-brand-400">${order.totalAmount.toFixed(2)}</span></p>
+                  <p className="text-slate-500 dark:text-slate-400">ID: <span className="font-semibold text-slate-900 dark:text-slate-100">{order._id.substring(order._id.length - 8).toUpperCase()}</span></p>
                 </div>
                 
-                <div className={`px-4 py-2 rounded-lg border flex items-center gap-2 ${statusColors.bg}`}>
-                  <StatusIcon className={`w-4 h-4 ${statusColors.color}`} />
-                  <span className={`text-sm font-bold ${statusColors.color}`}>{order.orderStatus}</span>
+                <div className={`px-2.5 py-1 rounded-md border flex items-center gap-1.5 ${statusColors.bg}`}>
+                  <StatusIcon className={`w-3.5 h-3.5 ${statusColors.color}`} />
+                  <span className={`text-xs font-bold ${statusColors.color}`}>{order.orderStatus}</span>
                 </div>
               </div>
 
               {/* Order Items */}
-              <div className="p-6">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100 uppercase tracking-wider mb-4">Items in this order</h3>
-                <div className="space-y-6">
+              <div className="p-5">
+                <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Items in order</h3>
+                <div className="space-y-4">
                   {order.orderItems.map((item: import("@/types").IOrderProduct, index: number) => {
-                    // Handle case where product might have been deleted from DB
                     if (!item.product) return null;
                     
                     return (
-                      <div key={`${order._id}-${index}`} className="flex items-center gap-4 sm:gap-6">
-                        <div className="relative w-20 h-20 sm:w-24 sm:h-24 bg-slate-100 dark:bg-slate-900 rounded-xl overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
+                      <div key={`${order._id}-${index}`} className="flex items-center gap-4">
+                        <div className="relative w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
                           <Image 
                             src={item.product.imageUrl || "https://via.placeholder.com/150"} 
                             alt={item.product.name}
                             fill
                             className="object-cover"
-                            sizes="96px"
+                            sizes="64px"
                           />
                         </div>
-                        <div className="flex-grow">
-                          <Link href={`/products/${item.product._id}`} className="text-lg font-bold text-slate-900 dark:text-slate-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors line-clamp-1">
+                        <div className="flex-grow min-w-0">
+                          <Link href={`/products/${item.product._id}`} className="text-sm font-bold text-slate-900 dark:text-slate-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors truncate block">
                             {item.product.name}
                           </Link>
-                          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">{item.product.category}</p>
-                          <div className="flex items-center gap-4 mt-2 text-sm font-medium">
-                            <span className="text-slate-600 dark:text-slate-300">Qty: {item.quantity}</span>
-                            <span className="text-slate-900 dark:text-slate-100 font-bold">${item.price.toFixed(2)}</span>
+                          <div className="flex items-center justify-between mt-1">
+                            <span className="text-slate-500 dark:text-slate-400 text-xs">Qty: {item.quantity}</span>
+                            <span className="text-slate-900 dark:text-slate-100 text-sm font-bold">${item.price.toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
