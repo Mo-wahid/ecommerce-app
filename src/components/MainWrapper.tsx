@@ -5,8 +5,8 @@ import { usePathname } from "next/navigation";
 export default function MainWrapper({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   
-  // The landing page handles its own full-width layout and padding
-  if (pathname === "/") {
+  // The landing page, admin, and profile handle their own full-width layout and padding
+  if (pathname === "/" || pathname.startsWith("/admin") || pathname.startsWith("/profile")) {
     return <main className="flex-grow w-full">{children}</main>;
   }
 
