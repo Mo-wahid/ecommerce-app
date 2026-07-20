@@ -43,3 +43,5 @@ next-env.d.ts
 /.history/
 /.postman/resources.yaml
 /postman/
+*storybook.log
+storybook-static
