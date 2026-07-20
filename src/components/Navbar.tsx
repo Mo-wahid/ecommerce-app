@@ -77,7 +77,7 @@ export default function Navbar() {
                 <Link href="/products" className="hidden sm:block text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Products
                 </Link>
-                {pathname !== "/" && (
+                {pathname !== "/" && user && (
                   <>
                     <Link href="/orders" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1" aria-label="Orders">
                       <Package className="w-5 h-5 sm:w-4 sm:h-4" />
