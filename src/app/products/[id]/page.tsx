@@ -34,7 +34,7 @@ export default async function ProductDetailsPage({
   };
 
   return (
-    <div className="max-w-5xl mx-auto mt-8 mb-16 px-4 sm:px-6 lg:px-8 w-full">
+    <div className="max-w-5xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8 w-full">
       <Link 
         href="/products" 
         className="inline-flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 mb-6 transition-colors"
