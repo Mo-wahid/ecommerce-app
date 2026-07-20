@@ -127,16 +127,19 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 w-full max-w-4xl max-h-[95vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-800">
+    // 1. BACKDROP: Pinned to edges, flex-end on mobile for bottom-sheet, centered on desktop
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+      
+      {/* 2. CONTAINER: Full height/width on mobile, rounded only on top for mobile sheet, fully rounded on desktop */}
+      <div className="bg-white dark:bg-slate-900 w-full h-[90vh] sm:h-auto max-h-[100dvh] sm:max-h-[95vh] sm:max-w-4xl rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-8 sm:zoom-in-95 duration-200 border-x border-t sm:border border-slate-200 dark:border-slate-800">
         
-        {/* Header */}
-        <div className="flex justify-between items-center p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900">
+        {/* Header (Shrink-0 prevents it from squishing) */}
+        <div className="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900">
           <div>
             <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
               {isEditing ? "Edit Product" : "Add New Product"}
             </h2>
-            <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
               {isEditing ? "Update the details of your existing product." : "Fill in the details to create a new product in your store."}
             </p>
           </div>
@@ -148,15 +151,15 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
           </button>
         </div>
         
-        {/* Scrollable Form Content */}
-        <div className="overflow-y-auto p-5 sm:p-6 custom-scrollbar bg-slate-50/50 dark:bg-slate-900/50">
+        {/* Scrollable Form Content (flex-1 forces it to take remaining space) */}
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar bg-slate-50/50 dark:bg-slate-900/50">
           <form id="product-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
               
               {/* Left Column: Basic Details */}
               <div className="lg:col-span-2 space-y-6">
-                <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
-                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-4">Basic Information</h3>
+                <div className="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2 sm:mb-4">Basic Information</h3>
                   
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Product Name</label>
@@ -166,7 +169,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                       className={`w-full px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 border rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none ${
                         errors.name ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50"
                       }`}
-                      placeholder="e.g. Wireless Noise-Cancelling Headphones"
+                      placeholder="e.g. Wireless Headphones"
                     />
                     {errors.name && <p className="text-red-500 text-xs mt-1.5">{errors.name.message}</p>}
                   </div>
@@ -179,12 +182,12 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                       className={`w-full px-4 py-3 text-sm text-slate-900 dark:text-slate-100 border rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none resize-none ${
                         errors.description ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50"
                       }`}
-                      placeholder="Provide a detailed description of your product, its features, and benefits..."
+                      placeholder="Provide a detailed description..."
                     />
                     {errors.description && <p className="text-red-500 text-xs mt-1.5">{errors.description.message}</p>}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
                     <div>
                       <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Price ($)</label>
                       <div className="relative">
@@ -224,8 +227,8 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
               <div className="lg:col-span-1 space-y-6">
                 
                 {/* Image Upload */}
-                <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
-                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-4">Product Image</h3>
+                <div className="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2 sm:mb-4">Product Image</h3>
                   
                   {isEditing && product?.imageUrl && !imageFile && (
                     <div className="mb-4 relative group rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
@@ -236,12 +239,12 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                     </div>
                   )}
 
-                  <div className={`flex justify-center px-4 py-8 border-2 border-dashed rounded-xl transition-colors ${
+                  <div className={`flex justify-center px-4 py-6 sm:py-8 border-2 border-dashed rounded-xl transition-colors ${
                     imageFile ? "border-brand-500 bg-brand-50/50 dark:bg-brand-900/10" : "border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700/50"
                   }`}>
                     <div className="space-y-2 text-center">
-                      <UploadCloud className={`mx-auto h-10 w-10 ${imageFile ? "text-brand-500" : "text-slate-400"}`} />
-                      <div className="flex flex-col text-sm text-slate-600 dark:text-slate-400 justify-center items-center">
+                      <UploadCloud className={`mx-auto h-8 w-8 sm:h-10 sm:w-10 ${imageFile ? "text-brand-500" : "text-slate-400"}`} />
+                      <div className="flex flex-col text-xs sm:text-sm text-slate-600 dark:text-slate-400 justify-center items-center">
                         <label
                           htmlFor="file-upload"
                           className="relative cursor-pointer bg-transparent rounded-md font-medium text-brand-600 hover:text-brand-500 focus-within:outline-none"
@@ -275,8 +278,8 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 </div>
 
                 {/* Organization */}
-                <div className="bg-white dark:bg-slate-800 p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
-                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-4">Organization</h3>
+                <div className="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
+                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2 sm:mb-4">Organization</h3>
                   
                   <div>
                     <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Category</label>
@@ -317,7 +320,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                       </div>
                       <div className="flex flex-col">
                         <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Featured Product</span>
-                        <span className="text-xs text-slate-500 dark:text-slate-400">Display this product prominently on the home page.</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400">Display prominently on the home page.</span>
                       </div>
                     </label>
                   </div>
@@ -328,8 +331,8 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
           </form>
         </div>
 
-        {/* Footer actions */}
-        <div className="flex flex-col-reverse sm:flex-row justify-end items-center gap-3 p-5 sm:p-6 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 sm:rounded-b-2xl mt-auto">
+        {/* Footer actions (Pinned to bottom) */}
+        <div className="flex justify-end items-center gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 mt-auto">
           <button
             type="button"
             onClick={onClose}
@@ -342,7 +345,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
             type="submit"
             form="product-form"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 sm:min-w-[140px]"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 min-w-[140px]"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isEditing ? "Save Changes" : "Create Product")}
           </button>
