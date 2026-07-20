@@ -220,6 +220,52 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                       {errors.stock && <p className="text-red-500 text-xs mt-1.5">{errors.stock.message}</p>}
                     </div>
                   </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+                    <div>
+                      <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Category</label>
+                      <div className="relative">
+                        <select
+                          {...register("category")}
+                          className={`w-full px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 border rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none cursor-pointer appearance-none ${
+                            errors.category ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50"
+                          }`}
+                        >
+                          <option value="Electronics">Electronics</option>
+                          <option value="Clothing">Clothing</option>
+                          <option value="Books">Books</option>
+                          <option value="Home & Garden">Home & Garden</option>
+                          <option value="Toys">Toys</option>
+                          <option value="Sports & Outdoors">Sports & Outdoors</option>
+                          <option value="Beauty & Personal Care">Beauty & Personal Care</option>
+                          <option value="Automotive">Automotive</option>
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                          <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
+                      {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
+                    </div>
+
+                    <div className="flex items-center sm:pt-6">
+                      <label className="flex items-center space-x-3 cursor-pointer group">
+                        <div className="relative flex items-center justify-center">
+                          <input
+                            type="checkbox"
+                            {...register("isFeatured")}
+                            className="peer sr-only"
+                          />
+                          <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:peer-focus:ring-brand-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-600"></div>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Featured Product</span>
+                          <span className="text-xs text-slate-500 dark:text-slate-400">Display prominently on the home page.</span>
+                        </div>
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -277,54 +323,6 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                   </div>
                 </div>
 
-                {/* Organization */}
-                <div className="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
-                  <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2 sm:mb-4">Organization</h3>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">Category</label>
-                    <div className="relative">
-                      <select
-                        {...register("category")}
-                        className={`w-full px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 border rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all outline-none cursor-pointer appearance-none ${
-                          errors.category ? "border-red-500 bg-red-50 dark:bg-red-900/20" : "border-slate-200 dark:border-slate-600 bg-slate-50/50 dark:bg-slate-900/50"
-                        }`}
-                      >
-                        <option value="Electronics">Electronics</option>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Books">Books</option>
-                        <option value="Home & Garden">Home & Garden</option>
-                        <option value="Toys">Toys</option>
-                        <option value="Sports & Outdoors">Sports & Outdoors</option>
-                        <option value="Beauty & Personal Care">Beauty & Personal Care</option>
-                        <option value="Automotive">Automotive</option>
-                      </select>
-                      <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </div>
-                    {errors.category && <p className="text-red-500 text-xs mt-1.5">{errors.category.message}</p>}
-                  </div>
-
-                  <div className="pt-2">
-                    <label className="flex items-center space-x-3 cursor-pointer group">
-                      <div className="relative flex items-center justify-center">
-                        <input
-                          type="checkbox"
-                          {...register("isFeatured")}
-                          className="peer sr-only"
-                        />
-                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:peer-focus:ring-brand-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-600"></div>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Featured Product</span>
-                        <span className="text-xs text-slate-500 dark:text-slate-400">Display prominently on the home page.</span>
-                      </div>
-                    </label>
-                  </div>
-                </div>
 
               </div>
             </div>
