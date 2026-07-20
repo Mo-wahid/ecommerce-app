@@ -16,7 +16,7 @@ export default function Button({
   disabled, 
   ...props 
 }: ButtonProps) {
-  const baseStyles = "inline-flex items-center justify-center font-bold transition-all rounded-xl cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseStyles = "inline-flex items-center justify-center font-bold transition-all rounded-xl cursor-pointer disabled:opacity-50";
   
   const variants = {
     primary: "bg-brand-600 hover:bg-brand-700 text-white shadow-sm shadow-brand-600/20",
@@ -33,7 +33,7 @@ export default function Button({
 
   return (
     <button 
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${isLoading ? 'disabled:cursor-wait' : 'disabled:cursor-not-allowed'} ${className}`}
       disabled={isLoading || disabled}
       {...props}
     >

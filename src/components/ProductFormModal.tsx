@@ -335,7 +335,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
@@ -343,7 +343,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
             type="submit"
             form="product-form"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 min-w-[140px]"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 min-w-[140px] disabled:cursor-wait"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isEditing ? "Save Changes" : "Create Product")}
           </button>

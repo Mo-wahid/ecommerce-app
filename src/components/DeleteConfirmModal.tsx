@@ -28,7 +28,7 @@ export default function DeleteConfirmModal({
           <button 
             onClick={onCancel}
             disabled={isDeleting}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors disabled:opacity-50"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <X className="w-5 h-5" />
           </button>
@@ -47,14 +47,14 @@ export default function DeleteConfirmModal({
           <button
             onClick={onCancel}
             disabled={isDeleting}
-            className="px-4 py-2 rounded-lg font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-lg font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Cancel
           </button>
           <button
             onClick={onConfirm}
             disabled={isDeleting}
-            className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-white bg-red-600 hover:bg-red-700 transition-colors disabled:bg-red-400 shadow-sm shadow-red-600/20 min-w-[100px]"
+            className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-medium text-white bg-red-600 hover:bg-red-700 transition-colors disabled:bg-red-400 shadow-sm shadow-red-600/20 min-w-[100px] disabled:cursor-wait"
           >
             {isDeleting ? <Loader2 className="w-4 h-4 animate-spin" /> : "Delete"}
           </button>

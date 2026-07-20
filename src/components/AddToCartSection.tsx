@@ -86,7 +86,7 @@ export default function AddToCartSection({ productId, stock, price }: AddToCartP
           <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white">
             <button
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer"
+              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
               disabled={quantity <= 1}
             >
               -
@@ -96,7 +96,7 @@ export default function AddToCartSection({ productId, stock, price }: AddToCartP
             </span>
             <button
               onClick={() => setQuantity(Math.min(stock, quantity + 1))}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer"
+              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
               disabled={quantity >= stock}
             >
               +
