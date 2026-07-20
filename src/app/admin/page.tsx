@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
+import { Loader2 } from "lucide-react";
 import StatusDropdown from "@/components/StatusDropdown";
 
 export default function AdminDashboard() {
@@ -94,7 +95,11 @@ export default function AdminDashboard() {
   };
 
   if (status === "loading" || loading) {
-    return <div className="text-center py-12 text-gray-600">Loading dashboard data...</div>;
+    return (
+      <div className="flex justify-center items-center py-20">
+        <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
+      </div>
+    );
   }
 
   if (error) {
