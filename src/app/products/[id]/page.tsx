@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AddToCartSection from "@/components/AddToCartSection";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 // 1. Update the type definition to expect a Promise
 export default async function ProductDetailsPage({ 
@@ -15,6 +17,9 @@ export default async function ProductDetailsPage({
   const resolvedParams = await params;
   
   await dbConnect();
+  const session = await getServerSession(authOptions);
+  const isAdmin = (session?.user as any)?.role === "admin";
+  const backUrl = isAdmin ? "/admin/products" : "/products";
   
   // 3. Use the unwrapped ID to fetch the product
   const product = await Product.findById(resolvedParams.id).lean();
@@ -36,11 +41,11 @@ export default async function ProductDetailsPage({
   return (
     <div className="max-w-5xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8 w-full">
       <Link 
-        href="/products" 
+        href={backUrl} 
         className="inline-flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 mb-6 transition-colors"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
-        Back to Products
+        {isAdmin ? "Back to Admin Products" : "Back to Products"}
       </Link>
       
       <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors w-full">
