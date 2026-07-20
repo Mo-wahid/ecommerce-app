@@ -25,7 +25,7 @@ export default function AdminSidebar() {
 
   return (
     <aside className="w-full max-w-[100vw] overflow-hidden md:w-64 bg-white dark:bg-slate-900 border-b md:border-b-0 md:border-r border-gray-200 dark:border-slate-800 h-auto md:h-[calc(100vh-4rem)] md:sticky top-16 flex flex-col transition-colors z-40 shrink-0">
-      <div className="p-4 md:p-6 flex-none md:flex-1 overflow-x-auto md:overflow-y-auto hide-scrollbar">
+      <div className="p-4 md:p-6 flex-none md:flex-1 w-full min-w-0 overflow-x-auto md:overflow-y-auto hide-scrollbar">
         <nav className="flex flex-row md:flex-col gap-2 md:space-y-0 min-w-max md:min-w-0">
           {links.map((link) => {
             const Icon = link.icon;
