@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import { Loader2, Edit, Trash2, ArrowLeft, Plus } from "lucide-react";
 import ProductFormModal from "@/components/ProductFormModal";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import SearchBar from "@/components/ui/SearchBar";
+import SelectFilter from "@/components/ui/SelectFilter";
 
 export default function ManageProductsPage() {
   const router = useRouter();
@@ -16,6 +18,22 @@ export default function ManageProductsPage() {
 
   const [products, setProducts] = useState<import("@/types").IProduct[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Filter states
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+
+  const categories = [
+    "All Categories",
+    "Electronics",
+    "Clothing",
+    "Books",
+    "Home & Garden",
+    "Toys",
+    "Sports & Outdoors",
+    "Beauty & Personal Care",
+    "Automotive"
+  ];
 
   // Modal states
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
@@ -33,14 +51,24 @@ export default function ManageProductsPage() {
       if (user.role !== "admin") {
         router.push("/");
       } else {
-        fetchProducts();
+        const debounceTimer = setTimeout(() => {
+          fetchProducts();
+        }, 300); // 300ms debounce
+        
+        return () => clearTimeout(debounceTimer);
       }
     }
-  }, [status, user, router]);
+  }, [status, user, router, searchQuery, selectedCategory]);
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch("/api/products");
+      const params = new URLSearchParams();
+      if (searchQuery) params.append("search", searchQuery);
+      if (selectedCategory !== "All" && selectedCategory !== "All Categories") {
+        params.append("category", selectedCategory);
+      }
+
+      const res = await fetch(`/api/products?${params.toString()}`);
       const json = await res.json();
       if (json.success && json.data) {
         setProducts(json.data);
@@ -115,6 +143,27 @@ export default function ManageProductsPage() {
             <Plus className="w-5 h-5" />
             <span>Add New Product</span>
           </button>
+        </div>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-4 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
+        <div className="flex-1">
+          <SearchBar
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+        <div className="sm:w-64">
+          <SelectFilter
+            className="w-full"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            options={categories.map(cat => ({
+              label: cat,
+              value: cat === "All Categories" ? "All" : cat
+            }))}
+          />
         </div>
       </div>
 

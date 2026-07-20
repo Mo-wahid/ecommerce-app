@@ -3,11 +3,26 @@ import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
 
 // GET: Fetch all products (Public)
-export async function GET() {
+export async function GET(request: Request) {
   try {
     await dbConnect();
-    // Fetch all products and sort by newest first
-    const products = await Product.find({}).sort({ createdAt: -1 });
+    
+    const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search");
+    const category = searchParams.get("category");
+
+    const query: any = {};
+    
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+    
+    if (category && category !== "All") {
+      query.category = category;
+    }
+
+    // Fetch products based on query and sort by newest first
+    const products = await Product.find(query).sort({ createdAt: -1 });
     return NextResponse.json({ success: true, data: products }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ success: false, message: "Failed to fetch products." }, { status: 500 });
