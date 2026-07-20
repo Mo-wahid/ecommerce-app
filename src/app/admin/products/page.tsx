@@ -18,6 +18,7 @@ export default function ManageProductsPage() {
 
   const [products, setProducts] = useState<import("@/types").IProduct[]>([]);
   const [loading, setLoading] = useState(true);
+  const [navigatingId, setNavigatingId] = useState<string | null>(null);
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -187,8 +188,11 @@ export default function ManageProductsPage() {
                 {products.map((product) => (
                   <tr 
                     key={product._id} 
-                    onClick={() => router.push(`/products/${product._id}`)}
-                    className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer"
+                    onClick={() => {
+                      setNavigatingId(product._id as string);
+                      router.push(`/products/${product._id}`);
+                    }}
+                    className={`hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors ${navigatingId === product._id ? "cursor-wait opacity-75" : "cursor-pointer"}`}
                   >
                     <td className="p-4">
                       <div className="w-12 h-12 bg-gray-100 dark:bg-slate-900 rounded overflow-hidden">
