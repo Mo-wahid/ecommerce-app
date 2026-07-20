@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import AddToCartSection from "@/components/AddToCartSection";
 import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/authOptions";
 
 // 1. Update the type definition to expect a Promise
 export default async function ProductDetailsPage({ 
