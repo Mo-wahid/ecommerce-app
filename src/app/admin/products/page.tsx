@@ -122,7 +122,7 @@ export default function ManageProductsPage() {
         {products.length === 0 ? (
           <div className="p-6 text-center text-gray-500 dark:text-slate-400">No products found.</div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-auto w-full">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-gray-50 dark:bg-slate-900/50 border-b border-gray-200 dark:border-slate-700 text-xs text-gray-600 dark:text-slate-400 uppercase tracking-wider">
