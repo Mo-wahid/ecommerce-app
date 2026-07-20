@@ -27,9 +27,7 @@ const mockProduct = {
   price: 299.99,
   category: 'Electronics',
   stock: 15,
-  images: [
-    { url: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop' }
-  ],
+  imageUrl: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1000&auto=format&fit=crop',
   isFeatured: true,
 };
 
@@ -52,7 +50,7 @@ export const NoImage: Story = {
   args: {
     product: {
       ...mockProduct,
-      images: [],
+      imageUrl: '',
     },
   },
 };
