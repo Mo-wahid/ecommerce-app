@@ -136,7 +136,11 @@ export default function ManageProductsPage() {
               </thead>
               <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-gray-900 dark:text-slate-100">
                 {products.map((product) => (
-                  <tr key={product._id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
+                  <tr 
+                    key={product._id} 
+                    onClick={() => router.push(`/products/${product._id}`)}
+                    className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer"
+                  >
                     <td className="p-4">
                       <div className="w-12 h-12 bg-gray-100 dark:bg-slate-900 rounded overflow-hidden">
                         <img 
@@ -157,7 +161,10 @@ export default function ManageProductsPage() {
                     <td className="p-4">
                       <div className="flex items-center justify-end space-x-4">
                         <button 
-                          onClick={() => openEditModal(product)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            openEditModal(product);
+                          }}
                           className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-2 rounded-full transition-colors flex items-center justify-center"
                           title="Edit Product"
                         >
@@ -165,7 +172,10 @@ export default function ManageProductsPage() {
                           <span className="sr-only">Edit</span>
                         </button>
                         <button 
-                          onClick={() => confirmDelete(product)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            confirmDelete(product);
+                          }}
                           className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-colors flex items-center justify-center"
                           title="Delete Product"
                         >
