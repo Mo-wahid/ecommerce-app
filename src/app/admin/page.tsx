@@ -159,7 +159,7 @@ export default function AdminDashboard() {
           </button>
         </div>
         
-        <div className="overflow-auto w-full">
+        <div className="w-full overflow-x-auto min-w-0 flex-1">
           {displayedOrders.length === 0 ? (
             <div className="p-12 text-center flex flex-col items-center justify-center h-full">
               <p className="text-gray-500 dark:text-slate-400 text-lg">

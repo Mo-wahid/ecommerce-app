@@ -139,7 +139,7 @@ export default function ManageUsersPage() {
             <p className="text-gray-500 dark:text-slate-400 text-lg">No users found.</p>
           </div>
         ) : (
-          <div className="overflow-auto w-full flex-1">
+          <div className="w-full overflow-x-auto min-w-0 flex-1">
             <table className="w-full text-left border-collapse min-w-[700px]">
               <thead className="sticky top-0 bg-gray-50 dark:bg-slate-900/90 backdrop-blur-sm z-10 border-b border-gray-200 dark:border-slate-700">
                 <tr className="text-xs text-gray-600 dark:text-slate-400 uppercase tracking-wider">
