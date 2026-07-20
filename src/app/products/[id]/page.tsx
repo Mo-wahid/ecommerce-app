@@ -1,6 +1,8 @@
 import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
 import { notFound } from "next/navigation";
+import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import AddToCartSection from "@/components/AddToCartSection";
 
 // 1. Update the type definition to expect a Promise
@@ -32,8 +34,17 @@ export default async function ProductDetailsPage({
   };
 
   return (
-    <div className="max-w-5xl mx-auto bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden mt-8 transition-colors">
-      <div className="grid grid-cols-1 md:grid-cols-2">
+    <div className="max-w-5xl mx-auto mt-8 mb-16 px-4 sm:px-6 lg:px-8 w-full">
+      <Link 
+        href="/products" 
+        className="inline-flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 mb-6 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4 mr-2" />
+        Back to Products
+      </Link>
+      
+      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2">
         
         {/* Left Side: Product Image */}
         <div className="bg-gray-100 dark:bg-slate-900 h-96 md:h-auto relative">
@@ -73,6 +84,7 @@ export default async function ProductDetailsPage({
           </div>
         </div>
 
+        </div>
       </div>
     </div>
   );
