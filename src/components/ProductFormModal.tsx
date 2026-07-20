@@ -128,7 +128,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center sm:p-6 bg-slate-900/50 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-800 w-full h-full sm:h-auto sm:rounded-2xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border-0 sm:border sm:border-slate-200 dark:sm:border-slate-700">
+      <div className="bg-white dark:bg-slate-800 w-full max-w-[100vw] h-full sm:h-auto sm:rounded-2xl shadow-2xl sm:max-w-2xl sm:max-h-[90vh] flex flex-col overflow-hidden animate-in zoom-in-95 duration-200 border-0 sm:border sm:border-slate-200 dark:sm:border-slate-700">
         
         {/* Header */}
         <div className="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-700 shrink-0 bg-slate-50/50 dark:bg-slate-900/50">
@@ -254,7 +254,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                 <div className="mt-1 flex justify-center px-4 pt-4 pb-4 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
                   <div className="space-y-1 text-center">
                     <UploadCloud className="mx-auto h-8 w-8 text-slate-400" />
-                    <div className="flex text-sm text-slate-600 dark:text-slate-400 justify-center">
+                    <div className="flex flex-col sm:flex-row text-sm text-slate-600 dark:text-slate-400 justify-center items-center">
                       <label
                         htmlFor="file-upload"
                         className="relative cursor-pointer bg-transparent rounded-md font-medium text-brand-600 hover:text-brand-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-brand-500"
@@ -272,7 +272,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                           }}
                         />
                       </label>
-                      <p className="pl-1">or drag and drop</p>
+                      <p className="pl-0 sm:pl-1 mt-1 sm:mt-0 text-center">or drag and drop</p>
                     </div>
                     <p className="text-xs text-slate-500">
                       {isEditing ? "Leave blank to keep existing image" : "PNG, JPG, GIF up to 10MB"}

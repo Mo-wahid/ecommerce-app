@@ -57,7 +57,7 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-black tracking-tight text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors">
+            <Link href="/" className="text-xl font-black tracking-tight text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors shrink-0 whitespace-nowrap">
               E-COMMERCE
             </Link>
           </div>
@@ -71,10 +71,10 @@ export default function Navbar() {
             </div>
           )}
 
-          <div className="flex items-center space-x-3 sm:space-x-6 relative z-10">
+          <div className="flex items-center space-x-2 sm:space-x-6 relative z-10">
             {user?.role !== "admin" && (
               <>
-                <Link href="/products" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
+                <Link href="/products" className="hidden sm:block text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Products
                 </Link>
                 {pathname !== "/" && (
@@ -118,11 +118,11 @@ export default function Navbar() {
                 </button>
               </div>
             ) : (
-              <div className="flex items-center space-x-3 sm:space-x-4 ml-2 sm:ml-4 pl-2 sm:pl-4 border-l border-slate-200 dark:border-slate-700">
+              <div className="flex items-center space-x-2 sm:space-x-4 ml-1 sm:ml-4 pl-1 sm:pl-4 border-l border-slate-200 dark:border-slate-700 shrink-0">
                 <button onClick={() => openModal("login")} className="cursor-pointer text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
                   Login
                 </button>
-                <button onClick={() => openModal("register")} className="cursor-pointer bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors shadow-sm">
+                <button onClick={() => openModal("register")} className="cursor-pointer bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors shadow-sm whitespace-nowrap shrink-0">
                   Sign Up
                 </button>
               </div>
