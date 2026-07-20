@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { SessionProvider } from 'next-auth/react';
+import { AuthModalProvider } from '@/context/AuthModalContext';
 import Navbar from './Navbar';
 
 const meta: Meta<typeof Navbar> = {
@@ -20,7 +21,9 @@ type Story = StoryObj<typeof Navbar>;
 // Mock session provider decorator
 const withSession = (session: any) => (Story: any) => (
   <SessionProvider session={session}>
-    <Story />
+    <AuthModalProvider>
+      <Story />
+    </AuthModalProvider>
   </SessionProvider>
 );
 
