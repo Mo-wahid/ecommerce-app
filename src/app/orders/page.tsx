@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { Package, Clock, CheckCircle2, XCircle, Truck, Loader2 } from "lucide-react";
+import { Package, Clock, CheckCircle2, XCircle, Truck } from "lucide-react";
 import { useSession } from "next-auth/react";
+import Loading from "@/components/ui/Loading";
 
 export default function OrdersPage() {
   const router = useRouter();
@@ -52,12 +53,7 @@ export default function OrdersPage() {
   };
 
   if (status === "loading" || loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-4">
-        <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
-        <p className="text-slate-600 font-medium animate-pulse">Loading your orders...</p>
-      </div>
-    );
+    return <Loading fullScreen message="Loading your orders..." />;
   }
 
   if (orders.length === 0) {

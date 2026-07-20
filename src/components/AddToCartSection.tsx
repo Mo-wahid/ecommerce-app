@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { Loader2, ShoppingCart } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useAuthModal } from "@/context/AuthModalContext";
+import Button from "./ui/Button";
 
 interface AddToCartProps {
   productId: string;
@@ -71,9 +72,9 @@ export default function AddToCartSection({ productId, stock, price }: AddToCartP
 
   if (stock === 0) {
     return (
-      <button disabled className="w-full bg-slate-300 text-slate-500 py-3.5 rounded-xl font-bold cursor-not-allowed shadow-inner mt-4">
+      <Button disabled className="w-full mt-4 bg-slate-300 text-slate-500 dark:bg-slate-800 dark:text-slate-600 cursor-not-allowed">
         Out of Stock
-      </button>
+      </Button>
     );
   }
 
@@ -110,14 +111,15 @@ export default function AddToCartSection({ productId, stock, price }: AddToCartP
         <span>${(price * quantity).toFixed(2)}</span>
       </div>
 
-      <button
+      <Button
         onClick={handleAddToCart}
-        disabled={loading}
-        className="cursor-pointer w-full flex justify-center items-center gap-2 bg-brand-600 text-white py-3.5 rounded-xl hover:bg-brand-700 font-bold transition-all disabled:bg-brand-400 disabled:cursor-not-allowed shadow-md shadow-brand-600/20 text-lg"
+        isLoading={loading}
+        className="w-full"
+        size="lg"
       >
-        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <ShoppingCart className="w-5 h-5" />}
+        {!loading && <ShoppingCart className="w-5 h-5 mr-2" />}
         {loading ? "Adding..." : "Add to Cart"}
-      </button>
+      </Button>
     </div>
   );
 }

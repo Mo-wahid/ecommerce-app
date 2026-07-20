@@ -3,6 +3,8 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "./ProductCard";
+import SearchBar from "./ui/SearchBar";
+import SelectFilter from "./ui/SelectFilter";
 
 export default function ProductCatalog({ initialProducts }: { initialProducts: import("@/types").IProduct[] }) {
   const searchParams = useSearchParams();
@@ -43,37 +45,34 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
       {/* Search and Filter Controls */}
       <div className="flex flex-col sm:flex-row gap-4 mb-8 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
         <div className="flex-1">
-          <input
-            type="text"
+          <SearchBar
             placeholder="Search products..."
-            className="w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-blue-500 focus:border-blue-500 transition-colors"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
         <div className="flex flex-col sm:flex-row gap-4 sm:w-auto">
-          <select
-            className="w-full sm:w-48 px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer"
+          <SelectFilter
+            className="sm:w-48"
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat === "All" ? "All Categories" : cat}
-              </option>
-            ))}
-          </select>
+            options={categories.map(cat => ({
+              label: cat === "All" ? "All Categories" : cat,
+              value: cat
+            }))}
+          />
           
-          <select
-            className="w-full sm:w-48 px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer"
+          <SelectFilter
+            className="sm:w-48"
             value={priceRange}
             onChange={(e) => setPriceRange(e.target.value)}
-          >
-            <option value="All">All Prices</option>
-            <option value="Under $50">Under $50</option>
-            <option value="$50 to $100">$50 to $100</option>
-            <option value="Over $100">Over $100</option>
-          </select>
+            options={[
+              { label: "All Prices", value: "All" },
+              { label: "Under $50", value: "Under $50" },
+              { label: "$50 to $100", value: "$50 to $100" },
+              { label: "Over $100", value: "Over $100" }
+            ]}
+          />
         </div>
       </div>
 
