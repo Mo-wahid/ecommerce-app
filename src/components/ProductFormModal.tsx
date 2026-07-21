@@ -150,7 +150,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
       
       {/* 2. CONTAINER: Full height/width on mobile, rounded only on top for mobile sheet, fully rounded on desktop */}
-      <div className="bg-white dark:bg-slate-900 w-full h-[90vh] sm:h-auto max-h-[100dvh] sm:max-h-[95vh] sm:max-w-4xl rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-8 sm:zoom-in-95 duration-200 border-x border-t sm:border border-slate-200 dark:border-slate-800">
+      <div className="bg-white dark:bg-slate-900 w-full h-full sm:h-auto max-h-[100dvh] sm:max-h-[95vh] sm:max-w-4xl rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-8 sm:zoom-in-95 duration-200 border-x border-t sm:border border-slate-200 dark:border-slate-800">
         
         {/* Header (Shrink-0 prevents it from squishing) */}
         <div className="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900">
@@ -173,10 +173,10 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         {/* Scrollable Form Content (flex-1 forces it to take remaining space) */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar bg-slate-50/50 dark:bg-slate-900/50">
           <form id="product-form" onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
               
               {/* Left Column: Basic Details */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="md:col-span-2 space-y-6">
                 <div className="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-5">
                   <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2 sm:mb-4">Basic Information</h3>
                   
@@ -289,7 +289,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
               </div>
 
               {/* Right Column: Media & Organization */}
-              <div className="lg:col-span-1 space-y-6">
+              <div className="md:col-span-1 space-y-6">
                 
                 {/* Image Upload */}
                 <div className="bg-white dark:bg-slate-800 p-4 sm:p-5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">
@@ -354,7 +354,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         </div>
 
         {/* Footer actions (Pinned to bottom) */}
-        <div className="flex justify-end items-center gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 mt-auto">
+        <div className="flex flex-col-reverse sm:flex-row justify-end sm:items-center gap-3 p-4 sm:p-6 border-t border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900 mt-auto">
           <button
             type="button"
             onClick={onClose}
