@@ -145,7 +145,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
           </div>
           <button 
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -335,7 +335,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full sm:w-auto px-5 py-2.5 rounded-xl font-medium text-slate-700 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             Cancel
           </button>
@@ -343,7 +343,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
             type="submit"
             form="product-form"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 min-w-[140px] disabled:cursor-wait"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 min-w-[140px] disabled:cursor-wait cursor-pointer"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isEditing ? "Save Changes" : "Create Product")}
           </button>
