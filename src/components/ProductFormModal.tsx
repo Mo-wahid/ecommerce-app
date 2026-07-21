@@ -154,8 +154,8 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         
         {/* Header (Shrink-0 prevents it from squishing) */}
         <div className="flex justify-between items-center p-4 sm:p-6 border-b border-slate-100 dark:border-slate-800 shrink-0 bg-white dark:bg-slate-900">
-          <div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+          <div className="flex-1 min-w-0 pr-4">
+            <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 truncate">
               {isEditing ? "Edit Product" : "Add New Product"}
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
@@ -270,7 +270,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
 
                     <div className="flex items-center sm:pt-6">
                       <label className="flex items-center space-x-3 cursor-pointer group">
-                        <div className="relative flex items-center justify-center">
+                        <div className="relative flex items-center justify-center shrink-0">
                           <input
                             type="checkbox"
                             {...register("isFeatured")}
@@ -278,7 +278,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                           />
                           <div className="w-11 h-6 bg-slate-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-brand-300 dark:peer-focus:ring-brand-800 rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-brand-600"></div>
                         </div>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col flex-1 min-w-0">
                           <span className="text-sm font-medium text-slate-900 dark:text-slate-100">Featured Product</span>
                           <span className="text-xs text-slate-500 dark:text-slate-400">Display prominently on the home page.</span>
                         </div>
