@@ -123,7 +123,7 @@ export default function CheckoutPage() {
             <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-6">Shipping Information</h2>
             <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Full Name</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Username</label>
                 <input
                   type="text"
                   required
