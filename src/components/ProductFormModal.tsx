@@ -57,8 +57,8 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         reset({
           name: "",
           description: "",
-          price: 0,
-          stock: 0,
+          price: "" as unknown as number,
+          stock: "" as unknown as number,
           category: "Electronics",
           isFeatured: false,
         });
