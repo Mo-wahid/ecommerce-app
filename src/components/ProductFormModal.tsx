@@ -27,6 +27,7 @@ interface ProductFormModalProps {
 export default function ProductFormModal({ isOpen, onClose, onSuccess, product }: ProductFormModalProps) {
   const [loading, setLoading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const isEditing = !!product;
 
   const {
@@ -65,6 +66,24 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
       setImageFile(null);
     }
   }, [isOpen, isEditing, product, reset]);
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setImageFile(e.dataTransfer.files[0]);
+    }
+  };
 
   const onSubmit = async (data: ProductFormOutput) => {
     if (!isEditing && !imageFile) {
@@ -285,7 +304,12 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                     </div>
                   )}
 
-                  <div className={`flex justify-center px-4 py-6 sm:py-8 border-2 border-dashed rounded-xl transition-colors ${
+                  <div 
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    className={`flex justify-center px-4 py-6 sm:py-8 border-2 border-dashed rounded-xl transition-colors ${
+                    isDragging ? "border-brand-500 bg-brand-50 dark:bg-brand-900/20" :
                     imageFile ? "border-brand-500 bg-brand-50/50 dark:bg-brand-900/10" : "border-slate-300 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700/50"
                   }`}>
                     <div className="space-y-2 text-center">
