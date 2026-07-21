@@ -22,6 +22,7 @@ function AuthModalInner() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [formError, setFormError] = useState("");
 
   const hasAutoOpened = useRef(false);
 
@@ -33,6 +34,10 @@ function AuthModalInner() {
       hasAutoOpened.current = false;
     }
   }, [searchParams, openModal]);
+
+  useEffect(() => {
+    setFormError("");
+  }, [type, isOpen]);
 
   if (!isOpen) return null;
 
@@ -57,6 +62,7 @@ function AuthModalInner() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setFormError("");
 
     try {
       if (isLogin) {
@@ -68,7 +74,7 @@ function AuthModalInner() {
         });
 
         if (res?.error) {
-          toast.error(res.error);
+          setFormError(res.error);
         } else {
           toast.success("Successfully logged in!");
           closeModal();
@@ -91,7 +97,7 @@ function AuthModalInner() {
       } else {
         // Registration Flow
         if (password !== confirmPassword) {
-          toast.error("Passwords do not match!");
+          setFormError("Passwords do not match!");
           setIsLoading(false);
           return;
         }
@@ -130,11 +136,11 @@ function AuthModalInner() {
             router.refresh();
           }
         } else {
-          toast.error(data.message || "Registration failed");
+          setFormError(data.message || "Registration failed");
         }
       }
     } catch (error) {
-      toast.error("An unexpected error occurred");
+      setFormError("An unexpected error occurred");
     } finally {
       setIsLoading(false);
     }
@@ -231,6 +237,12 @@ function AuthModalInner() {
                     placeholder="••••••••"
                   />
                 </div>
+              </div>
+            )}
+
+            {formError && (
+              <div className="p-3 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium rounded-xl border border-red-100 dark:border-red-900/50">
+                {formError}
               </div>
             )}
 
