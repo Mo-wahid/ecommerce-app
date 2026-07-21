@@ -147,7 +147,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
 
   return (
     // 1. BACKDROP: Pinned to edges, flex-end on mobile for bottom-sheet, centered on desktop
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-6 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-x-hidden">
       
       {/* 2. CONTAINER: Full height/width on mobile, rounded only on top for mobile sheet, fully rounded on desktop */}
       <div className="bg-white dark:bg-slate-900 w-full h-full sm:h-auto max-h-[100dvh] sm:max-h-[95vh] sm:max-w-4xl rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in slide-in-from-bottom-8 sm:zoom-in-95 duration-200 border-x border-t sm:border border-slate-200 dark:border-slate-800">
@@ -367,7 +367,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
             type="submit"
             form="product-form"
             disabled={loading}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 min-w-[140px] disabled:cursor-wait cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-medium text-white bg-brand-600 hover:bg-brand-700 transition-colors disabled:bg-brand-400 shadow-md shadow-brand-600/20 disabled:cursor-wait cursor-pointer"
           >
             {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isEditing ? "Save Changes" : "Create Product")}
           </button>

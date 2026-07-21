@@ -172,80 +172,126 @@ export default function ManageProductsPage() {
         {products.length === 0 ? (
           <div className="p-6 text-center text-gray-500 dark:text-slate-400">No products found.</div>
         ) : (
-          <div className="w-full overflow-x-auto min-w-0">
-            <table className="w-full text-left border-collapse min-w-[700px]">
-              <thead>
-                <tr className="bg-gray-50 dark:bg-slate-900/50 border-b border-gray-200 dark:border-slate-700 text-xs text-gray-600 dark:text-slate-400 uppercase tracking-wider">
-                  <th className="p-4 font-medium">Image</th>
-                  <th className="p-4 font-medium">Name</th>
-                  <th className="p-4 font-medium">Category</th>
-                  <th className="p-4 font-medium">Price</th>
-                  <th className="p-4 font-medium">Stock</th>
-                  <th className="p-4 font-medium text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-gray-900 dark:text-slate-100">
-                {products.map((product) => (
-                  <tr 
-                    key={product._id} 
-                    onClick={() => {
-                      setNavigatingId(product._id as string);
-                      router.push(`/products/${product._id}`);
-                    }}
-                    className={`hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors ${navigatingId === product._id ? "cursor-wait opacity-75" : "cursor-pointer"}`}
-                  >
-                    <td className="p-4">
-                      <div className="w-12 h-12 bg-gray-100 dark:bg-slate-900 rounded overflow-hidden">
-                        <img 
-                          src={product.imageUrl || "https://via.placeholder.com/150"} 
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-                    </td>
-                    <td className="p-4 font-medium">{product.name}</td>
-                    <td className="p-4 text-gray-500 dark:text-slate-400">{product.category}</td>
-                    <td className="p-4 font-bold">${product.price.toFixed(2)}</td>
-                    <td className="p-4">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400" : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400"}`}>
+          <>
+            {/* Mobile Card Layout */}
+            <div className="sm:hidden divide-y divide-gray-200 dark:divide-slate-700">
+              {products.map((product) => (
+                <div
+                  key={product._id}
+                  onClick={() => {
+                    setNavigatingId(product._id as string);
+                    router.push(`/products/${product._id}`);
+                  }}
+                  className={`flex items-center gap-3 p-4 transition-colors ${navigatingId === product._id ? "cursor-wait opacity-75 bg-gray-50 dark:bg-slate-700/50" : "cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50"}`}
+                >
+                  <div className="w-14 h-14 bg-gray-100 dark:bg-slate-900 rounded-lg overflow-hidden shrink-0">
+                    <img
+                      src={product.imageUrl || "https://via.placeholder.com/150"}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm text-gray-900 dark:text-slate-100 truncate">{product.name}</p>
+                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">{product.category}</p>
+                    <div className="flex items-center gap-2 mt-1.5">
+                      <span className="text-sm font-bold text-gray-900 dark:text-slate-100">${product.price.toFixed(2)}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400" : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400"}`}>
                         {product.stock} in stock
                       </span>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex items-center justify-end space-x-4">
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            openEditModal(product);
-                          }}
-                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-2 rounded-full transition-colors flex items-center justify-center cursor-pointer"
-                          title="Edit Product"
-                        >
-                          <Edit className="w-5 h-5" />
-                          <span className="sr-only">Edit</span>
-                        </button>
-                        <button 
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            confirmDelete(product);
-                          }}
-                          className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-colors flex items-center justify-center cursor-pointer"
-                          title="Delete Product"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                          <span className="sr-only">Delete</span>
-                        </button>
-                      </div>
-                    </td>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); openEditModal(product); }}
+                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-2 rounded-full transition-colors cursor-pointer"
+                      title="Edit Product"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); confirmDelete(product); }}
+                      className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-colors cursor-pointer"
+                      title="Delete Product"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table Layout */}
+            <div className="hidden sm:block w-full overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-gray-50 dark:bg-slate-900/50 border-b border-gray-200 dark:border-slate-700 text-xs text-gray-600 dark:text-slate-400 uppercase tracking-wider">
+                    <th className="p-4 font-medium">Image</th>
+                    <th className="p-4 font-medium">Name</th>
+                    <th className="p-4 font-medium">Category</th>
+                    <th className="p-4 font-medium">Price</th>
+                    <th className="p-4 font-medium">Stock</th>
+                    <th className="p-4 font-medium text-right">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-gray-900 dark:text-slate-100">
+                  {products.map((product) => (
+                    <tr
+                      key={product._id}
+                      onClick={() => {
+                        setNavigatingId(product._id as string);
+                        router.push(`/products/${product._id}`);
+                      }}
+                      className={`hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors ${navigatingId === product._id ? "cursor-wait opacity-75" : "cursor-pointer"}`}
+                    >
+                      <td className="p-4">
+                        <div className="w-12 h-12 bg-gray-100 dark:bg-slate-900 rounded overflow-hidden">
+                          <img
+                            src={product.imageUrl || "https://via.placeholder.com/150"}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      </td>
+                      <td className="p-4 font-medium">{product.name}</td>
+                      <td className="p-4 text-gray-500 dark:text-slate-400">{product.category}</td>
+                      <td className="p-4 font-bold">${product.price.toFixed(2)}</td>
+                      <td className="p-4">
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400" : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400"}`}>
+                          {product.stock} in stock
+                        </span>
+                      </td>
+                      <td className="p-4">
+                        <div className="flex items-center justify-end space-x-4">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); openEditModal(product); }}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-2 rounded-full transition-colors flex items-center justify-center cursor-pointer"
+                            title="Edit Product"
+                          >
+                            <Edit className="w-5 h-5" />
+                            <span className="sr-only">Edit</span>
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); confirmDelete(product); }}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-colors flex items-center justify-center cursor-pointer"
+                            title="Delete Product"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                            <span className="sr-only">Delete</span>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
 
       {/* Modals */}
+
       <ProductFormModal 
         isOpen={isFormModalOpen} 
         onClose={() => setIsFormModalOpen(false)}
