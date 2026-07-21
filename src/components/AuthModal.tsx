@@ -147,7 +147,7 @@ function AuthModalInner() {
         {/* Close Button */}
         <button 
           onClick={handleClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors z-10"
+          className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors z-10 cursor-pointer"
         >
           <X className="w-5 h-5" />
         </button>
@@ -275,7 +275,7 @@ function AuthModalInner() {
             <button
               type="button"
               onClick={() => openModal(isLogin ? "register" : "login")}
-              className="text-brand-600 dark:text-brand-400 font-bold hover:underline transition-all"
+              className="text-brand-600 dark:text-brand-400 font-bold hover:underline transition-all cursor-pointer"
             >
               {isLogin ? "Sign Up" : "Log In"}
             </button>

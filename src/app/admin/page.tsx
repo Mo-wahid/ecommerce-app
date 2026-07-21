@@ -158,7 +158,7 @@ export default function AdminDashboard() {
           </h2>
           <button
             onClick={() => setShowAllOrders(!showAllOrders)}
-            className="text-brand-600 dark:text-brand-400 font-bold hover:underline text-sm"
+            className="text-brand-600 dark:text-brand-400 font-bold hover:underline text-sm cursor-pointer"
           >
             {showAllOrders ? "Show Recent Only" : "View All Orders"}
           </button>

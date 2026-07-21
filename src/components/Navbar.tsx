@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { ShoppingCart, User, LogOut, Package, Sun, Moon } from "lucide-react";
+import { ShoppingCart, User, LogOut, Package, Sun, Moon, Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useAuthModal } from "@/context/AuthModalContext";
@@ -19,6 +19,7 @@ export default function Navbar() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const { openModal } = useAuthModal();
 
   useEffect(() => {
@@ -44,6 +45,7 @@ export default function Navbar() {
   }, [pathname]);
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     await signOut({ redirect: false });
     router.push("/");
   };
@@ -110,11 +112,12 @@ export default function Navbar() {
                 </Link>
                 <button
                   onClick={handleLogout}
-                  className="cursor-pointer text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400 transition-colors flex items-center gap-1 text-sm font-medium"
+                  disabled={isLoggingOut}
+                  className={`transition-colors flex items-center gap-1 text-sm font-medium ${isLoggingOut ? 'text-slate-400 cursor-wait opacity-50' : 'cursor-pointer text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400'}`}
                   aria-label="Logout"
                 >
-                  <LogOut className="w-5 h-5 sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">Logout</span>
+                  {isLoggingOut ? <Loader2 className="w-5 h-5 sm:w-4 sm:h-4 animate-spin" /> : <LogOut className="w-5 h-5 sm:w-4 sm:h-4" />}
+                  <span className="hidden sm:inline">{isLoggingOut ? "Logging out..." : "Logout"}</span>
                 </button>
               </div>
             ) : (

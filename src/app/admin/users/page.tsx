@@ -190,7 +190,7 @@ export default function ManageUsersPage() {
                             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
                               isMe 
                                 ? "opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-                                : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 shadow-sm"
+                                : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 shadow-sm cursor-pointer"
                             }`}
                           >
                             {user.role === "admin" ? "Demote to User" : "Make Admin"}
@@ -201,7 +201,7 @@ export default function ManageUsersPage() {
                             className={`p-1.5 rounded-lg transition-colors flex items-center justify-center ${
                               isMe
                                 ? "opacity-50 cursor-not-allowed text-slate-400 dark:text-slate-500"
-                                : "text-red-600 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-900/20"
+                                : "text-red-600 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-900/20 cursor-pointer"
                             }`}
                             title="Delete User"
                           >

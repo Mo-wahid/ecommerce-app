@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { 
@@ -9,11 +10,13 @@ import {
   ListTree, 
   Users, 
   Settings, 
-  LogOut 
+  LogOut,
+  Loader2
 } from "lucide-react";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const links = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -51,11 +54,15 @@ export default function AdminSidebar() {
 
       <div className="p-4 md:p-6 border-t border-gray-200 dark:border-slate-800 hidden md:block">
         <button
-          onClick={() => signOut({ callbackUrl: '/' })}
-          className="flex w-full items-center gap-3 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400 transition-all font-medium"
+          onClick={() => {
+            setIsSigningOut(true);
+            signOut({ callbackUrl: '/' });
+          }}
+          disabled={isSigningOut}
+          className={`flex w-full items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${isSigningOut ? 'cursor-wait opacity-50 text-slate-400' : 'cursor-pointer text-slate-600 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400'}`}
         >
-          <LogOut className="w-5 h-5" />
-          <span className="hidden md:inline">Logout</span>
+          {isSigningOut ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogOut className="w-5 h-5" />}
+          <span className="hidden md:inline">{isSigningOut ? "Logging out..." : "Logout"}</span>
         </button>
       </div>
     </aside>
