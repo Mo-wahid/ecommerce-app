@@ -29,6 +29,16 @@ export interface IOrderProduct {
   price: number;
 }
 
+export interface ICategory {
+  _id: string;
+  name: string;
+  image?: string;
+  description?: string;
+  itemCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 export interface IOrder {
   _id: string;
   user: IUser;

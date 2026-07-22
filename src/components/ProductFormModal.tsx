@@ -43,6 +43,22 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const isEditing = !!product;
+  const [categoriesList, setCategoriesList] = useState<string[]>([
+    "Electronics", "Clothing", "Books", "Home & Garden", "Toys", "Sports & Outdoors", "Beauty & Personal Care", "Automotive"
+  ]);
+
+  useEffect(() => {
+    if (isOpen) {
+      fetch("/api/categories")
+        .then((res) => res.json())
+        .then((result) => {
+          if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+            setCategoriesList(result.data.map((c: { name: string }) => c.name));
+          }
+        })
+        .catch(() => {});
+    }
+  }, [isOpen]);
 
   const {
     register,
@@ -233,14 +249,11 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem id="Electronics" textValue="Electronics">Electronics</SelectItem>
-                              <SelectItem id="Clothing" textValue="Clothing">Clothing</SelectItem>
-                              <SelectItem id="Books" textValue="Books">Books</SelectItem>
-                              <SelectItem id="Home & Garden" textValue="Home & Garden">Home & Garden</SelectItem>
-                              <SelectItem id="Toys" textValue="Toys">Toys</SelectItem>
-                              <SelectItem id="Sports & Outdoors" textValue="Sports & Outdoors">Sports & Outdoors</SelectItem>
-                              <SelectItem id="Beauty & Personal Care" textValue="Beauty & Personal Care">Beauty & Personal Care</SelectItem>
-                              <SelectItem id="Automotive" textValue="Automotive">Automotive</SelectItem>
+                              {categoriesList.map((cat) => (
+                                <SelectItem key={cat} id={cat} textValue={cat}>
+                                  {cat}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                         )}

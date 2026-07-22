@@ -10,6 +10,7 @@ import ProductFormModal from "@/components/ProductFormModal";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 import ProductFilterBar from "@/components/ProductFilterBar";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Separator } from "@/components/ui/separator";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -183,13 +184,13 @@ export default function ManageProductsPage() {
         showPriceFilter={false}
       />
 
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
+      <Card className="overflow-hidden border-border bg-card">
         {products.length === 0 ? (
           <EmptyState
             icon={Package}
             title="No products found"
             description="Try adjusting your search or filter to find what you're looking for, or add a new product."
-            className="border-0 rounded-none shadow-none bg-transparent dark:bg-transparent"
+            className="border-0 rounded-none shadow-none bg-transparent"
             action={
               <Button onPress={openAddModal}>Add New Product</Button>
             }
@@ -197,7 +198,7 @@ export default function ManageProductsPage() {
         ) : (
           <>
             {/* Mobile Card Layout */}
-            <div className="sm:hidden divide-y divide-gray-200 dark:divide-slate-700">
+            <div className="sm:hidden divide-y divide-border">
               {displayedProducts.map((product) => (
                 <div
                   key={product._id}
@@ -205,9 +206,9 @@ export default function ManageProductsPage() {
                     setNavigatingId(product._id as string);
                     router.push(`/products/${product._id}`);
                   }}
-                  className={`flex items-center gap-3 p-4 transition-colors ${navigatingId === product._id ? "cursor-wait opacity-75 bg-gray-50 dark:bg-slate-700/50" : "cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50"}`}
+                  className={`flex items-center gap-3 p-4 transition-colors ${navigatingId === product._id ? "cursor-wait opacity-75 bg-muted" : "cursor-pointer hover:bg-muted/50"}`}
                 >
-                  <div className="w-14 h-14 bg-gray-100 dark:bg-slate-900 rounded-lg overflow-hidden shrink-0">
+                  <div className="w-14 h-14 bg-muted border border-border rounded-lg overflow-hidden shrink-0">
                     <img
                       src={product.imageUrl || "https://via.placeholder.com/150"}
                       alt={product.name}
@@ -215,11 +216,11 @@ export default function ManageProductsPage() {
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm text-gray-900 dark:text-slate-100 truncate">{product.name}</p>
-                    <p className="text-xs text-gray-500 dark:text-slate-400 mt-0.5">{product.category}</p>
+                    <p className="font-semibold text-sm text-foreground truncate">{product.name}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{product.category}</p>
                     <div className="flex items-center gap-2 mt-1.5">
-                      <span className="text-sm font-bold text-gray-900 dark:text-slate-100">${product.price.toFixed(2)}</span>
-                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400" : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400"}`}>
+                      <span className="text-sm font-bold text-foreground">${product.price.toFixed(2)}</span>
+                      <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" : "bg-destructive/10 text-destructive border border-destructive/20"}`}>
                         {product.stock} in stock
                       </span>
                     </div>
@@ -229,7 +230,7 @@ export default function ManageProductsPage() {
                       variant="ghost"
                       size="icon"
                       onPress={(e: any) => { e.stopPropagation(); openEditModal(product); }}
-                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full"
+                      className="text-primary hover:text-primary hover:bg-primary/10 rounded-full"
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
@@ -237,7 +238,7 @@ export default function ManageProductsPage() {
                       variant="ghost"
                       size="icon"
                       onPress={(e: any) => { e.stopPropagation(); confirmDelete(product); }}
-                      className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -268,7 +269,7 @@ export default function ManageProductsPage() {
                       className={navigatingId === product._id ? "cursor-wait opacity-75" : "cursor-pointer"}
                     >
                       <TableCell>
-                        <div className="w-12 h-12 bg-gray-100 dark:bg-slate-900 rounded overflow-hidden">
+                        <div className="w-12 h-12 bg-muted border border-border rounded overflow-hidden">
                           <img
                             src={product.imageUrl || "https://via.placeholder.com/150"}
                             alt={product.name}
@@ -276,11 +277,11 @@ export default function ManageProductsPage() {
                           />
                         </div>
                       </TableCell>
-                      <TableCell className="font-medium">{product.name}</TableCell>
-                      <TableCell className="text-gray-500 dark:text-slate-400">{product.category}</TableCell>
-                      <TableCell className="font-bold">${product.price.toFixed(2)}</TableCell>
+                      <TableCell className="font-medium text-foreground">{product.name}</TableCell>
+                      <TableCell className="text-muted-foreground">{product.category}</TableCell>
+                      <TableCell className="font-bold text-foreground">${product.price.toFixed(2)}</TableCell>
                       <TableCell>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400" : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400"}`}>
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" : "bg-destructive/10 text-destructive border border-destructive/20"}`}>
                           {product.stock} in stock
                         </span>
                       </TableCell>
@@ -290,18 +291,18 @@ export default function ManageProductsPage() {
                             variant="ghost"
                             size="icon"
                             onPress={() => openEditModal(product)}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full"
+                            className="text-primary hover:text-primary hover:bg-primary/10 rounded-full"
                           >
-                            <Edit className="w-5 h-5" />
+                            <Edit className="w-4 h-4" />
                             <span className="sr-only">Edit</span>
                           </Button>
                           <Button
                             variant="ghost"
                             size="icon"
                             onPress={() => confirmDelete(product)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full"
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full"
                           >
-                            <Trash2 className="w-5 h-5" />
+                            <Trash2 className="w-4 h-4" />
                             <span className="sr-only">Delete</span>
                           </Button>
                         </div>
@@ -313,7 +314,7 @@ export default function ManageProductsPage() {
             </div>
 
             {totalPages > 1 && (
-              <div className="bg-white dark:bg-slate-800">
+              <div className="bg-card">
                 <Separator />
                 <div className="p-4">
                   <Pagination>
@@ -350,7 +351,7 @@ export default function ManageProductsPage() {
             )}
           </>
         )}
-      </div>
+      </Card>
 
       {/* Modals */}
 
