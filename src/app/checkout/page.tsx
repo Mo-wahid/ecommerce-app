@@ -3,6 +3,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { toast } from "sonner";
+import { CreditCard, Truck, AlertCircle, ShoppingBag } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { EmptyState } from "@/components/ui/empty-state";
+import { ShoppingCart } from "lucide-react";
 import { useSession } from "next-auth/react";
 
 export default function CheckoutPage() {
@@ -99,12 +107,17 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="text-center py-16 bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 shadow-sm transition-colors">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-100 mb-4">Your cart is empty</h2>
-        <p className="text-gray-600 dark:text-slate-400 mb-6">You need items in your cart to checkout.</p>
-        <Link href="/products" className="bg-brand-600 text-white px-6 py-2 rounded hover:bg-brand-700">
-          Return to Shop
-        </Link>
+      <div className="py-12 max-w-xl mx-auto">
+        <EmptyState
+          icon={ShoppingCart}
+          title="Your cart is empty"
+          description="You need items in your cart to checkout."
+          action={
+            <Button onPress={() => router.push("/products")}>
+              Return to Shop
+            </Button>
+          }
+        />
       </div>
     );
   }
@@ -124,66 +137,70 @@ export default function CheckoutPage() {
             <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Username</label>
-                <input
+                <Input
                   type="text"
                   required
-                  className="w-full px-4 py-2 text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors"
+                  className="h-11 rounded-xl"
                   value={formData.fullName}
-                  onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                  onChange={(e: any) => setFormData({ ...formData, fullName: e.target.value })}
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Street Address</label>
-                <input
+                <Input
                   type="text"
                   required
-                  className="w-full px-4 py-2 text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors"
+                  className="h-11 rounded-xl"
                   value={formData.address}
-                  onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                  onChange={(e: any) => setFormData({ ...formData, address: e.target.value })}
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">City</label>
-                  <input
+                  <Input
                     type="text"
                     required
-                    className="w-full px-4 py-2 text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors"
+                    className="h-11 rounded-xl"
                     value={formData.city}
-                    onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+                    onChange={(e: any) => setFormData({ ...formData, city: e.target.value })}
                   />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Postal Code</label>
-                  <input
+                  <Input
                     type="text"
                     required
-                    className="w-full px-4 py-2 text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors"
+                    className="h-11 rounded-xl"
                     value={formData.postalCode}
-                    onChange={(e) => setFormData({ ...formData, postalCode: e.target.value })}
+                    onChange={(e: any) => setFormData({ ...formData, postalCode: e.target.value })}
                   />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Country</label>
-                <select
-                  required
-                  className="w-full px-4 py-2 text-gray-900 dark:text-slate-100 bg-white dark:bg-slate-900 border border-gray-300 dark:border-slate-600 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors"
-                  value={formData.country}
-                  onChange={(e) => setFormData({ ...formData, country: e.target.value })}
+                <Select
+                  isRequired
+                  selectedKey={formData.country}
+                  onSelectionChange={(key) => setFormData({ ...formData, country: key?.toString() || "" })}
                 >
-                  <option value="United States">United States</option>
-                  <option value="Canada">Canada</option>
-                  <option value="United Kingdom">United Kingdom</option>
-                  <option value="Australia">Australia</option>
-                  <option value="Pakistan">Pakistan</option>
-                  <option value="India">India</option>
-                  <option value="Germany">Germany</option>
-                  <option value="France">France</option>
-                </select>
+                  <SelectTrigger className="w-full h-11 rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem id="United States" textValue="United States">United States</SelectItem>
+                    <SelectItem id="Canada" textValue="Canada">Canada</SelectItem>
+                    <SelectItem id="United Kingdom" textValue="United Kingdom">United Kingdom</SelectItem>
+                    <SelectItem id="Australia" textValue="Australia">Australia</SelectItem>
+                    <SelectItem id="Pakistan" textValue="Pakistan">Pakistan</SelectItem>
+                    <SelectItem id="India" textValue="India">India</SelectItem>
+                    <SelectItem id="Germany" textValue="Germany">Germany</SelectItem>
+                    <SelectItem id="France" textValue="France">France</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
             </form>
           </div>
@@ -206,16 +223,20 @@ export default function CheckoutPage() {
             ))}
           </div>
 
-          <div className="border-t border-gray-200 dark:border-slate-700 pt-4 mb-2 flex justify-between text-gray-600 dark:text-slate-400">
+          <Separator className="my-4" />
+          
+          <div className="mb-2 flex justify-between text-gray-600 dark:text-slate-400">
             <span>Subtotal</span>
             <span>${subtotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-gray-600 dark:text-slate-400 mb-6">
+          <div className="flex justify-between text-gray-600 dark:text-slate-400 mb-4">
             <span>Shipping</span>
             <span className="text-emerald-600 dark:text-emerald-400 font-medium">Free</span>
           </div>
           
-          <div className="border-t border-gray-200 dark:border-slate-700 pt-4 flex justify-between font-bold text-xl text-gray-900 dark:text-slate-100 mb-6">
+          <Separator className="my-4" />
+
+          <div className="flex justify-between font-bold text-xl text-gray-900 dark:text-slate-100 mb-6">
             <span>Total</span>
             <span>${subtotal.toFixed(2)}</span>
           </div>

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Button from './Button';
+import { Button } from './button';
 
 const meta: Meta<typeof Button> = {
   title: 'UI/Button',
@@ -11,16 +11,13 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'danger', 'ghost'],
+      options: ['default', 'outline', 'secondary', 'ghost', 'destructive', 'link'],
     },
     size: {
       control: 'select',
-      options: ['sm', 'md', 'lg'],
+      options: ['default', 'xs', 'sm', 'lg', 'icon'],
     },
-    isLoading: {
-      control: 'boolean',
-    },
-    disabled: {
+    isDisabled: {
       control: 'boolean',
     },
   },
@@ -29,10 +26,10 @@ const meta: Meta<typeof Button> = {
 export default meta;
 type Story = StoryObj<typeof Button>;
 
-export const Primary: Story = {
+export const Default: Story = {
   args: {
-    variant: 'primary',
-    children: 'Primary Button',
+    variant: 'default',
+    children: 'Default Button',
   },
 };
 
@@ -43,10 +40,10 @@ export const Secondary: Story = {
   },
 };
 
-export const Danger: Story = {
+export const Destructive: Story = {
   args: {
-    variant: 'danger',
-    children: 'Danger Button',
+    variant: 'destructive',
+    children: 'Destructive Button',
   },
 };
 
@@ -57,17 +54,16 @@ export const Ghost: Story = {
   },
 };
 
-export const Loading: Story = {
+export const Outline: Story = {
   args: {
-    variant: 'primary',
-    isLoading: true,
-    children: 'Loading State',
+    variant: 'outline',
+    children: 'Outline Button',
   },
 };
 
 export const Small: Story = {
   args: {
-    variant: 'primary',
+    variant: 'default',
     size: 'sm',
     children: 'Small Button',
   },
@@ -75,7 +71,7 @@ export const Small: Story = {
 
 export const Large: Story = {
   args: {
-    variant: 'primary',
+    variant: 'default',
     size: 'lg',
     children: 'Large Button',
   },

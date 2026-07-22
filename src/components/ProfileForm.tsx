@@ -2,8 +2,12 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { Loader2, Save, User, Lock } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 export default function ProfileForm() {
   const { data: session, update } = useSession();
@@ -47,10 +51,10 @@ export default function ProfileForm() {
   }
 
   return (
-    <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden max-w-2xl transition-colors">
-      <div className="p-6 sm:p-8 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50">
+    <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden max-w-2xl transition-colors">
+      <div className="p-6 sm:p-8 border-b border-border bg-muted/40">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-600 dark:text-brand-400 flex items-center justify-center shrink-0">
+          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
             {session.user.image ? (
               <img src={session.user.image} alt={session.user.name || "User"} className="w-full h-full rounded-full object-cover" />
             ) : (
@@ -58,9 +62,9 @@ export default function ProfileForm() {
             )}
           </div>
           <div>
-            <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">{session.user.name}</h2>
-            <p className="text-gray-500 dark:text-slate-400 text-sm">{session.user.email}</p>
-            <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 capitalize border border-brand-200 dark:border-brand-800/50">
+            <h2 className="text-xl font-bold text-foreground">{session.user.name}</h2>
+            <p className="text-muted-foreground text-sm">{session.user.email}</p>
+            <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground capitalize border border-border">
               {session.user.role || "User"} Account
             </span>
           </div>
@@ -69,66 +73,65 @@ export default function ProfileForm() {
 
       <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-6">
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Display Name
           </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-              <User className="w-5 h-5" />
-            </div>
-            <input
+          <InputGroup className="h-12 rounded-xl">
+            <InputGroupAddon align="inline-start">
+              <User className="w-5 h-5 text-muted-foreground" />
+            </InputGroupAddon>
+            <InputGroupInput
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white"
               placeholder="Your Name"
               required
             />
-          </div>
+          </InputGroup>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+          <label className="block text-sm font-medium text-foreground mb-2">
             Email Address
           </label>
-          <input
+          <Input
             type="email"
             value={session.user.email || ""}
             disabled
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/50 text-slate-500 dark:text-slate-500 cursor-not-allowed outline-none transition-all"
+            className="h-12 rounded-xl bg-muted cursor-not-allowed text-muted-foreground"
             title="Email cannot be changed"
           />
-          <p className="text-xs text-slate-500 mt-2">Email address cannot be changed currently.</p>
+          <p className="text-xs text-muted-foreground mt-2">Email address cannot be changed currently.</p>
         </div>
 
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-700/50">
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-            New Password <span className="text-slate-400 font-normal">(Leave blank to keep current)</span>
+        <Separator className="my-4" />
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-2">
+            New Password <span className="text-muted-foreground font-normal">(Leave blank to keep current)</span>
           </label>
-          <div className="relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-              <Lock className="w-5 h-5" />
-            </div>
-            <input
+          <InputGroup className="h-12 rounded-xl">
+            <InputGroupAddon align="inline-start">
+              <Lock className="w-5 h-5 text-muted-foreground" />
+            </InputGroupAddon>
+            <InputGroupInput
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white"
               placeholder="Enter new password"
               minLength={6}
             />
-          </div>
+          </InputGroup>
         </div>
 
         <div className="pt-4 flex justify-end">
-          <button
+          <Button
             type="submit"
-            disabled={loading}
-            className="cursor-pointer flex items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-6 py-3 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-wait shadow-md shadow-brand-600/20"
+            isDisabled={loading}
+            className="h-12 px-6 rounded-xl font-bold"
           >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
+            {loading ? <Loader2 className="w-5 h-5 animate-spin mr-2" /> : <Save className="w-5 h-5 mr-2" />}
             Save Changes
-          </button>
+          </Button>
         </div>
       </form>
     </div>

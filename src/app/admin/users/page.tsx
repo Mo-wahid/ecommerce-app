@@ -4,9 +4,22 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
-import { Loader2, Trash2, ArrowLeft, Shield, ShieldAlert } from "lucide-react";
+import { toast } from "sonner";
+import { User, Mail, Shield, CheckCircle, XCircle, Search, Trash2, Edit2, ShieldAlert, Key, MoreVertical, LogOut, Users, Loader2, ArrowLeft } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function ManageUsersPage() {
   const router = useRouter();
@@ -15,6 +28,10 @@ export default function ManageUsersPage() {
 
   const [users, setUsers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   const [deleteModalState, setDeleteModalState] = useState<{ isOpen: boolean; user: any | null; isDeleting: boolean }>({
     isOpen: false,
@@ -110,10 +127,16 @@ export default function ManageUsersPage() {
   if (status === "loading" || loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
       </div>
     );
   }
+
+  const totalPages = Math.ceil(users.length / ITEMS_PER_PAGE);
+  const displayedUsers = users.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
@@ -133,91 +156,122 @@ export default function ManageUsersPage() {
         </div>
       </div>
 
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors flex flex-col h-[600px]">
+      <Card className="flex flex-col h-[600px] overflow-hidden">
         {users.length === 0 ? (
-          <div className="p-12 text-center flex flex-col items-center justify-center h-full">
-            <p className="text-gray-500 dark:text-slate-400 text-lg">No users found.</p>
-          </div>
+          <EmptyState
+            icon={Users}
+            title="No users found"
+            description="Try adjusting your search query to find the user you're looking for."
+            className="border-0 rounded-none shadow-none bg-transparent dark:bg-transparent"
+          />
         ) : (
-          <div className="w-full overflow-x-auto min-w-0 flex-1">
-            <table className="w-full text-left border-collapse min-w-[700px]">
-              <thead className="sticky top-0 bg-gray-50 dark:bg-slate-900/90 backdrop-blur-sm z-10 border-b border-gray-200 dark:border-slate-700">
-                <tr className="text-xs text-gray-600 dark:text-slate-400 uppercase tracking-wider">
-                  <th className="p-4 font-bold">User</th>
-                  <th className="p-4 font-bold">Role</th>
-                  <th className="p-4 font-bold">Joined</th>
-                  <th className="p-4 font-bold text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-gray-900 dark:text-slate-100">
-                {users.map((user) => {
+          <CardContent className="p-0 w-full overflow-x-auto min-w-0 flex-1">
+            <Table className="min-w-[700px]">
+              <TableHeader>
+                <TableHead className="font-bold" isRowHeader>User</TableHead>
+                <TableHead className="font-bold">Role</TableHead>
+                <TableHead className="font-bold">Joined</TableHead>
+                <TableHead className="font-bold text-right">Actions</TableHead>
+              </TableHeader>
+              <TableBody>
+                {displayedUsers.map((user) => {
                   const isMe = user._id === currentUser.id;
                   
                   return (
-                    <tr key={user._id} className={`hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors ${isMe ? 'bg-brand-50/50 dark:bg-brand-900/10' : ''}`}>
-                      <td className="p-4">
+                    <TableRow key={user._id} className={isMe ? 'bg-primary/5 dark:bg-primary/10' : ''}>
+                      <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400 font-bold uppercase shrink-0">
+                          <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-secondary-foreground font-bold uppercase shrink-0">
                             {user.name.charAt(0)}
                           </div>
-                          <div>
-                            <div className="font-bold flex items-center gap-2">
-                              {user.name} 
-                              {isMe && <span className="px-2 py-0.5 rounded-full bg-brand-100 dark:bg-brand-900/30 text-brand-700 dark:text-brand-400 text-[10px] uppercase tracking-wider">You</span>}
+                          <div className="min-w-0">
+                            <div className="font-bold truncate text-foreground flex items-center gap-2">
+                              {user.name}
+                              {isMe && <span className="px-1.5 py-0.5 rounded text-[10px] uppercase font-black bg-primary text-primary-foreground tracking-wider">You</span>}
                             </div>
-                            <div className="text-gray-500 dark:text-slate-400 text-xs">{user.email}</div>
+                            <div className="text-muted-foreground text-xs truncate mt-0.5">{user.email}</div>
                           </div>
                         </div>
-                      </td>
-                      <td className="p-4">
+                      </TableCell>
+                      <TableCell>
                         <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1 w-max ${
                           user.role === "admin" 
                             ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800/50" 
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
+                            : "bg-secondary text-secondary-foreground border border-border"
                         }`}>
                           {user.role === "admin" ? <ShieldAlert className="w-3.5 h-3.5" /> : <Shield className="w-3.5 h-3.5" />}
                           {user.role}
                         </span>
-                      </td>
-                      <td className="p-4 font-medium text-gray-600 dark:text-slate-400">
+                      </TableCell>
+                      <TableCell className="font-medium text-muted-foreground">
                         {new Date(user.createdAt).toLocaleDateString()}
-                      </td>
-                      <td className="p-4">
-                        <div className="flex items-center justify-end space-x-3">
-                          <button 
-                            onClick={() => handleRoleToggle(user)}
-                            disabled={isMe}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                              isMe 
-                                ? "opacity-50 cursor-not-allowed bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500"
-                                : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 shadow-sm cursor-pointer"
-                            }`}
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end space-x-2">
+                          <Button 
+                            variant="outline"
+                            size="sm"
+                            onPress={() => handleRoleToggle(user)}
+                            isDisabled={isMe}
                           >
                             {user.role === "admin" ? "Demote to User" : "Make Admin"}
-                          </button>
-                          <button 
-                            onClick={() => confirmDelete(user)}
-                            disabled={isMe}
-                            className={`p-1.5 rounded-lg transition-colors flex items-center justify-center ${
-                              isMe
-                                ? "opacity-50 cursor-not-allowed text-slate-400 dark:text-slate-500"
-                                : "text-red-600 hover:bg-red-50 dark:text-red-500 dark:hover:bg-red-900/20 cursor-pointer"
-                            }`}
-                            title="Delete User"
+                          </Button>
+                          <Button 
+                            variant="ghost"
+                            size="icon"
+                            onPress={() => confirmDelete(user)}
+                            isDisabled={isMe}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
                           >
                             <Trash2 className="w-4 h-4" />
                             <span className="sr-only">Delete</span>
-                          </button>
+                          </Button>
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
+              </TableBody>
+            </Table>
+          </CardContent>
         )}
-      </div>
+        {totalPages > 1 && (
+          <div className="mt-auto shrink-0 bg-white dark:bg-slate-900 z-10 relative">
+            <Separator />
+            <div className="p-4">
+              <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onPress={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} 
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <PaginationItem key={i}>
+                    <PaginationLink 
+                      onPress={() => setCurrentPage(i + 1)} 
+                      isActive={currentPage === i + 1}
+                      className="cursor-pointer"
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext 
+                    onPress={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        </div>
+        )}
+      </Card>
 
       <DeleteConfirmModal 
         isOpen={deleteModalState.isOpen}

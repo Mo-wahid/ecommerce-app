@@ -10,8 +10,8 @@ interface LoadingProps {
 export default function Loading({ message = "Loading...", fullScreen = false, className = "" }: LoadingProps) {
   const content = (
     <div className={`flex flex-col items-center justify-center space-y-4 p-8 ${className}`}>
-      <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
-      {message && <p className="text-slate-600 dark:text-slate-400 font-medium animate-pulse">{message}</p>}
+      <Loader2 className="w-10 h-10 text-primary animate-spin" />
+      {message && <p className="text-muted-foreground font-medium animate-pulse">{message}</p>}
     </div>
   );
 

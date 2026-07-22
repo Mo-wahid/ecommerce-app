@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { toast } from "sonner";
 import { ShoppingCart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useAuthModal } from "@/context/AuthModalContext";
-import Button from "./ui/Button";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 interface AddToCartProps {
   productId: string;
@@ -53,12 +54,11 @@ export default function AddToCartSection({ productId, stock, price }: AddToCartP
 
       toast.success(`Added to cart! You now have ${totalItemsInCart} items in your cart.`, { 
         id: toastId,
-        position: 'bottom-right'
+        action: {
+          label: "View Cart",
+          onClick: () => router.push('/cart')
+        }
       });
-      // We don't necessarily want to go back immediately as it might disrupt their browsing.
-      // setTimeout(() => {
-      //   router.back();
-      // }, 500);
     } catch (error: unknown) {
       if (error instanceof Error) {
         toast.error(error.message, { id: toastId });
@@ -72,54 +72,57 @@ export default function AddToCartSection({ productId, stock, price }: AddToCartP
 
   if (stock === 0) {
     return (
-      <Button disabled className="w-full mt-4 bg-slate-300 text-slate-500 dark:bg-slate-800 dark:text-slate-600 cursor-not-allowed">
+      <Button isDisabled className="w-full h-12 bg-slate-200 dark:bg-slate-800 text-slate-500 dark:text-slate-400 font-bold rounded-xl cursor-not-allowed">
         Out of Stock
       </Button>
     );
   }
 
   return (
-    <div className="space-y-6 mt-6 pt-6 border-t border-slate-100">
-      <div className="flex items-center justify-between">
-        <label className="text-slate-700 dark:text-slate-300 font-semibold">Quantity</label>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white">
-            <button
-              onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
-              disabled={quantity <= 1}
-            >
-              -
-            </button>
-            <span className="px-4 py-2 text-slate-900 font-bold border-x border-slate-200 min-w-[3rem] text-center">
-              {quantity}
-            </span>
-            <button
-              onClick={() => setQuantity(Math.min(stock, quantity + 1))}
-              className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
-              disabled={quantity >= stock}
-            >
-              +
-            </button>
+    <>
+      <Separator className="my-6" />
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <label className="text-slate-700 dark:text-slate-300 font-semibold">Quantity</label>
+          <div className="flex items-center gap-3">
+            <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white">
+              <button
+                onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
+                disabled={quantity <= 1}
+              >
+                -
+              </button>
+              <span className="px-4 py-2 text-slate-900 font-bold border-x border-slate-200 min-w-[3rem] text-center">
+                {quantity}
+              </span>
+              <button
+                onClick={() => setQuantity(Math.min(stock, quantity + 1))}
+                className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
+                disabled={quantity >= stock}
+              >
+                +
+              </button>
+            </div>
+            <span className="text-sm font-medium text-slate-500">({stock - quantity} left)</span>
           </div>
-          <span className="text-sm font-medium text-slate-500">({stock - quantity} left)</span>
         </div>
-      </div>
 
-      <div className="flex items-center justify-between text-lg font-bold text-slate-900 dark:text-slate-100">
-        <span>Total Price:</span>
-        <span>${(price * quantity).toFixed(2)}</span>
-      </div>
+        <div className="flex items-center justify-between text-lg font-bold text-slate-900 dark:text-slate-100">
+          <span>Total Price:</span>
+          <span>${(price * quantity).toFixed(2)}</span>
+        </div>
 
-      <Button
-        onClick={handleAddToCart}
-        isLoading={loading}
-        className="w-full"
-        size="lg"
-      >
-        {!loading && <ShoppingCart className="w-5 h-5 mr-2" />}
-        {loading ? "Adding..." : "Add to Cart"}
-      </Button>
-    </div>
+        <Button
+          onPress={handleAddToCart}
+          isDisabled={loading}
+          className="w-full h-11 text-lg"
+          size="lg"
+        >
+          {!loading && <ShoppingCart className="w-5 h-5 mr-2" />}
+          {loading ? "Adding..." : "Add to Cart"}
+        </Button>
+      </div>
+    </>
   );
 }

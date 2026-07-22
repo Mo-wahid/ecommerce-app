@@ -3,14 +3,25 @@
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "./ProductCard";
-import SearchBar from "./ui/SearchBar";
-import SelectFilter from "./ui/SelectFilter";
+import ProductFilterBar from "./ProductFilterBar";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
+import { Card, CardContent } from "@/components/ui/card";
+
+const ITEMS_PER_PAGE = 8;
 
 export default function ProductCatalog({ initialProducts }: { initialProducts: import("@/types").IProduct[] }) {
   const searchParams = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [priceRange, setPriceRange] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const category = searchParams.get("category");
@@ -18,6 +29,11 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
       setSelectedCategory(category);
     }
   }, [searchParams]);
+
+  // Reset to page 1 whenever filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedCategory, priceRange]);
 
   // Extract unique categories for the dropdown filter
   const categories = useMemo(() => {
@@ -40,53 +56,74 @@ export default function ProductCatalog({ initialProducts }: { initialProducts: i
     });
   }, [initialProducts, searchQuery, selectedCategory, priceRange]);
 
+  const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
+  const paginatedProducts = filteredProducts.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <div>
       {/* Search and Filter Controls */}
-      <div className="flex flex-col sm:flex-row gap-4 mb-8 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
-        <div className="flex-1">
-          <SearchBar
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className="flex flex-col sm:flex-row gap-4 sm:w-auto">
-          <SelectFilter
-            className="sm:w-48"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            options={categories.map(cat => ({
-              label: cat === "All" ? "All Categories" : cat,
-              value: cat
-            }))}
-          />
-          
-          <SelectFilter
-            className="sm:w-48"
-            value={priceRange}
-            onChange={(e) => setPriceRange(e.target.value)}
-            options={[
-              { label: "All Prices", value: "All" },
-              { label: "Under $50", value: "Under $50" },
-              { label: "$50 to $100", value: "$50 to $100" },
-              { label: "Over $100", value: "Over $100" }
-            ]}
-          />
-        </div>
-      </div>
+      <ProductFilterBar
+        className="mb-8"
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
+        categories={categories}
+        priceRange={priceRange}
+        onPriceRangeChange={setPriceRange}
+        showPriceFilter={true}
+      />
 
       {/* Product Grid */}
-      {filteredProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product._id} product={product} />
-          ))}
-        </div>
+      {paginatedProducts.length > 0 ? (
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+            {paginatedProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious 
+                    onPress={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                    className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} 
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: totalPages }).map((_, i) => (
+                  <PaginationItem key={i}>
+                    <PaginationLink 
+                      onPress={() => setCurrentPage(i + 1)} 
+                      isActive={currentPage === i + 1}
+                      className="cursor-pointer"
+                    >
+                      {i + 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ))}
+
+                <PaginationItem>
+                  <PaginationNext 
+                    onPress={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                    className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
+        </>
       ) : (
-        <div className="text-center py-12 bg-white dark:bg-slate-800 rounded-lg border border-gray-100 dark:border-slate-700 transition-colors">
-          <p className="text-gray-500 dark:text-slate-400 text-lg">No products found matching your criteria.</p>
-        </div>
+        <Card>
+          <CardContent className="text-center py-20 flex flex-col items-center justify-center">
+            <p className="text-muted-foreground text-lg">No products found matching your criteria.</p>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

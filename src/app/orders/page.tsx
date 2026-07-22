@@ -62,11 +62,11 @@ export default function OrdersPage() {
         <div className="bg-slate-50 dark:bg-slate-900 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
           <Package className="w-10 h-10 text-slate-400" />
         </div>
-        <h2 className="text-2xl font-black text-slate-900 dark:text-slate-100 mb-4 tracking-tight">No orders yet</h2>
-        <p className="text-slate-500 dark:text-slate-400 mb-8 max-w-sm mx-auto">Looks like you haven't placed any orders. Let's find some amazing products for you!</p>
+        <h2 className="text-2xl font-black text-foreground mb-4 tracking-tight">No orders yet</h2>
+        <p className="text-muted-foreground mb-8 max-w-sm mx-auto">Looks like you haven't placed any orders. Let's find some amazing products for you!</p>
         <Link 
           href="/products" 
-          className="bg-brand-600 text-white px-8 py-3.5 rounded-xl hover:bg-brand-700 font-bold transition-all shadow-md shadow-brand-600/20"
+          className="bg-primary text-primary-foreground px-8 py-3.5 rounded-xl hover:bg-primary/90 font-bold transition-all shadow-md"
         >
           Start Shopping
         </Link>
@@ -76,9 +76,9 @@ export default function OrdersPage() {
 
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      <div className="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800 pb-6">
-        <Package className="w-8 h-8 text-brand-600" />
-        <h1 className="text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight">Your Orders</h1>
+      <div className="flex items-center gap-3 border-b border-border pb-6">
+        <Package className="w-8 h-8 text-primary" />
+        <h1 className="text-3xl font-black text-foreground tracking-tight">Your Orders</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -87,13 +87,13 @@ export default function OrdersPage() {
           const statusColors = getStatusConfig(order.orderStatus);
 
           return (
-            <div key={order._id} className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm hover:shadow-md transition-all">
+            <div key={order._id} className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all">
               {/* Order Header */}
-              <div className="bg-slate-50 dark:bg-slate-900/50 px-5 py-4 border-b border-slate-200 dark:border-slate-700 flex justify-between items-start gap-4">
+              <div className="bg-muted/40 px-5 py-4 border-b border-border flex justify-between items-start gap-4">
                 <div className="text-sm space-y-1.5">
-                  <p className="text-slate-500 dark:text-slate-400">Placed: <span className="font-semibold text-slate-900 dark:text-slate-100">{new Date(order.createdAt).toLocaleDateString()}</span></p>
-                  <p className="text-slate-500 dark:text-slate-400">Total: <span className="font-semibold text-brand-600 dark:text-brand-400">${order.totalAmount.toFixed(2)}</span></p>
-                  <p className="text-slate-500 dark:text-slate-400">ID: <span className="font-semibold text-slate-900 dark:text-slate-100">{order._id.substring(order._id.length - 8).toUpperCase()}</span></p>
+                  <p className="text-muted-foreground">Placed: <span className="font-semibold text-foreground">{new Date(order.createdAt).toLocaleDateString()}</span></p>
+                  <p className="text-muted-foreground">Total: <span className="font-semibold text-foreground">${order.totalAmount.toFixed(2)}</span></p>
+                  <p className="text-muted-foreground">ID: <span className="font-semibold text-foreground">{order._id.substring(order._id.length - 8).toUpperCase()}</span></p>
                 </div>
                 
                 <div className={`px-2.5 py-1 rounded-md border flex items-center gap-1.5 ${statusColors.bg}`}>
@@ -104,14 +104,14 @@ export default function OrdersPage() {
 
               {/* Order Items */}
               <div className="p-5">
-                <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider mb-4">Items in order</h3>
+                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Items in order</h3>
                 <div className="space-y-4">
                   {order.orderItems.map((item: import("@/types").IOrderProduct, index: number) => {
                     if (!item.product) return null;
                     
                     return (
                       <div key={`${order._id}-${index}`} className="flex items-center gap-4">
-                        <div className="relative w-16 h-16 bg-slate-100 dark:bg-slate-900 rounded-lg overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
+                        <div className="relative w-16 h-16 bg-muted rounded-lg overflow-hidden shrink-0 border border-border">
                           <Image 
                             src={item.product.imageUrl || "https://via.placeholder.com/150"} 
                             alt={item.product.name}
@@ -121,12 +121,12 @@ export default function OrdersPage() {
                           />
                         </div>
                         <div className="flex-grow min-w-0">
-                          <Link href={`/products/${item.product._id}`} className="text-sm font-bold text-slate-900 dark:text-slate-100 hover:text-brand-600 dark:hover:text-brand-400 transition-colors truncate block">
+                          <Link href={`/products/${item.product._id}`} className="text-sm font-bold text-foreground hover:text-primary transition-colors truncate block">
                             {item.product.name}
                           </Link>
                           <div className="flex items-center justify-between mt-1">
-                            <span className="text-slate-500 dark:text-slate-400 text-xs">Qty: {item.quantity}</span>
-                            <span className="text-slate-900 dark:text-slate-100 text-sm font-bold">${item.price.toFixed(2)}</span>
+                            <span className="text-muted-foreground text-xs">Qty: {item.quantity}</span>
+                            <span className="text-foreground text-sm font-bold">${item.price.toFixed(2)}</span>
                           </div>
                         </div>
                       </div>

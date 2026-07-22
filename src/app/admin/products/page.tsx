@@ -4,12 +4,23 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
-import { Loader2, Edit, Trash2, ArrowLeft, Plus } from "lucide-react";
+import { toast } from "sonner";
+import { Loader2, Edit, Trash2, ArrowLeft, Plus, Package } from "lucide-react";
 import ProductFormModal from "@/components/ProductFormModal";
 import DeleteConfirmModal from "@/components/DeleteConfirmModal";
-import SearchBar from "@/components/ui/SearchBar";
-import SelectFilter from "@/components/ui/SelectFilter";
+import ProductFilterBar from "@/components/ProductFilterBar";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Separator } from "@/components/ui/separator";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function ManageProductsPage() {
   const router = useRouter();
@@ -19,6 +30,10 @@ export default function ManageProductsPage() {
   const [products, setProducts] = useState<import("@/types").IProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [navigatingId, setNavigatingId] = useState<string | null>(null);
+
+  // Pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("");
@@ -124,58 +139,66 @@ export default function ManageProductsPage() {
   if (status === "loading" || loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
       </div>
     );
   }
 
+  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
+  const displayedProducts = products.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
+
   return (
     <div className="max-w-7xl mx-auto space-y-8">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b dark:border-slate-800 pb-4">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-4">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Products</h1>
-          <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">Update or delete your store's products.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground">Manage Products</h1>
+          <p className="text-muted-foreground mt-1 text-sm">Update or delete your store's products.</p>
         </div>
         <div className="w-full sm:w-auto">
-          <button 
-            onClick={openAddModal}
-            className="w-full sm:w-auto flex justify-center items-center gap-2 bg-brand-600 hover:bg-brand-700 text-white px-5 py-2.5 rounded-xl font-medium transition-colors shadow-sm shadow-brand-600/20 cursor-pointer"
+          <Button 
+            onPress={openAddModal}
+            className="w-full sm:w-auto flex justify-center items-center gap-2 rounded-xl shadow-sm"
           >
             <Plus className="w-5 h-5" />
             <span>Add New Product</span>
-          </button>
+          </Button>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 bg-white dark:bg-slate-800 p-4 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 transition-colors">
-        <div className="flex-1">
-          <SearchBar
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-        <div className="sm:w-64">
-          <SelectFilter
-            className="w-full"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            options={categories.map(cat => ({
-              label: cat,
-              value: cat === "All Categories" ? "All" : cat
-            }))}
-          />
-        </div>
-      </div>
+      <ProductFilterBar
+        searchQuery={searchQuery}
+        onSearchChange={(val) => {
+          setSearchQuery(val);
+          setCurrentPage(1);
+        }}
+        selectedCategory={selectedCategory}
+        onCategoryChange={(val) => {
+          setSelectedCategory(val);
+          setCurrentPage(1);
+        }}
+        categories={categories}
+        showPriceFilter={false}
+      />
 
       <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors">
         {products.length === 0 ? (
-          <div className="p-6 text-center text-gray-500 dark:text-slate-400">No products found.</div>
+          <EmptyState
+            icon={Package}
+            title="No products found"
+            description="Try adjusting your search or filter to find what you're looking for, or add a new product."
+            className="border-0 rounded-none shadow-none bg-transparent dark:bg-transparent"
+            action={
+              <Button onPress={openAddModal}>Add New Product</Button>
+            }
+          />
         ) : (
           <>
             {/* Mobile Card Layout */}
             <div className="sm:hidden divide-y divide-gray-200 dark:divide-slate-700">
-              {products.map((product) => (
+              {displayedProducts.map((product) => (
                 <div
                   key={product._id}
                   onClick={() => {
@@ -202,20 +225,22 @@ export default function ManageProductsPage() {
                     </div>
                   </div>
                   <div className="flex items-center gap-1 shrink-0">
-                    <button
-                      onClick={(e) => { e.stopPropagation(); openEditModal(product); }}
-                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-2 rounded-full transition-colors cursor-pointer"
-                      title="Edit Product"
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onPress={(e: any) => { e.stopPropagation(); openEditModal(product); }}
+                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full"
                     >
                       <Edit className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={(e) => { e.stopPropagation(); confirmDelete(product); }}
-                      className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-colors cursor-pointer"
-                      title="Delete Product"
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onPress={(e: any) => { e.stopPropagation(); confirmDelete(product); }}
+                      className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full"
                     >
                       <Trash2 className="w-4 h-4" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -223,28 +248,26 @@ export default function ManageProductsPage() {
 
             {/* Desktop Table Layout */}
             <div className="hidden sm:block w-full overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-gray-50 dark:bg-slate-900/50 border-b border-gray-200 dark:border-slate-700 text-xs text-gray-600 dark:text-slate-400 uppercase tracking-wider">
-                    <th className="p-4 font-medium">Image</th>
-                    <th className="p-4 font-medium">Name</th>
-                    <th className="p-4 font-medium">Category</th>
-                    <th className="p-4 font-medium">Price</th>
-                    <th className="p-4 font-medium">Stock</th>
-                    <th className="p-4 font-medium text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-gray-900 dark:text-slate-100">
-                  {products.map((product) => (
-                    <tr
+              <Table>
+                <TableHeader>
+                  <TableHead>Image</TableHead>
+                  <TableHead isRowHeader>Name</TableHead>
+                  <TableHead>Category</TableHead>
+                  <TableHead>Price</TableHead>
+                  <TableHead>Stock</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableHeader>
+                <TableBody>
+                  {displayedProducts.map((product) => (
+                    <TableRow
                       key={product._id}
-                      onClick={() => {
+                      onAction={() => {
                         setNavigatingId(product._id as string);
                         router.push(`/products/${product._id}`);
                       }}
-                      className={`hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors ${navigatingId === product._id ? "cursor-wait opacity-75" : "cursor-pointer"}`}
+                      className={navigatingId === product._id ? "cursor-wait opacity-75" : "cursor-pointer"}
                     >
-                      <td className="p-4">
+                      <TableCell>
                         <div className="w-12 h-12 bg-gray-100 dark:bg-slate-900 rounded overflow-hidden">
                           <img
                             src={product.imageUrl || "https://via.placeholder.com/150"}
@@ -252,40 +275,79 @@ export default function ManageProductsPage() {
                             className="w-full h-full object-cover"
                           />
                         </div>
-                      </td>
-                      <td className="p-4 font-medium">{product.name}</td>
-                      <td className="p-4 text-gray-500 dark:text-slate-400">{product.category}</td>
-                      <td className="p-4 font-bold">${product.price.toFixed(2)}</td>
-                      <td className="p-4">
+                      </TableCell>
+                      <TableCell className="font-medium">{product.name}</TableCell>
+                      <TableCell className="text-gray-500 dark:text-slate-400">{product.category}</TableCell>
+                      <TableCell className="font-bold">${product.price.toFixed(2)}</TableCell>
+                      <TableCell>
                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.stock > 0 ? "bg-green-100 dark:bg-green-900/20 text-green-800 dark:text-green-400" : "bg-red-100 dark:bg-red-900/20 text-red-800 dark:text-red-400"}`}>
                           {product.stock} in stock
                         </span>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex items-center justify-end space-x-4">
-                          <button
-                            onClick={(e) => { e.stopPropagation(); openEditModal(product); }}
-                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 p-2 rounded-full transition-colors flex items-center justify-center cursor-pointer"
-                            title="Edit Product"
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-end space-x-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onPress={() => openEditModal(product)}
+                            className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-full"
                           >
                             <Edit className="w-5 h-5" />
                             <span className="sr-only">Edit</span>
-                          </button>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); confirmDelete(product); }}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 p-2 rounded-full transition-colors flex items-center justify-center cursor-pointer"
-                            title="Delete Product"
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onPress={() => confirmDelete(product)}
+                            className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/30 rounded-full"
                           >
                             <Trash2 className="w-5 h-5" />
                             <span className="sr-only">Delete</span>
-                          </button>
+                          </Button>
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
+
+            {totalPages > 1 && (
+              <div className="bg-white dark:bg-slate-800">
+                <Separator />
+                <div className="p-4">
+                  <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious 
+                        onPress={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} 
+                      />
+                    </PaginationItem>
+                    
+                    {Array.from({ length: totalPages }).map((_, i) => (
+                      <PaginationItem key={i}>
+                        <PaginationLink 
+                          onPress={() => setCurrentPage(i + 1)} 
+                          isActive={currentPage === i + 1}
+                          className="cursor-pointer"
+                        >
+                          {i + 1}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                      <PaginationNext 
+                        onPress={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div>

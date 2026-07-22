@@ -7,6 +7,9 @@ import { ShoppingCart, User, LogOut, Package, Sun, Moon, Loader2 } from "lucide-
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useAuthModal } from "@/context/AuthModalContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -48,6 +51,7 @@ export default function Navbar() {
     setIsLoggingOut(true);
     await signOut({ redirect: false });
     router.push("/");
+    setIsLoggingOut(false);
   };
 
   if (isAuthPage) {
@@ -56,48 +60,34 @@ export default function Navbar() {
 
   return (
     <nav className="fixed w-full z-50 top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link href="/" className="text-xl font-black tracking-tight text-brand-600 dark:text-brand-400 hover:text-brand-700 dark:hover:text-brand-300 transition-colors shrink-0 whitespace-nowrap">
+            <Link href="/" className="text-xl font-black tracking-tight text-primary hover:text-primary/80 transition-colors shrink-0 whitespace-nowrap">
               E-COMMERCE
             </Link>
           </div>
 
           {pathname === "/" && (
             <div className="hidden lg:flex items-center space-x-8 absolute left-1/2 -translate-x-1/2">
-              <Link href="#hero" className={`text-sm font-bold transition-colors ${activeSection === 'hero' ? 'text-brand-600 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}`}>Home</Link>
-              <Link href="#featured" className={`text-sm font-bold transition-colors ${activeSection === 'featured' ? 'text-brand-600 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}`}>Featured</Link>
-              <Link href="#categories" className={`text-sm font-bold transition-colors ${activeSection === 'categories' ? 'text-brand-600 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}`}>Categories</Link>
-              <Link href="#contact" className={`text-sm font-bold transition-colors ${activeSection === 'contact' ? 'text-brand-600 dark:text-brand-400' : 'text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'}`}>Contact</Link>
+              <Link href="#hero" className={`text-sm font-bold transition-colors ${activeSection === 'hero' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>Home</Link>
+              <Link href="#featured" className={`text-sm font-bold transition-colors ${activeSection === 'featured' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>Featured</Link>
+              <Link href="#categories" className={`text-sm font-bold transition-colors ${activeSection === 'categories' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>Categories</Link>
+              <Link href="#contact" className={`text-sm font-bold transition-colors ${activeSection === 'contact' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>Contact</Link>
             </div>
           )}
 
           <div className="flex items-center space-x-2 sm:space-x-6 relative z-10">
-            {user?.role !== "admin" && (
-              <>
-                <Link href="/products" className="hidden sm:block text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
-                  Products
-                </Link>
-                {pathname !== "/" && user && (
-                  <>
-                    <Link href="/orders" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1" aria-label="Orders">
-                      <Package className="w-5 h-5 sm:w-4 sm:h-4" />
-                      <span className="hidden sm:inline">Orders</span>
-                    </Link>
-                    <Link href="/cart" className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1" aria-label="Cart">
-                      <ShoppingCart className="w-5 h-5 sm:w-4 sm:h-4" />
-                      <span className="hidden sm:inline">Cart</span>
-                    </Link>
-                  </>
-                )}
-              </>
+            {user?.role !== "admin" && pathname !== "/" && (
+              <Link href="/products" className="hidden sm:block text-muted-foreground hover:text-primary font-medium text-sm transition-colors">
+                Products
+              </Link>
             )}
 
             {mounted && (
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="cursor-pointer text-slate-500 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-400 transition-colors p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 flex items-center justify-center"
+                className="cursor-pointer text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-muted flex items-center justify-center"
                 aria-label="Toggle Dark Mode"
               >
                 {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
@@ -105,29 +95,54 @@ export default function Navbar() {
             )}
 
             {status === "loading" ? null : user ? (
-              <div className="flex items-center space-x-2 sm:space-x-4 ml-1 sm:ml-4 pl-1 sm:pl-4 border-l border-slate-200 dark:border-slate-700 shrink-0">
-                <Link href={user.role === "admin" ? "/admin" : "/profile"} className="text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors flex items-center gap-1 mr-1 sm:mr-2 shrink-0">
-                  <User className="w-5 h-5 sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">{user.role === "admin" ? "Admin" : user?.name || "Account"}</span>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  disabled={isLoggingOut}
-                  className={`transition-colors flex items-center gap-1 text-sm font-medium ${isLoggingOut ? 'text-slate-400 cursor-wait opacity-50' : 'cursor-pointer text-slate-500 dark:text-slate-400 hover:text-red-600 dark:hover:text-red-400'}`}
-                  aria-label="Logout"
-                >
-                  {isLoggingOut ? <Loader2 className="w-5 h-5 sm:w-4 sm:h-4 animate-spin" /> : <LogOut className="w-5 h-5 sm:w-4 sm:h-4" />}
-                  <span className="hidden sm:inline">{isLoggingOut ? "Logging out..." : "Logout"}</span>
-                </button>
+              <div className="flex items-center ml-1 sm:ml-4 pl-1 sm:pl-4 border-l border-slate-200 dark:border-slate-700 shrink-0">
+                <DropdownMenuTrigger>
+                  <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 overflow-hidden cursor-pointer">
+                    <Avatar className="h-9 w-9 cursor-pointer">
+                      <AvatarImage src={user.image || undefined} alt={user.name || "User"} />
+                      <AvatarFallback className="bg-primary/10 text-primary font-bold">{user.name?.charAt(0) || "U"}</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                  <DropdownMenu placement="bottom end">
+                    <DropdownMenuLabel className="font-normal">
+                      <div className="flex flex-col space-y-1 py-1">
+                        <p className="text-sm font-medium leading-none">{user.name}</p>
+                        <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem href={user.role === "admin" ? "/admin" : "/profile"}>
+                      <User className="mr-2 h-4 w-4" />
+                      <span>{user.role === "admin" ? "Admin Dashboard" : "Profile"}</span>
+                    </DropdownMenuItem>
+                    {user.role !== "admin" && (
+                      <>
+                        <DropdownMenuItem href="/orders">
+                          <Package className="mr-2 h-4 w-4" />
+                          <span>Orders</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem href="/cart">
+                          <ShoppingCart className="mr-2 h-4 w-4" />
+                          <span>Cart</span>
+                        </DropdownMenuItem>
+                      </>
+                    )}
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onAction={handleLogout}>
+                      {isLoggingOut ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <LogOut className="mr-2 h-4 w-4 text-destructive" />}
+                      <span className={isLoggingOut ? "" : "text-destructive"}>{isLoggingOut ? "Logging out..." : "Logout"}</span>
+                    </DropdownMenuItem>
+                  </DropdownMenu>
+                </DropdownMenuTrigger>
               </div>
             ) : (
               <div className="flex items-center space-x-2 sm:space-x-4 ml-1 sm:ml-4 pl-1 sm:pl-4 border-l border-slate-200 dark:border-slate-700 shrink-0">
-                <button onClick={() => openModal("login")} className="cursor-pointer text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-brand-400 font-medium text-sm transition-colors">
+                <Button variant="ghost" onPress={() => openModal("login")} className="text-muted-foreground font-medium cursor-pointer hover:bg-transparent hover:text-primary">
                   Login
-                </button>
-                <button onClick={() => openModal("register")} className="cursor-pointer bg-brand-600 hover:bg-brand-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-colors shadow-sm whitespace-nowrap shrink-0">
+                </Button>
+                <Button onPress={() => openModal("register")} className="rounded-full shadow-sm cursor-pointer whitespace-nowrap shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground">
                   Sign Up
-                </button>
+                </Button>
               </div>
             )}
           </div>

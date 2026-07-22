@@ -3,6 +3,7 @@ import Product from "@/models/Product";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import AddToCartSection from "@/components/AddToCartSection";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/authOptions";
@@ -42,17 +43,17 @@ export default async function ProductDetailsPage({
     <div className="max-w-5xl mx-auto pt-24 pb-16 px-4 sm:px-6 lg:px-8 w-full">
       <Link 
         href={backUrl} 
-        className="inline-flex items-center text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-brand-600 dark:hover:text-brand-400 mb-6 transition-colors"
+        className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-primary mb-6 transition-colors"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
         {isAdmin ? "Back to Admin Products" : "Back to Products"}
       </Link>
       
-      <div className="bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200 dark:border-slate-700 overflow-hidden transition-colors w-full">
+      <div className="bg-card rounded-lg shadow-sm border border-border overflow-hidden transition-colors w-full">
         <div className="grid grid-cols-1 md:grid-cols-2">
         
         {/* Left Side: Product Image */}
-        <div className="bg-gray-100 dark:bg-slate-900 h-96 md:h-auto relative">
+        <div className="bg-muted h-96 md:h-auto relative">
           <img
             src={serializedProduct.imageUrl || "https://via.placeholder.com/600"}
             alt={serializedProduct.name}
@@ -63,24 +64,26 @@ export default async function ProductDetailsPage({
         {/* Right Side: Product Details */}
         <div className="p-8 md:p-12 flex flex-col justify-center">
           <div className="mb-2">
-            <span className="text-xs font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase">
+            <span className="text-xs font-bold tracking-widest text-primary uppercase">
               {serializedProduct.category}
             </span>
           </div>
           
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-slate-100 mb-4">
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             {serializedProduct.name}
           </h1>
           
-          <div className="text-3xl font-bold text-gray-900 dark:text-slate-100 mb-6">
+          <div className="text-3xl font-bold text-foreground mb-6">
             ${serializedProduct.price.toFixed(2)}
           </div>
           
-          <p className="text-gray-600 dark:text-slate-300 mb-8 leading-relaxed">
+          <p className="text-muted-foreground mb-8 leading-relaxed">
             {serializedProduct.description}
           </p>
 
-          <div className="border-t border-gray-200 dark:border-slate-700 pt-8">
+          <Separator className="my-8" />
+          
+          <div>
             <AddToCartSection 
               productId={serializedProduct._id} 
               stock={serializedProduct.stock} 

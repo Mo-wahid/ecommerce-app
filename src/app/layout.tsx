@@ -1,12 +1,15 @@
 import Navbar from "@/components/Navbar";
-import { Inter } from "next/font/google";
-import { Toaster } from "react-hot-toast";
+import { Inter, Geist } from "next/font/google";
+import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/AuthProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import MainWrapper from "@/components/MainWrapper";
 import { AuthModalProvider } from "@/context/AuthModalContext";
 import AuthModal from "@/components/AuthModal";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,8 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.className} overflow-x-hidden bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-100 min-h-screen flex flex-col antialiased selection:bg-indigo-100 selection:text-indigo-900 transition-colors duration-300`}>
+    <html lang="en" suppressHydrationWarning className={cn("font-sans", geist.variable)}>
+      <body className={`${inter.className} overflow-x-hidden bg-background text-foreground min-h-screen flex flex-col antialiased selection:bg-primary/20 selection:text-primary transition-colors duration-300`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -31,7 +34,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <AuthModalProvider>
-              <Toaster position="top-center" toastOptions={{ duration: 4000, style: { background: '#333', color: '#fff' } }} />
+              <Toaster />
               <Navbar />
               <AuthModal />
               <MainWrapper>

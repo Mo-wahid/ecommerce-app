@@ -4,9 +4,22 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import toast from "react-hot-toast";
-import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import { Loader2, Package, ShoppingCart, Clock, Users } from "lucide-react";
+import { EmptyState } from "@/components/ui/empty-state";
+import { Separator } from "@/components/ui/separator";
 import StatusDropdown from "@/components/StatusDropdown";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function AdminDashboard() {
   const router = useRouter();
@@ -23,6 +36,8 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAllOrders, setShowAllOrders] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
 
   useEffect(() => {
     const fetchDashboardData = async () => {
@@ -97,7 +112,7 @@ export default function AdminDashboard() {
   if (status === "loading" || loading) {
     return (
       <div className="flex justify-center items-center py-20">
-        <Loader2 className="w-10 h-10 text-brand-600 animate-spin" />
+        <Loader2 className="w-10 h-10 text-primary animate-spin" />
       </div>
     );
   }
@@ -110,8 +125,14 @@ export default function AdminDashboard() {
   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
   const recentOrdersFiltered = stats.recentOrders.filter(
     (o: any) => new Date(o.createdAt) >= twentyFourHoursAgo
-  ).slice(0, 8);
-  const displayedOrders = showAllOrders ? stats.recentOrders : recentOrdersFiltered;
+  );
+  
+  const allOrdersToPaginate = showAllOrders ? stats.recentOrders : recentOrdersFiltered;
+  const totalPages = Math.ceil(allOrdersToPaginate.length / ITEMS_PER_PAGE);
+  const displayedOrders = allOrdersToPaginate.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   return (
     <div className="max-w-7xl mx-auto space-y-6">
@@ -123,7 +144,7 @@ export default function AdminDashboard() {
         <div className="flex space-x-4">
           <Link 
             href="/admin/products" 
-            className="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2 rounded-md font-medium transition-colors shadow-sm"
+            className={buttonVariants()}
           >
             Manage Products
           </Link>
@@ -132,82 +153,138 @@ export default function AdminDashboard() {
 
       {/* Top Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-brand-50 dark:bg-brand-900/20 p-6 rounded-xl shadow-sm border border-brand-100 dark:border-brand-800/30 transition-colors">
-          <h3 className="text-brand-600 dark:text-brand-400 text-sm font-bold uppercase tracking-wider mb-2">Total Orders</h3>
-          <div className="text-4xl font-black text-brand-900 dark:text-brand-100">{stats.totalOrders}</div>
-        </div>
-        <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-xl shadow-sm border border-blue-100 dark:border-blue-800/30 transition-colors">
-          <h3 className="text-blue-600 dark:text-blue-400 text-sm font-bold uppercase tracking-wider mb-2">Pending Orders</h3>
-          <div className="text-4xl font-black text-blue-900 dark:text-blue-100">{stats.pendingOrders}</div>
-        </div>
-        <div className="bg-emerald-50 dark:bg-emerald-900/20 p-6 rounded-xl shadow-sm border border-emerald-100 dark:border-emerald-800/30 transition-colors">
-          <h3 className="text-emerald-600 dark:text-emerald-400 text-sm font-bold uppercase tracking-wider mb-2">Registered Users</h3>
-          <div className="text-4xl font-black text-emerald-900 dark:text-emerald-100">{stats.totalUsers}</div>
-        </div>
-        <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-xl shadow-sm border border-purple-100 dark:border-purple-800/30 transition-colors">
-          <h3 className="text-purple-600 dark:text-purple-400 text-sm font-bold uppercase tracking-wider mb-2">Total Products</h3>
-          <div className="text-4xl font-black text-purple-900 dark:text-purple-100">{stats.totalProducts}</div>
-        </div>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Orders</CardTitle>
+            <Package className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalOrders}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Pending Orders</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.pendingOrders}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Registered Users</CardTitle>
+            <Users className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalUsers}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.totalProducts}</div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Recent Orders Table */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-200 dark:border-slate-700 transition-colors flex flex-col max-h-[600px] overflow-hidden">
-        <div className="p-5 border-b border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-900/50 shrink-0 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100">
+      {/* Recent Orders Section */}
+      <div className="space-y-4">
+        <div className="flex flex-row justify-between items-center">
+          <h2 className="text-xl font-bold">
             {showAllOrders ? "All Orders" : "Recent Orders (Last 24h)"}
           </h2>
-          <button
-            onClick={() => setShowAllOrders(!showAllOrders)}
-            className="text-brand-600 dark:text-brand-400 font-bold hover:underline text-sm cursor-pointer"
-          >
+          <Button variant="ghost" className="text-sm text-primary hover:text-primary/80" onClick={() => { setShowAllOrders(!showAllOrders); setCurrentPage(1); }}>
             {showAllOrders ? "Show Recent Only" : "View All Orders"}
-          </button>
+          </Button>
         </div>
         
-        <div className="w-full overflow-x-auto min-w-0 flex-1">
+        <Card className="flex flex-col gap-0 max-h-[600px] overflow-hidden">
+
+        <CardContent className="p-0 w-full overflow-x-auto min-w-0 flex-1">
           {displayedOrders.length === 0 ? (
-            <div className="p-12 text-center flex flex-col items-center justify-center h-full">
-              <p className="text-gray-500 dark:text-slate-400 text-lg">
-                {showAllOrders ? "No orders have been placed yet." : "No recent orders in the last 24 hours."}
-              </p>
-            </div>
+            <EmptyState
+              icon={ShoppingCart}
+              title="No orders found"
+              description={showAllOrders ? "No orders have been placed yet." : "No recent orders in the last 24 hours."}
+              className="border-0 rounded-none shadow-none bg-transparent dark:bg-transparent h-full"
+            />
           ) : (
-            <table className="w-full text-left border-collapse min-w-[700px]">
-              <thead className="sticky top-0 bg-gray-50 dark:bg-slate-900/90 backdrop-blur-sm z-10 border-b border-gray-200 dark:border-slate-700">
-                <tr className="text-xs text-gray-600 dark:text-slate-400 uppercase tracking-wider">
-                  <th className="p-4 font-bold">Order ID</th>
-                  <th className="p-4 font-bold">Customer</th>
-                  <th className="p-4 font-bold">Date</th>
-                  <th className="p-4 font-bold">Total</th>
-                  <th className="p-4 font-bold">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 dark:divide-slate-700 text-sm text-gray-900 dark:text-slate-100">
-                {displayedOrders.map((order: import("@/types").IOrder) => (
-                  <tr key={order._id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
-                    <td className="p-4 font-mono text-xs">{order._id.substring(0, 10)}...</td>
-                    <td className="p-4">
-                      <div className="font-bold">{order.user?.name || "Unknown"}</div>
-                      <div className="text-gray-500 dark:text-slate-400 text-xs">{order.user?.email}</div>
-                    </td>
-                    <td className="p-4 font-medium text-gray-600 dark:text-slate-300">
+            <Table>
+              <TableHeader>
+                  <TableHead className="w-[120px]">Order ID</TableHead>
+                  <TableHead className="w-full">Customer</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Total</TableHead>
+                  <TableHead className="text-right">Status</TableHead>
+              </TableHeader>
+              <TableBody>
+                {displayedOrders.map((order: any) => (
+                  <TableRow key={order._id}>
+                    <TableCell className="font-mono text-xs">{order._id.substring(0, 10)}...</TableCell>
+                    <TableCell>
+                      <div className="font-medium">{order.user?.name || "Unknown"}</div>
+                      <div className="text-muted-foreground text-xs">{order.user?.email}</div>
+                    </TableCell>
+                    <TableCell className="text-muted-foreground">
                       {new Date(order.createdAt).toLocaleDateString()} {new Date(order.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </td>
-                    <td className="p-4 font-black text-brand-600 dark:text-brand-400">
+                    </TableCell>
+                    <TableCell className="font-medium text-primary">
                       ${order.totalAmount.toFixed(2)}
-                    </td>
-                    <td className="p-4">
+                    </TableCell>
+                    <TableCell className="flex justify-end">
                       <StatusDropdown
                         currentStatus={order.orderStatus}
                         onStatusChange={(newStatus) => handleStatusChange(order._id, newStatus)}
                       />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           )}
-        </div>
+
+          {totalPages > 1 && (
+            <div>
+              <Separator />
+              <div className="p-4">
+                <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))} 
+                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"} 
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalPages }).map((_, i) => (
+                    <PaginationItem key={i}>
+                      <PaginationLink 
+                        onClick={() => setCurrentPage(i + 1)} 
+                        isActive={currentPage === i + 1}
+                        className="cursor-pointer"
+                      >
+                        {i + 1}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))} 
+                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+                </Pagination>
+              </div>
+            </div>
+          )}
+        </CardContent>
+      </Card>
       </div>
     </div>
   );

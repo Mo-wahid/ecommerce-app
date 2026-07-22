@@ -35,17 +35,17 @@ export default async function ProductsPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-900 transition-colors">
+    <div className="min-h-screen flex flex-col bg-background transition-colors">
       
       {/* Banner Header */}
-      <div className="bg-brand-700 text-white pt-28 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-brand-600 opacity-50 blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-brand-800 opacity-50 blur-3xl"></div>
+      <div className="bg-zinc-900 text-white dark:bg-zinc-950 pt-28 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden border-b border-border">
+        <div className="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 rounded-full bg-zinc-800 opacity-50 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 rounded-full bg-zinc-800 opacity-50 blur-3xl"></div>
         <div className="relative z-10 max-w-7xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-4 drop-shadow-md">
             Discover Our Collection
           </h1>
-          <p className="text-lg md:text-xl text-brand-100 max-w-2xl mx-auto font-light">
+          <p className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto font-light">
             Browse through our extensive catalog of premium products. Use the filters below to find exactly what you're looking for at the right price.
           </p>
         </div>

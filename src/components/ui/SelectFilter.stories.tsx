@@ -8,11 +8,6 @@ const meta: Meta<typeof SelectFilter> = {
     layout: 'centered',
   },
   tags: ['autodocs'],
-  argTypes: {
-    disabled: {
-      control: 'boolean',
-    },
-  },
   decorators: [
     (Story) => (
       <div className="w-[300px]">
@@ -35,12 +30,5 @@ const sampleOptions = [
 export const Default: Story = {
   args: {
     options: sampleOptions,
-  },
-};
-
-export const Disabled: Story = {
-  args: {
-    options: sampleOptions,
-    disabled: true,
   },
 };

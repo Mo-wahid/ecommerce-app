@@ -1,20 +1,26 @@
 import React from 'react';
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from '@/components/ui/select';
 
-interface SelectFilterProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+interface SelectFilterProps {
+  value?: string;
+  onChange?: (value: string) => void;
   options: { label: string; value: string }[];
+  className?: string;
 }
 
-export default function SelectFilter({ options, className = '', ...props }: SelectFilterProps) {
+export default function SelectFilter({ options, value, onChange, className = '' }: SelectFilterProps) {
   return (
-    <select
-      className={`w-full px-4 py-2 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-900 text-gray-900 dark:text-slate-100 rounded-md focus:ring-brand-500 focus:border-brand-500 transition-colors cursor-pointer ${className}`}
-      {...props}
-    >
-      {options.map((opt) => (
-        <option key={opt.value} value={opt.value}>
-          {opt.label}
-        </option>
-      ))}
-    </select>
+    <Select aria-label="Filter options" selectedKey={value} onSelectionChange={(key) => onChange && onChange(key?.toString() || "")}>
+      <SelectTrigger className={`w-full h-11 rounded-xl ${className}`}>
+        <SelectValue />
+      </SelectTrigger>
+      <SelectContent>
+        {options.map((opt) => (
+          <SelectItem key={opt.value} id={opt.value} textValue={opt.label}>
+            {opt.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
   );
 }

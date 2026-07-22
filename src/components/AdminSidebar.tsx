@@ -13,6 +13,17 @@ import {
   LogOut,
   Loader2
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuItem,
+  SidebarMenuButton,
+} from "@/components/ui/sidebar";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -27,44 +38,50 @@ export default function AdminSidebar() {
   ];
 
   return (
-    <aside className="w-full overflow-hidden md:w-64 bg-white dark:bg-slate-900 border-b md:border-b-0 md:border-r border-gray-200 dark:border-slate-800 h-auto md:h-[calc(100vh-4rem)] md:sticky top-16 flex flex-col transition-colors z-40 shrink-0">
-      <div className="p-4 md:p-6 flex-none md:flex-1 w-full min-w-0 overflow-x-auto md:overflow-y-auto hide-scrollbar">
-        <nav className="flex flex-row md:flex-col gap-2 md:space-y-0 min-w-max md:min-w-0">
-          {links.map((link) => {
-            const Icon = link.icon;
-            const isActive = pathname === link.href;
+    <Sidebar collapsible="none" className="sticky top-16 h-[calc(100vh-4rem)] bg-sidebar border-r border-sidebar-border">
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-2">
+              {links.map((link) => {
+                const Icon = link.icon;
+                const isActive = pathname === link.href;
 
-            return (
-              <Link
-                key={link.name}
-                href={link.href}
-                className={`flex items-center gap-3 px-4 py-2.5 md:py-3 rounded-xl transition-all font-medium ${
-                  isActive
-                    ? "bg-brand-50 dark:bg-brand-900/20 text-brand-600 dark:text-brand-400"
-                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-200"
-                }`}
-              >
-                <Icon className={`w-5 h-5 shrink-0 ${isActive ? "text-brand-600 dark:text-brand-400" : "text-slate-400"}`} />
-                <span className="whitespace-nowrap">{link.name}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
+                return (
+                  <SidebarMenuItem key={link.name}>
+                    <SidebarMenuButton
+                      href={link.href}
+                      isActive={isActive}
+                      className={isActive ? "bg-sidebar-accent py-3 text-sidebar-accent-foreground font-semibold" : "text-muted-foreground py-3 font-medium hover:text-foreground"}
+                    >
+                      <Icon />
+                      <span>{link.name}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-      <div className="p-4 md:p-6 border-t border-gray-200 dark:border-slate-800 hidden md:block">
-        <button
-          onClick={() => {
-            setIsSigningOut(true);
-            signOut({ callbackUrl: '/' });
-          }}
-          disabled={isSigningOut}
-          className={`flex w-full items-center gap-3 px-4 py-3 rounded-xl transition-all font-medium ${isSigningOut ? 'cursor-wait opacity-50 text-slate-400' : 'cursor-pointer text-slate-600 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400'}`}
-        >
-          {isSigningOut ? <Loader2 className="w-5 h-5 animate-spin" /> : <LogOut className="w-5 h-5" />}
-          <span className="hidden md:inline">{isSigningOut ? "Logging out..." : "Logout"}</span>
-        </button>
-      </div>
-    </aside>
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              onPress={() => {
+                setIsSigningOut(true);
+                signOut({ callbackUrl: '/' });
+              }}
+              isDisabled={isSigningOut}
+              className="text-muted-foreground hover:bg-destructive/10 hover:text-destructive py-3 font-medium transition-colors"
+            >
+              {isSigningOut ? <Loader2 className="animate-spin" /> : <LogOut />}
+              <span>{isSigningOut ? "Logging out..." : "Logout"}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </Sidebar>
   );
 }

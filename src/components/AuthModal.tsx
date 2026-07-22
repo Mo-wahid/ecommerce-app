@@ -3,10 +3,18 @@
 import { useState, useEffect, Suspense, useRef } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { X, Eye, EyeOff, Loader2 } from "lucide-react";
-import toast from "react-hot-toast";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { useAuthModal } from "@/context/AuthModalContext";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 function AuthModalInner() {
   const { isOpen, type, openModal, closeModal } = useAuthModal();
@@ -38,8 +46,6 @@ function AuthModalInner() {
   useEffect(() => {
     setFormError("");
   }, [type, isOpen]);
-
-  if (!isOpen) return null;
 
   const isLogin = type === "login";
   const explicitCallback = searchParams?.get("callbackUrl");
@@ -147,75 +153,70 @@ function AuthModalInner() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md overflow-hidden relative animate-in zoom-in-95 duration-200 border border-slate-200 dark:border-slate-800">
-        
-        {/* Close Button */}
-        <button 
-          onClick={handleClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-500 transition-colors z-10 cursor-pointer"
-        >
-          <X className="w-5 h-5" />
-        </button>
+    <Dialog isOpen={isOpen} onOpenChange={(open) => !open && handleClose()} className="sm:max-w-md p-6">
+      <DialogHeader className="mb-6">
+        <DialogTitle className="text-2xl font-bold tracking-tight text-center">
+          {isLogin ? "Welcome Back" : "Create Account"}
+        </DialogTitle>
+        <DialogDescription className="text-center">
+          {isLogin ? "Enter your details to access your account." : "Join us to start shopping for premium goods."}
+        </DialogDescription>
+      </DialogHeader>
 
-        <div className="p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-black text-brand-600 dark:text-brand-400 tracking-tight mb-2">
-              {isLogin ? "Welcome Back" : "Create Account"}
-            </h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm">
-              {isLogin ? "Enter your details to access your account." : "Join us to start shopping for premium goods."}
-            </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Full Name <span className="text-red-500">*</span>
                 </label>
-                <input
+                <Input
                   type="text"
+                  name="name"
+                  autoComplete="name"
                   required
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white"
+                  onChange={(e: any) => setName(e.target.value)}
+                  className="h-11 rounded-xl"
                   placeholder="John Doe"
                 />
               </div>
             )}
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                 Email Address <span className="text-red-500">*</span>
               </label>
-              <input
+              <Input
                 type="email"
+                name="email"
+                autoComplete="username"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white"
+                onChange={(e: any) => setEmail(e.target.value)}
+                className="h-11 rounded-xl"
                 placeholder="you@example.com"
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                 Password <span className="text-red-500">*</span>
               </label>
               <div className="relative">
-                <input
+                <Input
                   type={showPassword ? "text" : "password"}
+                  name="password"
+                  autoComplete={isLogin ? "current-password" : "new-password"}
                   required
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white pr-12"
+                  onChange={(e: any) => setPassword(e.target.value)}
+                  className="h-11 rounded-xl pr-10"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors p-1 cursor-pointer"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -223,17 +224,19 @@ function AuthModalInner() {
             </div>
 
             {!isLogin && (
-              <div>
-                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1.5">
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
                   Confirm Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
-                  <input
+                  <Input
                     type={showPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    autoComplete="new-password"
                     required
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 focus:ring-2 focus:ring-brand-500 outline-none transition-all dark:text-white pr-12"
+                    onChange={(e: any) => setConfirmPassword(e.target.value)}
+                    className="h-11 rounded-xl pr-10"
                     placeholder="••••••••"
                   />
                 </div>
@@ -246,14 +249,14 @@ function AuthModalInner() {
               </div>
             )}
 
-            <button
+            <Button
               type="submit"
-              disabled={isLoading || isGoogleLoading}
-              className="cursor-pointer w-full flex items-center justify-center gap-2 bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 rounded-xl transition-colors shadow-lg shadow-brand-600/30 disabled:opacity-70 disabled:cursor-wait mt-4"
+              isDisabled={isLoading || isGoogleLoading}
+              className="w-full h-12 rounded-xl mt-4 font-bold text-base cursor-pointer"
             >
               {isLoading && <Loader2 className="w-5 h-5 animate-spin" />}
               {isLogin ? "Sign In" : "Create Account"}
-            </button>
+            </Button>
           </form>
 
           <div className="flex items-center gap-3 my-6">
@@ -263,11 +266,12 @@ function AuthModalInner() {
           </div>
 
           {/* Google Auth Button */}
-          <button
+          <Button
             type="button"
+            variant="outline"
             onClick={handleGoogleSignIn}
-            disabled={isLoading || isGoogleLoading}
-            className="cursor-pointer w-full flex items-center justify-center gap-3 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium py-2.5 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors disabled:opacity-70 disabled:cursor-wait"
+            isDisabled={isLoading || isGoogleLoading}
+            className="w-full h-12 rounded-xl gap-3 text-base cursor-pointer"
           >
             {isGoogleLoading ? (
               <Loader2 className="w-5 h-5 animate-spin" />
@@ -280,21 +284,19 @@ function AuthModalInner() {
               </svg>
             )}
             {isGoogleLoading ? "Connecting..." : "Continue with Google"}
-          </button>
+          </Button>
 
-          <p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
-            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-            <button
-              type="button"
-              onClick={() => openModal(isLogin ? "register" : "login")}
-              className="text-brand-600 dark:text-brand-400 font-bold hover:underline transition-all cursor-pointer"
-            >
-              {isLogin ? "Sign Up" : "Log In"}
-            </button>
-          </p>
-        </div>
-      </div>
-    </div>
+        <p className="mt-6 text-center text-sm text-muted-foreground">
+          {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
+          <button
+            type="button"
+            onClick={() => openModal(isLogin ? "register" : "login")}
+            className="text-primary font-bold hover:underline transition-all cursor-pointer"
+          >
+            {isLogin ? "Sign Up" : "Log In"}
+          </button>
+        </p>
+    </Dialog>
   );
 }
 
