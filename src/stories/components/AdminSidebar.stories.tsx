@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import AdminSidebar from './AdminSidebar';
+import AdminSidebar from '@/components/AdminSidebar';
 import { SessionProvider } from 'next-auth/react';
 import { SidebarProvider } from '@/components/ui/sidebar';
 
@@ -27,3 +27,4 @@ export default meta;
 type Story = StoryObj<typeof AdminSidebar>;
 
 export const Default: Story = {};
+

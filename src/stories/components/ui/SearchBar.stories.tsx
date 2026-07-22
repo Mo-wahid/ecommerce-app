@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import SearchBar from './SearchBar';
+import SearchBar from '@/components/ui/SearchBar';
 
 const meta: Meta<typeof SearchBar> = {
   title: 'UI/SearchBar',
@@ -40,3 +40,4 @@ export const Disabled: Story = {
     disabled: true,
   },
 };
+

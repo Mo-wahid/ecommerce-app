@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import StatusDropdown from "./StatusDropdown";
+import StatusDropdown from "@/components/StatusDropdown";
 
 const meta: Meta<typeof StatusDropdown> = {
   title: "Components/StatusDropdown",
@@ -44,3 +44,4 @@ export const Cancelled: Story = {
     currentStatus: "Cancelled",
   },
 };
+

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ProfileForm from "./ProfileForm";
+import ProfileForm from "@/components/ProfileForm";
 import { SessionProvider } from "next-auth/react";
 
 const meta: Meta<typeof ProfileForm> = {
@@ -35,3 +35,4 @@ export const LoadingState: Story = {
     )
   ]
 };
+

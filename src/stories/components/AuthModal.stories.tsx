@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import AuthModal from './AuthModal';
+import AuthModal from '@/components/AuthModal';
 import { AuthModalProvider, useAuthModal } from '@/context/AuthModalContext';
 import { useEffect, Suspense } from 'react';
 import { SessionProvider } from 'next-auth/react';
@@ -51,3 +51,4 @@ export const LoginView: Story = {
 export const RegisterView: Story = {
   render: () => <AuthModalStoryWrapper type="register" />,
 };
+

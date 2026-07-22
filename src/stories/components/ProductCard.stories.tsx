@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import ProductCard from './ProductCard';
+import ProductCard from '@/components/ProductCard';
 
 const meta: Meta<typeof ProductCard> = {
   title: 'Components/ProductCard',
@@ -55,3 +55,4 @@ export const NoImage: Story = {
     } as any,
   },
 };
+

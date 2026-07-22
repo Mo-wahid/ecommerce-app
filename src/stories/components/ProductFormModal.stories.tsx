@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import ProductFormModal from './ProductFormModal';
+import ProductFormModal from '@/components/ProductFormModal';
 
 const meta: Meta<typeof ProductFormModal> = {
   title: 'Forms/ProductFormModal',
@@ -41,3 +41,4 @@ export const EditProduct: Story = {
     } as any,
   },
 };
+

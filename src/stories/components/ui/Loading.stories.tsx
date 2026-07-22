@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import Loading from './Loading';
+import Loading from '@/components/ui/Loading';
 
 const meta: Meta<typeof Loading> = {
   title: 'UI/Loading',
@@ -41,3 +41,4 @@ export const CustomMessage: Story = {
     fullScreen: false,
   },
 };
+

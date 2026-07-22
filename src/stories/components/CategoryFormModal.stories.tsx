@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import CategoryFormModal from './CategoryFormModal';
+import CategoryFormModal from '@/components/CategoryFormModal';
 
 const meta: Meta<typeof CategoryFormModal> = {
   title: 'Forms/CategoryFormModal',
@@ -37,3 +37,4 @@ export const EditCategory: Story = {
     },
   },
 };
+

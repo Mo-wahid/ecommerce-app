@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import AddToCartSection from './AddToCartSection';
+import AddToCartSection from '@/components/AddToCartSection';
 import { SessionProvider } from 'next-auth/react';
 import { AuthModalProvider } from '@/context/AuthModalContext';
 
@@ -52,3 +52,4 @@ export const OutOfStock: Story = {
     price: 99.99,
   },
 };
+

@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import ProductFilterBar from "./ProductFilterBar";
+import ProductFilterBar from "@/components/ProductFilterBar";
 
 const meta: Meta<typeof ProductFilterBar> = {
   title: "Components/ProductFilterBar",
@@ -35,3 +35,4 @@ export const WithPriceFilterAndSearch: Story = {
     showPriceFilter: true,
   },
 };
+

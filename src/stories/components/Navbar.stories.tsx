@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { SessionProvider } from 'next-auth/react';
 import { AuthModalProvider } from '@/context/AuthModalContext';
 import { ThemeProvider } from 'next-themes';
-import Navbar from './Navbar';
+import Navbar from '@/components/Navbar';
 
 const meta: Meta<typeof Navbar> = {
   title: 'Components/Navbar',
@@ -65,3 +65,4 @@ export const LoggedInAdmin: Story = {
     }),
   ],
 };
+

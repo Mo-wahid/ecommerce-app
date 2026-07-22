@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import ProductCatalog from './ProductCatalog';
+import ProductCatalog from '@/components/ProductCatalog';
 import { Suspense } from 'react';
 
 const meta: Meta<typeof ProductCatalog> = {
@@ -81,3 +81,4 @@ export const EmptyCatalog: Story = {
     initialProducts: [],
   },
 };
+

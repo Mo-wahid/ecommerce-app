@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import DeleteConfirmModal from "./DeleteConfirmModal";
+import DeleteConfirmModal from "@/components/DeleteConfirmModal";
 
 const meta: Meta<typeof DeleteConfirmModal> = {
   title: "Components/DeleteConfirmModal",
@@ -31,3 +31,4 @@ export const Deleting: Story = {
     isDeleting: true,
   },
 };
+

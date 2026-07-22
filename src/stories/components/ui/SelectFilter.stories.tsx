@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import SelectFilter from './SelectFilter';
+import SelectFilter from '@/components/ui/SelectFilter';
 
 const meta: Meta<typeof SelectFilter> = {
   title: 'UI/SelectFilter',
@@ -32,3 +32,4 @@ export const Default: Story = {
     options: sampleOptions,
   },
 };
+
