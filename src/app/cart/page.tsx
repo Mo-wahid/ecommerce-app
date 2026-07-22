@@ -7,7 +7,7 @@ import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Separator } from "@/components/ui/separator";
-import { ShoppingCart, LogIn } from "lucide-react";
+import { ShoppingCart, LogIn, Loader2 } from "lucide-react";
 
 export default function CartPage() {
   const router = useRouter();
@@ -71,7 +71,13 @@ export default function CartPage() {
     }
   };
 
-  if (status === "loading" || loading) return <div className="text-center py-12">Loading cart...</div>;
+  if (status === "loading" || loading) {
+    return (
+      <div className="flex justify-center items-center py-24 min-h-[50vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
   if (!user) {
     return (

@@ -38,7 +38,7 @@ export default function AdminSidebar() {
   ];
 
   return (
-    <Sidebar collapsible="none" className="sticky top-16 h-[calc(100vh-4rem)] bg-sidebar border-r border-sidebar-border">
+    <Sidebar className="sticky top-16 h-[calc(100vh-4rem)] bg-sidebar border-r border-sidebar-border">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>

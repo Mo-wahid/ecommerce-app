@@ -47,7 +47,11 @@ export default function ProfileForm() {
   };
 
   if (!session?.user) {
-    return <div className="text-center p-8">Loading profile...</div>;
+    return (
+      <div className="flex justify-center items-center py-24 min-h-[50vh]">
+        <Loader2 className="w-10 h-10 animate-spin text-muted-foreground" />
+      </div>
+    );
   }
 
   return (
