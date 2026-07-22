@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { SessionProvider } from 'next-auth/react';
 import { AuthModalProvider } from '@/context/AuthModalContext';
+import { ThemeProvider } from 'next-themes';
 import Navbar from './Navbar';
 
 const meta: Meta<typeof Navbar> = {
@@ -10,6 +11,9 @@ const meta: Meta<typeof Navbar> = {
     layout: 'fullscreen',
     nextjs: {
       appDirectory: true,
+      navigation: {
+        pathname: '/',
+      },
     },
   },
   tags: ['autodocs'],
@@ -18,27 +22,29 @@ const meta: Meta<typeof Navbar> = {
 export default meta;
 type Story = StoryObj<typeof Navbar>;
 
-// Mock session provider decorator
-const withSession = (session: any) => (Story: any) => (
+const withProviders = (session: any) => (Story: any) => (
   <SessionProvider session={session}>
-    <AuthModalProvider>
-      <Story />
-    </AuthModalProvider>
+    <ThemeProvider attribute="class" defaultTheme="light">
+      <AuthModalProvider>
+        <Story />
+      </AuthModalProvider>
+    </ThemeProvider>
   </SessionProvider>
 );
 
 export const LoggedOut: Story = {
-  decorators: [withSession(null)],
+  decorators: [withProviders(null)],
 };
 
 export const LoggedInUser: Story = {
   decorators: [
-    withSession({
+    withProviders({
       user: {
         id: '1',
         name: 'John Doe',
         email: 'john@example.com',
         role: 'user',
+        image: 'https://i.pravatar.cc/150?u=1'
       },
       expires: '9999-12-31T23:59:59.999Z',
     }),
@@ -47,12 +53,13 @@ export const LoggedInUser: Story = {
 
 export const LoggedInAdmin: Story = {
   decorators: [
-    withSession({
+    withProviders({
       user: {
-        id: '1',
+        id: '2',
         name: 'Admin User',
         email: 'admin@example.com',
         role: 'admin',
+        image: 'https://i.pravatar.cc/150?u=2'
       },
       expires: '9999-12-31T23:59:59.999Z',
     }),

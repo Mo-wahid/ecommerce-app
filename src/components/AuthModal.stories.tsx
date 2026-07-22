@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import AuthModal from './AuthModal';
 import { AuthModalProvider, useAuthModal } from '@/context/AuthModalContext';
-import { useEffect } from 'react';
+import { useEffect, Suspense } from 'react';
+import { SessionProvider } from 'next-auth/react';
 
 // Wrapper component to automatically open the modal for Storybook
 const AuthModalStoryWrapper = ({ type }: { type: 'login' | 'register' }) => {
@@ -29,9 +30,13 @@ const meta: Meta<typeof AuthModal> = {
   },
   decorators: [
     (Story) => (
-      <AuthModalProvider>
-        <Story />
-      </AuthModalProvider>
+      <SessionProvider session={null}>
+        <AuthModalProvider>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Story />
+          </Suspense>
+        </AuthModalProvider>
+      </SessionProvider>
     ),
   ],
 };
