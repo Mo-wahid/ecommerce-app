@@ -92,7 +92,7 @@ export default function CartPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 border-b dark:border-slate-800 pb-4">Shopping Cart</h1>
+      <h1 className="text-3xl font-bold tracking-tight text-foreground border-b border-border pb-4">Shopping Cart</h1>
 
       {cart.length === 0 ? (
         <EmptyState
@@ -110,10 +110,10 @@ export default function CartPage() {
           {/* Cart Items List */}
           <div className="lg:col-span-2 space-y-4">
             {cart.map((item) => (
-              <div key={item.product._id} className="flex items-center justify-between p-4 bg-card rounded-lg border border-border shadow-sm transition-colors">
+              <div key={item.product._id} className="flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm transition-colors">
                 <div className="flex items-center space-x-4">
-                  <Link href={`/products/${item.product._id}`} className="w-16 h-16 bg-muted rounded flex-shrink-0 block overflow-hidden group">
-                    <img src={item.product.imageUrl || "https://via.placeholder.com/64"} alt={item.product.name} className="w-full h-full object-cover rounded group-hover:scale-105 transition-transform" />
+                  <Link href={`/products/${item.product._id}`} className="w-16 h-16 bg-muted rounded-lg flex-shrink-0 block overflow-hidden group">
+                    <img src={item.product.imageUrl || "https://via.placeholder.com/64"} alt={item.product.name} className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform" />
                   </Link>
                   <div>
                     <Link href={`/products/${item.product._id}`} className="text-lg font-semibold text-foreground hover:text-primary transition-colors block">
@@ -137,8 +137,8 @@ export default function CartPage() {
           </div>
 
           {/* Order Summary */}
-          <div className="bg-card p-6 rounded-lg border border-border shadow-sm h-fit transition-colors">
-            <h2 className="text-xl font-bold text-foreground mb-4">Order Summary</h2>
+          <div className="bg-card p-6 rounded-xl border border-border shadow-sm h-fit transition-colors">
+            <h2 className="text-xl font-bold tracking-tight text-foreground mb-4">Order Summary</h2>
             <div className="flex justify-between mb-2 text-muted-foreground">
               <span>Subtotal</span>
               <span>${subtotal.toFixed(2)}</span>

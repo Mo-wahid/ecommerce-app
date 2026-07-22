@@ -173,7 +173,7 @@ export default async function LandingPage() {
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
                 <Truck className="w-8 h-8 text-foreground" />
               </div>
-              <h3 className="text-4xl font-black text-foreground mb-2">12,500+</h3>
+              <p className="text-4xl font-bold tracking-tight text-foreground mb-2">12,500+</p>
               <p className="text-muted-foreground font-medium">Items Shipped Globally</p>
             </div>
 
@@ -181,7 +181,7 @@ export default async function LandingPage() {
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
                 <ShoppingBag className="w-8 h-8 text-foreground" />
               </div>
-              <h3 className="text-4xl font-black text-foreground mb-2">4,800+</h3>
+              <p className="text-4xl font-bold tracking-tight text-foreground mb-2">4,800+</p>
               <p className="text-muted-foreground font-medium">Premium Products</p>
             </div>
 
@@ -189,7 +189,7 @@ export default async function LandingPage() {
               <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mb-4">
                 <Users className="w-8 h-8 text-foreground" />
               </div>
-              <h3 className="text-4xl font-black text-foreground mb-2">99.8%</h3>
+              <p className="text-4xl font-bold tracking-tight text-foreground mb-2">99.8%</p>
               <p className="text-muted-foreground font-medium">Customer Satisfaction</p>
             </div>
           </div>

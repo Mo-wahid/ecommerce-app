@@ -123,20 +123,20 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
-      <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100 border-b dark:border-slate-800 pb-4">Checkout</h1>
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold tracking-tight text-foreground border-b border-border pb-4">Checkout</h1>
 
-      {error && <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-md">{error}</div>}
+      {error && <div className="bg-destructive/10 text-destructive p-4 rounded-md border border-destructive/20">{error}</div>}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
         {/* Shipping Form */}
         <div className="lg:col-span-2">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm transition-colors">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-6">Shipping Information</h2>
+          <div className="bg-card p-6 rounded-xl border border-border shadow-sm transition-colors">
+            <h2 className="text-xl font-bold tracking-tight text-foreground mb-6">Shipping Information</h2>
             <form id="checkout-form" onSubmit={handlePlaceOrder} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Username</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Username</label>
                 <Input
                   type="text"
                   required
@@ -147,7 +147,7 @@ export default function CheckoutPage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Street Address</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Street Address</label>
                 <Input
                   type="text"
                   required
@@ -159,7 +159,7 @@ export default function CheckoutPage() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">City</label>
+                  <label className="block text-sm font-medium text-foreground mb-1">City</label>
                   <Input
                     type="text"
                     required
@@ -169,7 +169,7 @@ export default function CheckoutPage() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Postal Code</label>
+                  <label className="block text-sm font-medium text-foreground mb-1">Postal Code</label>
                   <Input
                     type="text"
                     required
@@ -181,9 +181,9 @@ export default function CheckoutPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-slate-300 mb-1">Country</label>
+                <label className="block text-sm font-medium text-foreground mb-1">Country</label>
                 <Select
-                  isRequired
+                  aria-label="Select Country"
                   selectedKey={formData.country}
                   onSelectionChange={(key) => setFormData({ ...formData, country: key?.toString() || "" })}
                 >
@@ -194,9 +194,6 @@ export default function CheckoutPage() {
                     <SelectItem id="United States" textValue="United States">United States</SelectItem>
                     <SelectItem id="Canada" textValue="Canada">Canada</SelectItem>
                     <SelectItem id="United Kingdom" textValue="United Kingdom">United Kingdom</SelectItem>
-                    <SelectItem id="Australia" textValue="Australia">Australia</SelectItem>
-                    <SelectItem id="Pakistan" textValue="Pakistan">Pakistan</SelectItem>
-                    <SelectItem id="India" textValue="India">India</SelectItem>
                     <SelectItem id="Germany" textValue="Germany">Germany</SelectItem>
                     <SelectItem id="France" textValue="France">France</SelectItem>
                   </SelectContent>
@@ -207,16 +204,16 @@ export default function CheckoutPage() {
         </div>
 
         {/* Order Summary */}
-        <div className="bg-white dark:bg-slate-800 p-6 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm h-fit transition-colors">
-          <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-4">Order Summary</h2>
+        <div className="bg-card p-6 rounded-xl border border-border shadow-sm h-fit transition-colors">
+          <h2 className="text-xl font-bold tracking-tight text-foreground mb-4">Order Summary</h2>
           
           <div className="space-y-3 mb-6">
             {cart.map((item) => (
               <div key={item.product._id} className="flex justify-between text-sm">
-                <span className="text-gray-600 dark:text-slate-400 truncate pr-4">
+                <span className="text-muted-foreground truncate pr-4">
                   {item.quantity}x {item.product.name}
                 </span>
-                <span className="font-medium text-gray-900 dark:text-slate-100">
+                <span className="font-medium text-foreground">
                   ${(item.product.price * item.quantity).toFixed(2)}
                 </span>
               </div>
@@ -225,18 +222,18 @@ export default function CheckoutPage() {
 
           <Separator className="my-4" />
           
-          <div className="mb-2 flex justify-between text-gray-600 dark:text-slate-400">
+          <div className="mb-2 flex justify-between text-muted-foreground">
             <span>Subtotal</span>
             <span>${subtotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-gray-600 dark:text-slate-400 mb-4">
+          <div className="flex justify-between text-muted-foreground mb-4">
             <span>Shipping</span>
             <span className="text-emerald-600 dark:text-emerald-400 font-medium">Free</span>
           </div>
           
           <Separator className="my-4" />
 
-          <div className="flex justify-between font-bold text-xl text-gray-900 dark:text-slate-100 mb-6">
+          <div className="flex justify-between font-bold text-xl text-foreground mb-6">
             <span>Total</span>
             <span>${subtotal.toFixed(2)}</span>
           </div>

@@ -75,10 +75,10 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8">
+    <div className="space-y-8">
       <div className="flex items-center gap-3 border-b border-border pb-6">
         <Package className="w-8 h-8 text-primary" />
-        <h1 className="text-3xl font-black text-foreground tracking-tight">Your Orders</h1>
+        <h1 className="text-3xl font-bold text-foreground tracking-tight">Your Orders</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -87,7 +87,7 @@ export default function OrdersPage() {
           const statusColors = getStatusConfig(order.orderStatus);
 
           return (
-            <div key={order._id} className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all">
+            <div key={order._id} className="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all">
               {/* Order Header */}
               <div className="bg-muted/40 px-5 py-4 border-b border-border flex justify-between items-start gap-4">
                 <div className="text-sm space-y-1.5">
@@ -96,15 +96,15 @@ export default function OrdersPage() {
                   <p className="text-muted-foreground">ID: <span className="font-semibold text-foreground">{order._id.substring(order._id.length - 8).toUpperCase()}</span></p>
                 </div>
                 
-                <div className={`px-2.5 py-1 rounded-md border flex items-center gap-1.5 ${statusColors.bg}`}>
+                <div className={`px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${statusColors.bg}`}>
                   <StatusIcon className={`w-3.5 h-3.5 ${statusColors.color}`} />
-                  <span className={`text-xs font-bold ${statusColors.color}`}>{order.orderStatus}</span>
+                  <span className={`text-xs font-medium ${statusColors.color}`}>{order.orderStatus}</span>
                 </div>
               </div>
 
               {/* Order Items */}
               <div className="p-5">
-                <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Items in order</h3>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Items in order</p>
                 <div className="space-y-4">
                   {order.orderItems.map((item: import("@/types").IOrderProduct, index: number) => {
                     if (!item.product) return null;

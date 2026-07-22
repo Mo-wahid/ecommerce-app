@@ -80,35 +80,34 @@ export default function AddToCartSection({ productId, stock, price }: AddToCartP
 
   return (
     <>
-      <Separator className="my-6" />
-      <div className="space-y-6">
+      <div className="bg-muted/40 p-5 md:p-6 rounded-2xl border border-border/50 space-y-6 mt-2">
         <div className="flex items-center justify-between">
-          <label className="text-slate-700 dark:text-slate-300 font-semibold">Quantity</label>
+          <label className="text-foreground font-semibold">Quantity</label>
           <div className="flex items-center gap-3">
-            <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden shadow-sm bg-white">
+            <div className="flex items-center border border-border rounded-lg overflow-hidden shadow-sm bg-card">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
+                className="px-4 py-2 text-foreground hover:bg-muted disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
                 disabled={quantity <= 1}
               >
                 -
               </button>
-              <span className="px-4 py-2 text-slate-900 font-bold border-x border-slate-200 min-w-[3rem] text-center">
+              <span className="px-4 py-2 text-foreground font-bold border-x border-border min-w-[3rem] text-center">
                 {quantity}
               </span>
               <button
                 onClick={() => setQuantity(Math.min(stock, quantity + 1))}
-                className="px-4 py-2 text-slate-600 hover:bg-slate-50 disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
+                className="px-4 py-2 text-foreground hover:bg-muted disabled:opacity-50 transition-colors font-medium cursor-pointer disabled:cursor-not-allowed"
                 disabled={quantity >= stock}
               >
                 +
               </button>
             </div>
-            <span className="text-sm font-medium text-slate-500">({stock - quantity} left)</span>
+            <span className="text-sm font-medium text-muted-foreground">({stock - quantity} left)</span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between text-lg font-bold text-slate-900 dark:text-slate-100">
+        <div className="flex items-center justify-between text-lg font-bold text-foreground">
           <span>Total Price:</span>
           <span>${(price * quantity).toFixed(2)}</span>
         </div>

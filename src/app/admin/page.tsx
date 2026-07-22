@@ -138,8 +138,8 @@ export default function AdminDashboard() {
     <div className="max-w-7xl mx-auto space-y-6">
       <div className="flex justify-between items-center pb-2">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Admin Dashboard</h1>
-          <p className="text-gray-500 dark:text-slate-400 mt-1">Overview of your store's performance.</p>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Admin Dashboard</h1>
+          <p className="text-muted-foreground mt-1">Overview of your store's performance.</p>
         </div>
         <div className="flex space-x-4">
           <Link 
@@ -215,7 +215,7 @@ export default function AdminDashboard() {
           ) : (
             <Table>
               <TableHeader>
-                  <TableHead className="w-[120px]">Order ID</TableHead>
+                  <TableHead className="w-[120px]" isRowHeader>Order ID</TableHead>
                   <TableHead className="w-full">Customer</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead>Total</TableHead>

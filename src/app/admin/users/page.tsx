@@ -144,25 +144,25 @@ export default function ManageUsersPage() {
         <div className="flex items-center gap-4">
           <Link
             href="/admin"
-            className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+            className="p-2 text-muted-foreground hover:text-foreground hover:bg-accent rounded-full transition-colors"
             title="Back to Dashboard"
           >
             <ArrowLeft className="w-6 h-6" />
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-100">Manage Users</h1>
-            <p className="text-gray-500 dark:text-slate-400 mt-1 text-sm">View and manage registered customers and admins.</p>
+            <h1 className="text-3xl font-bold tracking-tight text-foreground">Manage Users</h1>
+            <p className="text-muted-foreground mt-1 text-sm">View and manage registered customers and admins.</p>
           </div>
         </div>
       </div>
 
-      <Card className="flex flex-col h-[600px] overflow-hidden">
+      <Card className="flex flex-col h-[600px] overflow-hidden border-border bg-card">
         {users.length === 0 ? (
           <EmptyState
             icon={Users}
             title="No users found"
             description="Try adjusting your search query to find the user you're looking for."
-            className="border-0 rounded-none shadow-none bg-transparent dark:bg-transparent"
+            className="border-0 rounded-none shadow-none bg-transparent"
           />
         ) : (
           <CardContent className="p-0 w-full overflow-x-auto min-w-0 flex-1">
@@ -187,16 +187,16 @@ export default function ManageUsersPage() {
                           <div className="min-w-0">
                             <div className="font-bold truncate text-foreground flex items-center gap-2">
                               {user.name}
-                              {isMe && <span className="px-1.5 py-0.5 rounded text-[10px] uppercase font-black bg-primary text-primary-foreground tracking-wider">You</span>}
+                              {isMe && <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-primary text-primary-foreground">You</span>}
                             </div>
                             <div className="text-muted-foreground text-xs truncate mt-0.5">{user.email}</div>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className={`px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider flex items-center gap-1 w-max ${
+                        <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium flex items-center gap-1 w-max ${
                           user.role === "admin" 
-                            ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border border-purple-200 dark:border-purple-800/50" 
+                            ? "bg-primary/10 text-primary border border-primary/20" 
                             : "bg-secondary text-secondary-foreground border border-border"
                         }`}>
                           {user.role === "admin" ? <ShieldAlert className="w-3.5 h-3.5" /> : <Shield className="w-3.5 h-3.5" />}

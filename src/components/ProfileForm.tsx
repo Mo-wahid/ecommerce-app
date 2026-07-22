@@ -51,7 +51,7 @@ export default function ProfileForm() {
   }
 
   return (
-    <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden max-w-2xl transition-colors">
+    <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden max-w-2xl transition-colors">
       <div className="p-6 sm:p-8 border-b border-border bg-muted/40">
         <div className="flex items-center gap-4">
           <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
@@ -62,7 +62,7 @@ export default function ProfileForm() {
             )}
           </div>
           <div>
-            <h2 className="text-xl font-bold text-foreground">{session.user.name}</h2>
+            <h2 className="text-xl font-bold tracking-tight text-foreground">{session.user.name}</h2>
             <p className="text-muted-foreground text-sm">{session.user.email}</p>
             <span className="inline-block mt-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground capitalize border border-border">
               {session.user.role || "User"} Account
