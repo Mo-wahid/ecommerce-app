@@ -20,8 +20,11 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import CategoryFormModal from "@/components/CategoryFormModal";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import dynamic from "next/dynamic";
+
+const CategoryFormModal = dynamic(() => import("@/components/CategoryFormModal"), { ssr: false });
+const DeleteConfirmModal = dynamic(() => import("@/components/DeleteConfirmModal"), { ssr: false });
+
 import { ICategory } from "@/types";
 
 const ITEMS_PER_PAGE = 8;

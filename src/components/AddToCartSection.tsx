@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import { useAuthModal } from "@/context/AuthModalContext";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { apiClient } from "@/lib/api-client";
 
 interface AddToCartProps {
   productId: string;
@@ -34,21 +35,7 @@ export default function AddToCartSection({ productId, stock, price }: AddToCartP
     const toastId = toast.loading("Adding to cart...");
 
     try {
-      const res = await fetch("/api/cart", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: user.id,
-          productId,
-          quantity,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to add to cart");
-      }
+      const data = await apiClient.addToCart(user.id, productId, quantity);
 
       const totalItemsInCart = data.data.products.reduce((sum: number, item: any) => sum + item.quantity, 0);
 

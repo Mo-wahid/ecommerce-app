@@ -7,6 +7,7 @@ import * as z from "zod";
 import { toast } from "sonner";
 import { Loader2, UploadCloud, X } from "lucide-react";
 import Image from "next/image";
+import { apiClient } from "@/lib/api-client";
 import {
   Dialog,
   DialogHeader,
@@ -101,17 +102,7 @@ export default function CategoryFormModal({
 
       // Upload image file if selected
       if (imageFile) {
-        const formData = new FormData();
-        formData.append("file", imageFile);
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
-
-        if (!uploadRes.ok) {
-          throw new Error("Failed to upload image.");
-        }
-        const uploadData = await uploadRes.json();
+        const uploadData = await apiClient.uploadImage(imageFile);
         imageUrl = uploadData.url;
       }
 
@@ -121,19 +112,10 @@ export default function CategoryFormModal({
         image: imageUrl,
       };
 
-      const url = isEditing ? `/api/categories/${category._id}` : "/api/categories";
-      const method = isEditing ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok || !result.success) {
-        throw new Error(result.message || "Failed to save category.");
+      if (isEditing && category) {
+        await apiClient.updateCategory(category._id, payload);
+      } else {
+        await apiClient.createCategory(payload);
       }
 
       toast.success(isEditing ? "Category updated successfully!" : "Category created successfully!");

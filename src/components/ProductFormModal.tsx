@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
+import { apiClient } from "@/lib/api-client";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -123,17 +125,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
 
     try {
       if (imageFile) {
-        const uploadData = new FormData();
-        uploadData.append("file", imageFile);
-
-        const uploadRes = await fetch("/api/upload", {
-          method: "POST",
-          body: uploadData,
-        });
-        const uploadJson = await uploadRes.json();
-        
-        if (!uploadRes.ok) throw new Error(uploadJson.message || "Image upload failed");
-        
+        const uploadJson = await apiClient.uploadImage(imageFile);
         finalImageUrl = uploadJson.url;
       }
 
@@ -141,20 +133,16 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
         toast.loading("Saving product details...", { id: loadingToastId });
       }
 
-      const method = isEditing ? "PUT" : "POST";
-      const url = isEditing ? `/api/products/${product?._id}` : "/api/products";
+      const payload = {
+        ...data,
+        imageUrl: finalImageUrl,
+      };
 
-      const productRes = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          imageUrl: finalImageUrl,
-        }),
-      });
-
-      const productJson = await productRes.json();
-      if (!productRes.ok) throw new Error(productJson.message || "Failed to save product");
+      if (isEditing && product) {
+        await apiClient.updateProduct(product._id, payload);
+      } else {
+        await apiClient.createProduct(payload);
+      }
 
       toast.success(isEditing ? "Product updated successfully!" : "Product added successfully!", { id: loadingToastId });
       
@@ -290,7 +278,7 @@ export default function ProductFormModal({ isOpen, onClose, onSuccess, product }
                   
                   {isEditing && product?.imageUrl && !imageFile && (
                     <div className="mb-4 relative group rounded-xl overflow-hidden border">
-                      <img src={product.imageUrl} alt="Current" className="w-full aspect-square object-cover" />
+                      <Image src={product.imageUrl} alt="Current" width={300} height={300} className="w-full aspect-square object-cover" />
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="text-white text-sm font-medium">Current Image</span>
                       </div>

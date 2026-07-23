@@ -7,12 +7,12 @@ export default function MainWrapper({ children }: { children: React.ReactNode })
   
   // The landing page, admin, profile, and products handle their own full-width layout and padding
   if (pathname === "/" || pathname.startsWith("/admin") || pathname.startsWith("/profile") || pathname.startsWith("/products")) {
-    return <main className="flex-grow w-full max-w-full min-w-0">{children}</main>;
+    return <main className="flex-grow flex flex-col min-w-0">{children}</main>;
   }
 
   // All other pages get the standard constrained container
   return (
-    <main className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24 w-full max-w-full min-w-0">
+    <main className="flex-grow flex flex-col min-w-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24 w-full">
       {children}
     </main>
   );

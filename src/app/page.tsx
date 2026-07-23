@@ -110,8 +110,8 @@ export default async function LandingPage() {
 
         {featuredProducts.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {featuredProducts.map((product: any) => (
-              <ProductCard key={product._id} product={product} />
+            {featuredProducts.map((product: any, index: number) => (
+              <ProductCard key={product._id} product={product} priority={index < 4} />
             ))}
           </div>
         ) : (

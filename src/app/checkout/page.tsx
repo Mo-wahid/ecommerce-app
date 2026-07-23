@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronRight, ShoppingCart, Percent, AlertCircle } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
@@ -268,7 +269,7 @@ export default function CheckoutPage() {
                 {cart.map((item) => (
                   <div key={item.product._id} className="flex gap-4 items-center">
                     <div className="relative w-16 h-16 rounded-xl overflow-visible shrink-0 bg-muted border border-border">
-                      <img src={item.product.imageUrl} alt={item.product.name} className="w-full h-full object-cover rounded-xl" />
+                      <Image src={item.product.imageUrl || "https://via.placeholder.com/64"} alt={item.product.name} width={64} height={64} className="w-full h-full object-cover rounded-xl" />
                       <div className="absolute -top-2 -right-2 min-w-[22px] h-[22px] bg-foreground text-background text-[11px] font-bold rounded-full flex items-center justify-center border-2 border-background z-10 shadow-sm px-1">
                         {item.quantity}
                       </div>

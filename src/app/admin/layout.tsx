@@ -10,12 +10,12 @@ export default function AdminLayout({
     <SidebarProvider className="pt-16 min-h-screen">
       <AdminSidebar />
       <SidebarInset>
-        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4 md:hidden">
+        <header className="flex h-14 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger />
         </header>
-        <main className="flex-1 w-full max-w-full min-w-0 p-4 sm:p-6 lg:p-8 overflow-x-hidden bg-background transition-colors">
+        <div className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 bg-background transition-colors">
           {children}
-        </main>
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );

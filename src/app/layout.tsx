@@ -4,10 +4,12 @@ import { Toaster } from "@/components/ui/sonner";
 import AuthProvider from "@/components/AuthProvider";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import MainWrapper from "@/components/MainWrapper";
+import dynamic from "next/dynamic";
 import { AuthModalProvider } from "@/context/AuthModalContext";
-import AuthModal from "@/components/AuthModal";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+
+const AuthModal = dynamic(() => import("@/components/AuthModal"));
 
 const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 

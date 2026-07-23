@@ -1,14 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    optimizePackageImports: ['lucide-react', 'react-aria-components', 'sonner'],
+  },
   images: {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'res.cloudinary.com',
+        hostname: '**',
       },
       {
-        protocol: 'https',
-        hostname: 'via.placeholder.com',
+        protocol: 'http',
+        hostname: '**',
       },
     ],
   },

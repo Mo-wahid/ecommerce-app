@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { useAuthModal } from "@/context/AuthModalContext";
+import { apiClient } from "@/lib/api-client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -108,16 +109,9 @@ function AuthModalInner() {
           return;
         }
 
-        const res = await fetch("/api/auth/register", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ name, email, password }),
-        });
+        await apiClient.register(name, email, password);
 
-        const data = await res.json();
-
-        if (res.ok) {
-          toast.success("Registration successful!");
+        toast.success("Registration successful!");
           // Auto-login after successful registration
           const loginRes = await signIn("credentials", {
             redirect: false,
@@ -141,9 +135,6 @@ function AuthModalInner() {
             
             router.refresh();
           }
-        } else {
-          setFormError(data.message || "Registration failed");
-        }
       }
     } catch (error) {
       setFormError("An unexpected error occurred");

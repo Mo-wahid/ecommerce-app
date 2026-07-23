@@ -2,6 +2,7 @@ import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { ChevronRight, Home, CheckCircle2, AlertTriangle, XCircle, FileText, Truck, Info, RotateCcw, ShieldCheck } from "lucide-react";
 import AddToCartSection from "@/components/AddToCartSection";
 import { Accordion, AccordionItem } from "@/components/ui/accordion";
@@ -107,12 +108,17 @@ export default async function ProductDetailsPage({
             <div className="grid grid-cols-1 md:grid-cols-2">
               {/* Left Side: Sticky Product Image Container */}
               <div className="relative h-full border-r border-border/50 bg-muted">
-                <div className="h-[350px] sm:h-[450px] md:h-[500px] lg:h-[540px] w-full relative flex items-center justify-center md:sticky md:top-24">
-                  <img
-                    src={serializedProduct.imageUrl || "https://via.placeholder.com/600"}
-                    alt={serializedProduct.name}
-                    className="absolute inset-0 w-full h-full object-contain p-8 mix-blend-multiply dark:mix-blend-normal"
-                  />
+                <div className="h-[350px] sm:h-[450px] md:h-[500px] lg:h-[540px] w-full flex items-center justify-center md:sticky md:top-24">
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={serializedProduct.imageUrl || "https://via.placeholder.com/600"}
+                      alt={serializedProduct.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 50vw"
+                      priority
+                      className="object-contain p-8 mix-blend-multiply dark:mix-blend-normal"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -226,11 +232,13 @@ export default async function ProductDetailsPage({
                   href={`/products/${relProduct._id}`}
                   className="flex items-center gap-3.5 p-3 rounded-xl border border-border bg-card hover:bg-accent/50 hover:border-primary/30 transition-all group shadow-xs"
                 >
-                  <div className="w-20 h-20 bg-muted/50 rounded-lg relative shrink-0 border border-border/50">
-                    <img
+                  <div className="w-20 h-20 bg-muted/50 rounded-lg relative shrink-0 border border-border/50 overflow-hidden">
+                    <Image
                       src={relProduct.imageUrl || "https://via.placeholder.com/150"}
                       alt={relProduct.name}
-                      className="absolute inset-0 w-full h-full object-contain p-2 mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-300"
+                      fill
+                      sizes="80px"
+                      className="object-contain p-2 mix-blend-multiply dark:mix-blend-normal group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
                   <div className="min-w-0 flex-1 space-y-1">

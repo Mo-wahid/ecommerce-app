@@ -14,9 +14,10 @@ interface ProductProps {
     imageUrl: string;
     stock: number;
   };
+  priority?: boolean;
 }
 
-export default function ProductCard({ product }: ProductProps) {
+export default function ProductCard({ product, priority = false }: ProductProps) {
   return (
     <Link href={`/products/${product._id}`} className="block h-full group cursor-pointer">
       <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
@@ -25,6 +26,7 @@ export default function ProductCard({ product }: ProductProps) {
             src={product.imageUrl || "https://via.placeholder.com/400?text=No+Image"}
             alt={product.name}
             fill
+            priority={priority}
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />

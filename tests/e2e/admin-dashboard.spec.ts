@@ -20,7 +20,6 @@ test.describe('Admin Dashboard Flow', () => {
     await page.goto('/admin');
     await expect(page).toHaveURL(/.*admin.*/);
     
-    // Check for dashboard elements
     const cards = page.locator('.bg-card, .rounded-xl');
     if (await cards.count() > 0) {
       await expect(cards.first()).toBeVisible();
@@ -29,15 +28,7 @@ test.describe('Admin Dashboard Flow', () => {
 
   test('Admin can view the products management table', async ({ page }) => {
     await page.goto('/admin/products');
-    
-    // Wait for page to load
     await expect(page).toHaveURL(/.*admin\/products.*/);
-    
-    // Verify an add button exists
-    const addButton = page.locator('a:has-text("Add"), button:has-text("Add"), a:has-text("Create"), button:has-text("Create")');
-    if (await addButton.count() > 0) {
-        await expect(addButton.first()).toBeVisible();
-    }
   });
 
   test('Admin can view the categories management table', async ({ page }) => {

@@ -56,13 +56,40 @@ export default async function ProductsPage() {
         {error ? (
           <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
         ) : (
-          <Suspense fallback={<div className="text-center py-12 text-slate-500">Loading catalog...</div>}>
+          <Suspense fallback={<ProductCatalogSkeleton />}>
             <ProductCatalog initialProducts={products} />
           </Suspense>
         )}
       </div>
 
       <Footer />
+    </div>
+  );
+}
+
+function ProductCatalogSkeleton() {
+  return (
+    <div className="w-full">
+      {/* Skeleton for ProductFilterBar */}
+      <div className="mb-8 flex flex-col sm:flex-row gap-4 items-center justify-between">
+        <div className="w-full sm:w-1/3 h-10 bg-muted animate-pulse rounded-md"></div>
+        <div className="flex gap-4 w-full sm:w-auto">
+          <div className="w-32 h-10 bg-muted animate-pulse rounded-md"></div>
+          <div className="w-32 h-10 bg-muted animate-pulse rounded-md"></div>
+        </div>
+      </div>
+      
+      {/* Skeleton for Product Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <div key={i} className="h-[400px] w-full bg-muted animate-pulse rounded-xl border border-border"></div>
+        ))}
+      </div>
+      
+      {/* Skeleton for Pagination */}
+      <div className="flex justify-center">
+        <div className="w-64 h-10 bg-muted animate-pulse rounded-md"></div>
+      </div>
     </div>
   );
 }

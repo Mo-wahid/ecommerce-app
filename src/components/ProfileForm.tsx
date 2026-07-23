@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Loader2, Save, User, Lock } from "lucide-react";
@@ -8,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
+import { apiClient } from "@/lib/api-client";
 
 export default function ProfileForm() {
   const { data: session, update } = useSession();
@@ -22,17 +24,7 @@ export default function ProfileForm() {
     setLoading(true);
 
     try {
-      const res = await fetch("/api/profile", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.message || "Failed to update profile");
-      }
+      await apiClient.updateProfile({ name, password });
 
       toast.success("Profile updated successfully!");
       
@@ -58,9 +50,9 @@ export default function ProfileForm() {
     <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden max-w-2xl transition-colors">
       <div className="p-6 sm:p-8 border-b border-border bg-muted/40">
         <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
+          <div className="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0 relative overflow-hidden">
             {session.user.image ? (
-              <img src={session.user.image} alt={session.user.name || "User"} className="w-full h-full rounded-full object-cover" />
+              <Image src={session.user.image} alt={session.user.name || "User"} width={64} height={64} className="w-full h-full rounded-full object-cover" />
             ) : (
               <User className="w-8 h-8" />
             )}

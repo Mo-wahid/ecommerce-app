@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
@@ -118,8 +119,8 @@ export default function CartPage() {
             {cart.map((item) => (
               <div key={item.product._id} className="flex items-center justify-between p-4 bg-card rounded-xl border border-border shadow-sm transition-colors">
                 <div className="flex items-center space-x-4">
-                  <Link href={`/products/${item.product._id}`} className="w-16 h-16 bg-muted rounded-lg flex-shrink-0 block overflow-hidden group">
-                    <img src={item.product.imageUrl || "https://via.placeholder.com/64"} alt={item.product.name} className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform" />
+                  <Link href={`/products/${item.product._id}`} className="w-16 h-16 bg-muted rounded-lg flex-shrink-0 block overflow-hidden group relative">
+                    <Image src={item.product.imageUrl || "https://via.placeholder.com/64"} alt={item.product.name} width={64} height={64} className="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform" />
                   </Link>
                   <div>
                     <Link href={`/products/${item.product._id}`} className="text-lg font-semibold text-foreground hover:text-primary transition-colors block">

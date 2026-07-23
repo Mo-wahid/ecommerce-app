@@ -2,12 +2,16 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { toast } from "sonner";
 import { Loader2, Edit, Trash2, ArrowLeft, Plus, Package } from "lucide-react";
-import ProductFormModal from "@/components/ProductFormModal";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import dynamic from "next/dynamic";
+
+const ProductFormModal = dynamic(() => import("@/components/ProductFormModal"), { ssr: false });
+const DeleteConfirmModal = dynamic(() => import("@/components/DeleteConfirmModal"), { ssr: false });
+
 import ProductFilterBar from "@/components/ProductFilterBar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -247,12 +251,12 @@ export default function ManageProductsPage() {
               ))}
             </div>
 
-            {/* Desktop Table Layout */}
-            <div className="hidden sm:block w-full overflow-x-auto">
+            {/* Desktop Table View (hidden on mobile, visible on sm and up) */}
+            <div className="hidden sm:block overflow-x-auto border border-border rounded-xl bg-card">
               <Table>
                 <TableHeader>
-                  <TableHead>Image</TableHead>
-                  <TableHead isRowHeader>Name</TableHead>
+                  <TableHead className="w-16" isRowHeader>Image</TableHead>
+                  <TableHead>Name</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
                   <TableHead>Stock</TableHead>
@@ -260,8 +264,8 @@ export default function ManageProductsPage() {
                 </TableHeader>
                 <TableBody>
                   {displayedProducts.map((product) => (
-                    <TableRow
-                      key={product._id}
+                    <TableRow 
+                      key={product._id} 
                       onAction={() => {
                         setNavigatingId(product._id as string);
                         router.push(`/products/${product._id}`);
@@ -269,10 +273,12 @@ export default function ManageProductsPage() {
                       className={navigatingId === product._id ? "cursor-wait opacity-75" : "cursor-pointer"}
                     >
                       <TableCell>
-                        <div className="w-12 h-12 bg-muted border border-border rounded overflow-hidden">
-                          <img
+                        <div className="w-12 h-12 bg-muted border border-border rounded overflow-hidden relative">
+                          <Image
                             src={product.imageUrl || "https://via.placeholder.com/150"}
                             alt={product.name}
+                            width={48}
+                            height={48}
                             className="w-full h-full object-cover"
                           />
                         </div>
