@@ -38,6 +38,7 @@ export default function ManageProductsPage() {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const ITEMS_PER_PAGE = 10;
 
   // Filter states
@@ -79,7 +80,7 @@ export default function ManageProductsPage() {
         return () => clearTimeout(debounceTimer);
       }
     }
-  }, [status, user, router, searchQuery, selectedCategory]);
+  }, [status, user, router, searchQuery, selectedCategory, currentPage]);
 
   const fetchProducts = async () => {
     try {
@@ -88,11 +89,21 @@ export default function ManageProductsPage() {
       if (selectedCategory !== "All" && selectedCategory !== "All Categories") {
         params.append("category", selectedCategory);
       }
+      params.append("page", currentPage.toString());
+      params.append("limit", ITEMS_PER_PAGE.toString());
 
-      const res = await fetch(`/api/products?${params.toString()}`);
+      const res = await fetch(`/api/products?${params.toString()}`, {
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        },
+        cache: 'no-store'
+      });
       const json = await res.json();
       if (json.success && json.data) {
         setProducts(json.data);
+        setTotalPages(json.totalPages || 1);
       }
     } catch (error) {
       console.error("Failed to fetch products:", error);
@@ -149,12 +160,6 @@ export default function ManageProductsPage() {
     );
   }
 
-  const totalPages = Math.ceil(products.length / ITEMS_PER_PAGE);
-  const displayedProducts = products.slice(
-    (currentPage - 1) * ITEMS_PER_PAGE,
-    currentPage * ITEMS_PER_PAGE
-  );
-
   return (
     <div className="max-w-7xl mx-auto space-y-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-border pb-4">
@@ -203,7 +208,7 @@ export default function ManageProductsPage() {
           <>
             {/* Mobile Card Layout */}
             <div className="sm:hidden divide-y divide-border">
-              {displayedProducts.map((product) => (
+              {products.map((product) => (
                 <div
                   key={product._id}
                   onClick={() => {
@@ -263,7 +268,7 @@ export default function ManageProductsPage() {
                   <TableHead className="text-right">Actions</TableHead>
                 </TableHeader>
                 <TableBody>
-                  {displayedProducts.map((product) => (
+                  {products.map((product) => (
                     <TableRow 
                       key={product._id} 
                       onAction={() => {

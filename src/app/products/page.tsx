@@ -8,11 +8,17 @@ export const revalidate = 60;
 
 export default async function ProductsPage() {
   let products: import("@/types").IProduct[] = [];
+  let totalPages = 1;
   let error = null;
 
   try {
     await dbConnect();
-    const result = await Product.find({}).sort({ createdAt: -1 }).lean();
+    const [result, totalCount] = await Promise.all([
+      Product.find({}).sort({ createdAt: -1 }).limit(8).lean(),
+      Product.countDocuments({})
+    ]);
+    
+    totalPages = Math.ceil(totalCount / 8);
     
     type RawProduct = Omit<import("@/types").IProduct, "_id" | "createdAt" | "updatedAt"> & {
       _id: import("mongoose").Types.ObjectId;
@@ -57,7 +63,7 @@ export default async function ProductsPage() {
           <div className="bg-red-50 text-red-600 p-4 rounded-md">{error}</div>
         ) : (
           <Suspense fallback={<ProductCatalogSkeleton />}>
-            <ProductCatalog initialProducts={products} />
+            <ProductCatalog initialProducts={products} initialTotalPages={totalPages} />
           </Suspense>
         )}
       </div>

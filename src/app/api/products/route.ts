@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
@@ -10,20 +12,42 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search");
     const category = searchParams.get("category");
+    const page = parseInt(searchParams.get("page") || "1", 10);
+    const limit = parseInt(searchParams.get("limit") || "8", 10);
+    const sort = searchParams.get("sort") || "newest";
 
     const query: any = {};
     
     if (search) {
-      query.name = { $regex: search, $options: "i" };
+      // Use MongoDB text index for optimized search
+      query.$text = { $search: search };
     }
     
-    if (category && category !== "All") {
+    if (category && category !== "All" && category !== "All Categories") {
       query.category = category;
     }
 
-    // Fetch products based on query and sort by newest first
-    const products = await Product.find(query).sort({ createdAt: -1 });
-    return NextResponse.json({ success: true, data: products }, { status: 200 });
+    // Determine sort object
+    let sortObj: any = { createdAt: -1 }; // Default: newest
+    if (sort === "price_asc") sortObj = { price: 1 };
+    else if (sort === "price_desc") sortObj = { price: -1 };
+    else if (sort === "oldest") sortObj = { createdAt: 1 };
+
+    const skip = (page - 1) * limit;
+
+    // Fetch products and total count in parallel
+    const [products, totalCount] = await Promise.all([
+      Product.find(query).sort(sortObj).skip(skip).limit(limit),
+      Product.countDocuments(query),
+    ]);
+
+    return NextResponse.json({ 
+      success: true, 
+      data: products, 
+      totalCount,
+      page,
+      totalPages: Math.ceil(totalCount / limit)
+    }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ success: false, message: "Failed to fetch products." }, { status: 500 });
   }

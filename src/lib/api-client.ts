@@ -69,6 +69,22 @@ export const apiClient = {
     }),
 
   // Products API
+  getProducts: (params?: { search?: string; category?: string; sort?: string; page?: number; limit?: number }) => {
+    const query = new URLSearchParams();
+    if (params?.search) query.append("search", params.search);
+    if (params?.category) query.append("category", params.category);
+    if (params?.sort) query.append("sort", params.sort);
+    if (params?.page) query.append("page", params.page.toString());
+    if (params?.limit) query.append("limit", params.limit.toString());
+    return request<{ success: boolean; data: any; totalCount: number; page: number; totalPages: number }>(`/api/products?${query.toString()}`, {
+      headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      },
+      cache: 'no-store'
+    });
+  },
   createProduct: (data: any) =>
     request<{ success: boolean; data: any }>("/api/products", {
       method: "POST",

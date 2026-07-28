@@ -32,5 +32,8 @@ const ProductSchema = new Schema({
 }, {timestamps: true},
 )
 
+// Add a text index to optimize search queries on name and description
+ProductSchema.index({ name: 'text', description: 'text' });
+
 const Product = models.Product || model("Product", ProductSchema);
 export default Product;

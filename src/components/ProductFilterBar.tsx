@@ -15,6 +15,9 @@ interface ProductFilterBarProps {
   priceRange?: string;
   onPriceRangeChange?: (priceRange: string) => void;
   showPriceFilter?: boolean;
+  sortOrder?: string;
+  onSortChange?: (sortOrder: string) => void;
+  showSortFilter?: boolean;
   className?: string;
 }
 
@@ -27,6 +30,9 @@ export default function ProductFilterBar({
   priceRange,
   onPriceRangeChange,
   showPriceFilter = false,
+  sortOrder = "newest",
+  onSortChange,
+  showSortFilter = true,
   className = "",
 }: ProductFilterBarProps) {
   return (
@@ -85,6 +91,25 @@ export default function ProductFilterBar({
                 <SelectItem id="Under $50" textValue="Under $50">Under $50</SelectItem>
                 <SelectItem id="$50 to $100" textValue="$50 to $100">$50 to $100</SelectItem>
                 <SelectItem id="Over $100" textValue="Over $100">Over $100</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+
+          {/* Sort Filter */}
+          {showSortFilter && onSortChange && (
+            <Select
+              aria-label="Sort products"
+              selectedKey={sortOrder}
+              onSelectionChange={(key) => onSortChange(key?.toString() || "newest")}
+            >
+              <SelectTrigger className="w-full sm:w-[180px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem id="newest" textValue="Newest">Newest</SelectItem>
+                <SelectItem id="price_asc" textValue="Price: Low to High">Price: Low to High</SelectItem>
+                <SelectItem id="price_desc" textValue="Price: High to Low">Price: High to Low</SelectItem>
+                <SelectItem id="oldest" textValue="Oldest">Oldest</SelectItem>
               </SelectContent>
             </Select>
           )}
