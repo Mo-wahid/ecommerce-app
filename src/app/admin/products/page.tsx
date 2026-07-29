@@ -279,11 +279,9 @@ export default function ManageProductsPage() {
                     >
                       <TableCell>
                         <div className="w-12 h-12 bg-muted border border-border rounded overflow-hidden relative">
-                          <Image
+                          <img
                             src={product.imageUrl || "https://via.placeholder.com/150"}
                             alt={product.name}
-                            width={48}
-                            height={48}
                             className="w-full h-full object-cover"
                           />
                         </div>

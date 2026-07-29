@@ -97,8 +97,24 @@ export default function CheckoutPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to place order.");
 
-      setCart([]);
-      router.push("/orders");
+      const orderId = data.data._id; // The order ID from the successful POST
+
+      // Step 2: Initialize Stripe Checkout
+      const stripeRes = await fetch("/api/checkout/stripe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId }),
+      });
+
+      const stripeData = await stripeRes.json();
+      if (!stripeRes.ok) throw new Error(stripeData.message || "Failed to initialize payment.");
+
+      // Redirect to Stripe hosted checkout
+      if (stripeData.url) {
+        window.location.href = stripeData.url;
+      } else {
+        throw new Error("No Stripe URL returned");
+      }
     } catch (err: any) {
       setError(err.message || "An unknown error occurred");
       setPlacingOrder(false);
