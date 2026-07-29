@@ -1,10 +1,37 @@
 {
   "info": {
-    "name": "E-Commerce API",
-    "description": "Collection covering authentication, products, categories, cart, and orders.",
+    "name": "E-Commerce API Complete",
+    "description": "Complete collection for all API endpoints including Auth, Users, Products, Categories, Cart, Orders, and Dashboard.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
+    {
+      "name": "Authentication & Profile",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/auth/register", "host": ["{{baseUrl}}"], "path": ["api", "auth", "register"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}" }
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/profile", "host": ["{{baseUrl}}"], "path": ["api", "profile"] } }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/profile", "host": ["{{baseUrl}}"], "path": ["api", "profile"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"Updated Name\"\n}" }
+          }
+        }
+      ]
+    },
     {
       "name": "Products",
       "item": [
@@ -12,32 +39,43 @@
           "name": "Get Products (Paginated)",
           "request": {
             "method": "GET",
-            "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/products?page=1&limit=8&sort=newest&search=&category=All",
+              "raw": "{{baseUrl}}/api/products?page=1&limit=8&sort=newest",
               "host": ["{{baseUrl}}"],
               "path": ["api", "products"],
               "query": [
                 { "key": "page", "value": "1" },
                 { "key": "limit", "value": "8" },
-                { "key": "sort", "value": "newest" },
-                { "key": "search", "value": "" },
-                { "key": "category", "value": "All" }
+                { "key": "sort", "value": "newest" }
               ]
             }
           }
         },
         {
-          "name": "Get Single Product",
+          "name": "Create Product (Admin)",
           "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/products/{{productId}}",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "products", "{{productId}}"]
-            }
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/products", "host": ["{{baseUrl}}"], "path": ["api", "products"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Product\",\n  \"price\": 99.99,\n  \"description\": \"Awesome product\",\n  \"category\": \"Electronics\"\n}" }
           }
+        },
+        {
+          "name": "Get Single Product",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/products/{{productId}}", "host": ["{{baseUrl}}"], "path": ["api", "products", "{{productId}}"] } }
+        },
+        {
+          "name": "Update Product (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/products/{{productId}}", "host": ["{{baseUrl}}"], "path": ["api", "products", "{{productId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 89.99\n}" }
+          }
+        },
+        {
+          "name": "Delete Product (Admin)",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/products/{{productId}}", "host": ["{{baseUrl}}"], "path": ["api", "products", "{{productId}}"] } }
         }
       ]
     },
@@ -46,29 +84,117 @@
       "item": [
         {
           "name": "Get Categories",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/categories", "host": ["{{baseUrl}}"], "path": ["api", "categories"] } }
+        },
+        {
+          "name": "Create Category (Admin)",
           "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/api/categories",
-              "host": ["{{baseUrl}}"],
-              "path": ["api", "categories"]
-            }
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/categories", "host": ["{{baseUrl}}"], "path": ["api", "categories"] },
+            "body": { "mode": "raw", "raw": "{\n  \"name\": \"New Category\"\n}" }
           }
+        },
+        {
+          "name": "Get Single Category",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api", "categories", "{{categoryId}}"] } }
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api", "categories", "{{categoryId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"description\": \"Updated desc\"\n}" }
+          }
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["api", "categories", "{{categoryId}}"] } }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "Get Cart",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/cart", "host": ["{{baseUrl}}"], "path": ["api", "cart"] } }
+        },
+        {
+          "name": "Update Cart",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/cart", "host": ["{{baseUrl}}"], "path": ["api", "cart"] },
+            "body": { "mode": "raw", "raw": "{\n  \"items\": []\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Get User Orders",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] } }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/orders", "host": ["{{baseUrl}}"], "path": ["api", "orders"] },
+            "body": { "mode": "raw", "raw": "{\n  \"items\": [],\n  \"totalAmount\": 100,\n  \"shippingAddress\": {}\n}" }
+          }
+        },
+        {
+          "name": "Get Single Order",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/orders/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "orders", "{{orderId}}"] } }
+        },
+        {
+          "name": "Update Order Status (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/orders/{{orderId}}", "host": ["{{baseUrl}}"], "path": ["api", "orders", "{{orderId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"Shipped\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin Specific",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/dashboard", "host": ["{{baseUrl}}"], "path": ["api", "dashboard"] } }
+        },
+        {
+          "name": "Get All Users",
+          "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/api/users", "host": ["{{baseUrl}}"], "path": ["api", "users"] } }
+        },
+        {
+          "name": "Update User Role",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "users", "{{userId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"role\": \"admin\"\n}" }
+          }
+        },
+        {
+          "name": "Delete User",
+          "request": { "method": "DELETE", "url": { "raw": "{{baseUrl}}/api/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["api", "users", "{{userId}}"] } }
         }
       ]
     }
   ],
   "variable": [
-    {
-      "key": "baseUrl",
-      "value": "http://localhost:3000",
-      "type": "string"
-    },
-    {
-      "key": "productId",
-      "value": "your_product_id_here",
-      "type": "string"
-    }
+    { "key": "baseUrl", "value": "http://localhost:3000", "type": "string" },
+    { "key": "productId", "value": "123", "type": "string" },
+    { "key": "categoryId", "value": "123", "type": "string" },
+    { "key": "orderId", "value": "123", "type": "string" },
+    { "key": "userId", "value": "123", "type": "string" }
   ]
 }

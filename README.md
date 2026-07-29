@@ -56,6 +56,18 @@
 
 ---
 
+## 🧩 UI Components (shadcn/ui)
+
+This project extensively utilizes [shadcn/ui](https://ui.shadcn.com/) to build an accessible, highly customizable, and stunning interface without bloated component libraries. 
+
+The following primitives are fully integrated into our Design System:
+- **Navigation & Layout**: `Sidebar`, `Dropdown Menu`, `Sheet`, `Accordion`
+- **Data Entry**: `Input`, `Select`, `Combobox`, `Checkbox`, `Textarea`
+- **Feedback & Overlays**: `Dialog`, `Alert Dialog`, `Sonner (Toasts)`, `Tooltip`, `Skeleton`
+- **Data Display**: `Table`, `Card`, `Badge`, `Avatar`, `Pagination`
+
+---
+
 ## 🚀 Getting Started
 
 ### Prerequisites
