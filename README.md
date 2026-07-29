@@ -19,7 +19,7 @@
 > **👋 Note to developer**: *Replace these placeholder URLs with your actual Imgur or GitHub Assets links to show off your UI!*
 
 <div align="center">
-  <img src="https://placehold.co/800x400/18181b/ffffff?text=Replace+with+Homepage+Screenshot" alt="Homepage Preview" width="100%" style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+  <img src="docs/LandingPage.png" alt="Homepage Preview" width="100%" style="border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
   <p><i>The modern, responsive storefront built with shadcn/ui.</i></p>
 </div>
 
@@ -31,12 +31,12 @@
 
 | Admin Dashboard | Product Catalog |
 |:---:|:---:|
-| <img src="https://placehold.co/400x250/18181b/ffffff?text=Admin+Dashboard" width="100%" style="border-radius: 6px;"> | <img src="https://placehold.co/400x250/18181b/ffffff?text=Product+Catalog" width="100%" style="border-radius: 6px;"> |
+| <img src="docs/AdminDashboard.png" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top; border-radius: 6px;"> | <img src="docs/ProductCatalog.png" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top; border-radius: 6px;"> |
 | *Role-based CMS for managing products & categories.* | *Server-side paginated catalog with full-text search.* |
 
 | Swagger API Docs | Shopping Cart |
 |:---:|:---:|
-| <img src="https://placehold.co/400x250/18181b/ffffff?text=Swagger+API+UI" width="100%" style="border-radius: 6px;"> | <img src="https://placehold.co/400x250/18181b/ffffff?text=Shopping+Cart" width="100%" style="border-radius: 6px;"> |
+| <img src="docs/APIDocs.png" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top; border-radius: 6px;"> | <img src="docs/ShoppingCart.png" style="width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top; border-radius: 6px;"> |
 | *Interactive API documentation auto-generated via JSDoc.* | *Persistent cart state across sessions.* |
 
 </details>
