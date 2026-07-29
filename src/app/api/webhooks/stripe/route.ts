@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import dbConnect from "@/lib/dbConnect";
 import Order from "@/models/Order";
+import Cart from "@/models/Cart";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
   apiVersion: "2026-06-24.dahlia",
@@ -51,6 +52,36 @@ export async function POST(request: NextRequest) {
         console.log(`Order ${orderId} successfully marked as Paid via Stripe Webhook!`);
       } else {
         console.warn("Webhook Warning: No orderId found in session metadata.");
+      }
+    } else if (event.type === "payment_intent.succeeded") {
+      const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      const orderId = paymentIntent.metadata?.orderId;
+      const userId = paymentIntent.metadata?.userId;
+
+      if (orderId) {
+        await dbConnect();
+        
+        const updatedOrder = await Order.findByIdAndUpdate(
+          orderId,
+          {
+            paymentStatus: "Paid",
+            orderStatus: "Processing",
+            stripeSessionId: paymentIntent.id
+          },
+          { new: true }
+        );
+
+        if (!updatedOrder) {
+          console.error(`Webhook Error: Order ${orderId} not found in database.`);
+          return NextResponse.json({ success: false, message: "Order not found" }, { status: 404 });
+        }
+        console.log(`Order ${orderId} successfully marked as Paid via Stripe Webhook (Payment Intent)!`);
+        
+        if (userId) {
+          await Cart.findOneAndUpdate({ user: userId }, { products: [] });
+        }
+      } else {
+        console.warn("Webhook Warning: No orderId found in payment_intent metadata.");
       }
     }
 

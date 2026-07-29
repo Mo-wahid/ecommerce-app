@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductCard from "./ProductCard";
 import ProductFilterBar from "./ProductFilterBar";
@@ -34,7 +34,7 @@ export default function ProductCatalog({
   const [totalPages, setTotalPages] = useState(initialTotalPages);
   const [isLoading, setIsLoading] = useState(false);
   const [categories, setCategories] = useState<string[]>(["All"]);
-  const [isInitialMount, setIsInitialMount] = useState(true);
+  const isInitialMount = useRef(true);
 
   // Fetch categories once on mount
   useEffect(() => {
@@ -58,15 +58,15 @@ export default function ProductCatalog({
 
   // Reset to page 1 whenever filters change
   useEffect(() => {
-    if (!isInitialMount) {
+    if (!isInitialMount.current) {
       setCurrentPage(1);
     }
   }, [searchQuery, selectedCategory, sortOrder]);
 
   // Fetch products when filters or page change
   useEffect(() => {
-    if (isInitialMount) {
-      setIsInitialMount(false);
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
       return; // Skip fetching on first mount since we have initialProducts
     }
 
@@ -95,7 +95,8 @@ export default function ProductCatalog({
     }, 300);
     
     return () => clearTimeout(timer);
-  }, [searchQuery, selectedCategory, sortOrder, currentPage, isInitialMount]);
+  }, [searchQuery, selectedCategory, sortOrder, currentPage]);
+
 
   return (
     <div>

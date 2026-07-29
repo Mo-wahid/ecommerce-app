@@ -45,5 +45,6 @@ export interface IOrder {
   orderItems: IOrderProduct[];
   totalAmount: number;
   orderStatus: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+  paymentStatus: "Unpaid" | "Paid" | "Failed";
   createdAt: string;
 }

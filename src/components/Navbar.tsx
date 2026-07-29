@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
-import { ShoppingCart, User, LogOut, Package, Sun, Moon, Loader2 } from "lucide-react";
+import { ShoppingCart, User, LogOut, Package, Sun, Moon, Loader2, Menu } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { useAuthModal } from "@/context/AuthModalContext";
@@ -23,7 +23,9 @@ export default function Navbar() {
   const [mounted, setMounted] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { openModal } = useAuthModal();
+  const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
     setMounted(true);
@@ -47,6 +49,25 @@ export default function Navbar() {
     return () => sections.forEach((s) => observer.unobserve(s));
   }, [pathname]);
 
+  useEffect(() => {
+    if (status === "authenticated" && user?.role !== "admin") {
+      const fetchCart = async () => {
+        try {
+          const res = await fetch("/api/cart");
+          if (res.ok) {
+            const json = await res.json();
+            const products = json?.data?.cart?.products || [];
+            const count = products.reduce((acc: number, item: any) => acc + (item.quantity || 1), 0);
+            setCartCount(count);
+          }
+        } catch (error) {
+          console.error("Error fetching cart count:", error);
+        }
+      };
+      fetchCart();
+    }
+  }, [pathname, status, user?.role]);
+
   const handleLogout = async () => {
     setIsLoggingOut(true);
     await signOut({ redirect: false });
@@ -59,10 +80,19 @@ export default function Navbar() {
   }
 
   return (
-    <nav className="fixed w-full z-50 top-0 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+    <nav className="fixed w-full z-50 top-0 bg-background/80 backdrop-blur-md border-b border-border transition-colors duration-300">
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center space-x-2">
+            {pathname === "/" && (
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="lg:hidden p-2 -ml-2 text-muted-foreground hover:text-primary transition-colors rounded-full hover:bg-muted"
+                aria-label="Toggle mobile menu"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            )}
             <Link href="/" className="text-xl font-black tracking-tight text-primary hover:text-primary/80 transition-colors shrink-0 whitespace-nowrap">
               E-COMMERCE
             </Link>
@@ -79,8 +109,19 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-2 sm:space-x-6 relative z-10">
             {user?.role !== "admin" && pathname !== "/" && (
-              <Link href="/products" className="hidden sm:block text-muted-foreground hover:text-primary font-medium text-sm transition-colors">
+              <Link href="/products" className="text-muted-foreground hover:text-primary font-medium text-sm transition-colors">
                 Products
+              </Link>
+            )}
+
+            {user && user.role !== "admin" && (
+              <Link href="/cart" className="relative cursor-pointer text-muted-foreground hover:text-primary transition-colors p-2 rounded-full hover:bg-muted flex items-center justify-center" aria-label="Cart">
+                <ShoppingCart className="w-5 h-5" />
+                {cartCount > 0 && (
+                  <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-primary text-primary-foreground text-[10px] font-bold flex items-center justify-center">
+                    {cartCount > 99 ? "99+" : cartCount}
+                  </span>
+                )}
               </Link>
             )}
 
@@ -95,7 +136,7 @@ export default function Navbar() {
             )}
 
             {status === "loading" ? null : user ? (
-              <div className="flex items-center ml-1 sm:ml-4 pl-1 sm:pl-4 border-l border-slate-200 dark:border-slate-700 shrink-0">
+              <div className="flex items-center ml-1 sm:ml-4 pl-1 sm:pl-4 border-l border-border shrink-0">
                 <DropdownMenuTrigger>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full p-0 overflow-hidden cursor-pointer">
                     <Avatar className="h-9 w-9 cursor-pointer">
@@ -136,7 +177,7 @@ export default function Navbar() {
                 </DropdownMenuTrigger>
               </div>
             ) : (
-              <div className="flex items-center space-x-2 sm:space-x-4 ml-1 sm:ml-4 pl-1 sm:pl-4 border-l border-slate-200 dark:border-slate-700 shrink-0">
+              <div className="flex items-center space-x-2 sm:space-x-4 ml-1 sm:ml-4 pl-1 sm:pl-4 border-l border-border shrink-0">
                 <Button variant="ghost" onPress={() => openModal("login")} className="text-muted-foreground font-medium cursor-pointer hover:bg-transparent hover:text-primary">
                   Login
                 </Button>
@@ -148,6 +189,18 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+      
+      {/* Mobile Menu */}
+      {pathname === "/" && isMobileMenuOpen && (
+        <div className="lg:hidden bg-background border-t border-border">
+          <div className="flex flex-col px-4 py-4 space-y-4">
+            <Link href="#hero" onClick={() => setIsMobileMenuOpen(false)} className={`text-sm font-bold transition-colors ${activeSection === 'hero' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>Home</Link>
+            <Link href="#featured" onClick={() => setIsMobileMenuOpen(false)} className={`text-sm font-bold transition-colors ${activeSection === 'featured' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>Featured</Link>
+            <Link href="#categories" onClick={() => setIsMobileMenuOpen(false)} className={`text-sm font-bold transition-colors ${activeSection === 'categories' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>Categories</Link>
+            <Link href="#contact" onClick={() => setIsMobileMenuOpen(false)} className={`text-sm font-bold transition-colors ${activeSection === 'contact' ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`}>Contact</Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }

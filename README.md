@@ -100,9 +100,21 @@ CLOUDINARY_API_SECRET="your_api_secret"
 # Upstash Redis (Optional for caching API responses)
 UPSTASH_REDIS_REST_URL="your_upstash_url"
 UPSTASH_REDIS_REST_TOKEN="your_upstash_token"
+
+# Stripe (Required for payments)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="your_stripe_publishable_key"
+STRIPE_SECRET_KEY="your_stripe_secret_key"
+STRIPE_WEBHOOK_SECRET="your_stripe_webhook_secret"
 ```
 
-### 3. Run Development Server
+### 3. Stripe Webhook Configuration
+To properly receive payment status updates on your local machine during development, you need to use the Stripe CLI to forward webhooks to your local server:
+```bash
+stripe listen --forward-to localhost:3000/api/webhooks/stripe
+```
+Copy the webhook signing secret output by the command and add it to your `.env.local` as `STRIPE_WEBHOOK_SECRET`.
+
+### 4. Run Development Server
 ```bash
 npm run dev
 ```

@@ -3,10 +3,61 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
-import { Package, Clock, CheckCircle2, XCircle, Truck } from "lucide-react";
+import { Package, Clock, CheckCircle2, XCircle, Truck, Loader2 } from "lucide-react";
+import { toast } from "sonner";
 import { useSession } from "next-auth/react";
 import Loading from "@/components/ui/Loading";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+function StripePaymentForm({ orderId, amount }: { orderId: string, amount: number }) {
+  const stripe = useStripe();
+  const elements = useElements();
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!stripe || !elements) return;
+
+    setLoading(true);
+    setError("");
+
+    const { error: submitError } = await elements.submit();
+    if (submitError) {
+      setError(submitError.message || "An error occurred");
+      setLoading(false);
+      return;
+    }
+
+    const result = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        return_url: `${window.location.origin}/checkout/success?order_id=${orderId}`,
+      },
+    });
+
+    if (result.error) {
+      setError(result.error.message || "Payment failed");
+      setLoading(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      <PaymentElement />
+      {error && <div className="text-sm font-medium text-destructive">{error}</div>}
+      <Button type="submit" isDisabled={!stripe || loading} className="w-full">
+        {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+        Pay ${amount.toFixed(2)}
+      </Button>
+    </form>
+  );
+}
 
 export default function OrdersPage() {
   const router = useRouter();
@@ -14,6 +65,30 @@ export default function OrdersPage() {
   const user = session?.user;
   const [orders, setOrders] = useState<import("@/types").IOrder[]>([]);
   const [loading, setLoading] = useState(true);
+  const [payingOrderId, setPayingOrderId] = useState<string | null>(null);
+  const [paymentModalData, setPaymentModalData] = useState<{orderId: string, clientSecret: string, amount: number} | null>(null);
+
+  const handlePayment = async (order: import("@/types").IOrder) => {
+    setPayingOrderId(order._id);
+    try {
+      const res = await fetch("/api/checkout/intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ orderId: order._id }),
+      });
+      const data = await res.json();
+      if (data.clientSecret) {
+        setPaymentModalData({ orderId: order._id, clientSecret: data.clientSecret, amount: order.totalAmount });
+      } else {
+        toast.error("Failed to initiate payment");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to initiate payment");
+    } finally {
+      setPayingOrderId(null);
+    }
+  };
 
   useEffect(() => {
     if (status === "unauthenticated") {
@@ -58,15 +133,15 @@ export default function OrdersPage() {
 
   if (orders.length === 0) {
     return (
-      <div className="text-center py-20 bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm max-w-2xl mx-auto mt-10 transition-colors">
-        <div className="bg-slate-50 dark:bg-slate-900 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Package className="w-10 h-10 text-slate-400" />
+      <div className="text-center py-20 bg-card rounded-2xl border border-border shadow-sm max-w-2xl mx-auto mt-10 transition-colors">
+        <div className="bg-muted w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6">
+          <Package className="w-10 h-10 text-muted-foreground" />
         </div>
         <h2 className="text-2xl font-black text-foreground mb-4 tracking-tight">No orders yet</h2>
         <p className="text-muted-foreground mb-8 max-w-sm mx-auto">Looks like you haven't placed any orders. Let's find some amazing products for you!</p>
         <Link 
           href="/products" 
-          className="bg-primary text-primary-foreground px-8 py-3.5 rounded-xl hover:bg-primary/90 font-bold transition-all shadow-md"
+          className="bg-primary text-primary-foreground px-8 py-3.5 rounded-xl hover:bg-primary/90 font-bold transition-all shadow-md inline-block"
         >
           Start Shopping
         </Link>
@@ -87,7 +162,7 @@ export default function OrdersPage() {
           const statusColors = getStatusConfig(order.orderStatus);
 
           return (
-            <div key={order._id} className="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all">
+            <div key={order._id} className="bg-card rounded-xl border border-border overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col">
               {/* Order Header */}
               <div className="bg-muted/40 px-5 py-4 border-b border-border flex justify-between items-start gap-4">
                 <div className="text-sm space-y-1.5">
@@ -96,28 +171,54 @@ export default function OrdersPage() {
                   <p className="text-muted-foreground">ID: <span className="font-semibold text-foreground">{order._id.substring(order._id.length - 8).toUpperCase()}</span></p>
                 </div>
                 
-                <div className={`px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${statusColors.bg}`}>
-                  <StatusIcon className={`w-3.5 h-3.5 ${statusColors.color}`} />
-                  <span className={`text-xs font-medium ${statusColors.color}`}>{order.orderStatus}</span>
+                <div className="flex flex-col items-end gap-2">
+                  <div className={`px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${statusColors.bg}`}>
+                    <StatusIcon className={`w-3.5 h-3.5 ${statusColors.color}`} />
+                    <span className={`text-xs font-medium ${statusColors.color}`}>{order.orderStatus}</span>
+                  </div>
+                  {order.paymentStatus && (
+                    <div className={`px-2.5 py-1 rounded-full border flex items-center gap-1.5 ${
+                      order.paymentStatus.toLowerCase() === 'paid' 
+                        ? 'bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400' 
+                        : 'bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 text-amber-600 dark:text-amber-400'
+                    }`}>
+                      <span className="text-xs font-medium uppercase tracking-wider">{order.paymentStatus}</span>
+                    </div>
+                  )}
                 </div>
               </div>
 
               {/* Order Items */}
-              <div className="p-5">
+              <div className="p-5 flex-grow">
                 <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-4">Items in order</p>
                 <div className="space-y-4">
                   {order.orderItems.map((item: import("@/types").IOrderProduct, index: number) => {
-                    if (!item.product) return null;
+                    if (!item.product) {
+                      return (
+                        <div key={`${order._id}-${index}`} className="flex items-center gap-4">
+                          <div className="relative w-16 h-16 bg-muted rounded-lg overflow-hidden shrink-0 border border-border flex items-center justify-center">
+                            <Package className="w-8 h-8 text-muted-foreground" />
+                          </div>
+                          <div className="flex-grow min-w-0">
+                            <span className="text-sm font-bold text-muted-foreground truncate block">
+                              Product unavailable
+                            </span>
+                            <div className="flex items-center justify-between mt-1">
+                              <span className="text-muted-foreground text-xs">Qty: {item.quantity}</span>
+                              <span className="text-foreground text-sm font-bold">${item.price.toFixed(2)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
                     
                     return (
                       <div key={`${order._id}-${index}`} className="flex items-center gap-4">
                         <div className="relative w-16 h-16 bg-muted rounded-lg overflow-hidden shrink-0 border border-border">
-                          <Image 
+                          <img 
                             src={item.product.imageUrl || "https://via.placeholder.com/150"} 
                             alt={item.product.name}
-                            fill
-                            className="object-cover"
-                            sizes="64px"
+                            className="w-full h-full object-cover"
                           />
                         </div>
                         <div className="flex-grow min-w-0">
@@ -134,10 +235,50 @@ export default function OrdersPage() {
                   })}
                 </div>
               </div>
+
+              {/* Order Actions */}
+              <div className="p-4 border-t border-border bg-muted/20">
+                {order.paymentStatus === 'Unpaid' ? (
+                  <Button
+                    type="button"
+                    onPress={() => handlePayment(order)}
+                    isDisabled={payingOrderId === order._id}
+                    className="w-full"
+                  >
+                    {payingOrderId === order._id ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                    Pay Now
+                  </Button>
+                ) : (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onPress={() => toast("Invoice download will be available soon.")}
+                    className="w-full bg-primary/5 hover:bg-primary/10 text-primary border-primary/20"
+                  >
+                    View Invoice
+                  </Button>
+                )}
+              </div>
             </div>
           );
         })}
       </div>
+
+      <Dialog isOpen={!!paymentModalData} onOpenChange={(open) => !open && setPaymentModalData(null)} className="sm:max-w-[500px] w-[95vw] max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>Complete Payment</DialogTitle>
+          <DialogDescription>
+            Enter your payment details below to complete your order.
+          </DialogDescription>
+        </DialogHeader>
+        {paymentModalData && (
+          <div className="mt-4">
+            <Elements stripe={stripePromise} options={{ clientSecret: paymentModalData.clientSecret }}>
+              <StripePaymentForm orderId={paymentModalData.orderId} amount={paymentModalData.amount} />
+            </Elements>
+          </div>
+        )}
+      </Dialog>
     </div>
   );
 }
