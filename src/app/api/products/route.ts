@@ -3,10 +3,72 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Product from "@/models/Product";
+import { redis, hasRedis } from "@/lib/redis";
+import { measureTime } from "@/lib/measure";
 
+/**
+ * @swagger
+ * /api/products:
+ *   get:
+ *     summary: Retrieve a list of products
+ *     description: Fetch products with pagination, sorting, and full-text search.
+ *     parameters:
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Full-text search term
+ *       - in: query
+ *         name: category
+ *         schema:
+ *           type: string
+ *         description: Filter by category name
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 8
+ *         description: Number of items per page
+ *       - in: query
+ *         name: sort
+ *         schema:
+ *           type: string
+ *           enum: [newest, oldest, price_asc, price_desc]
+ *           default: newest
+ *         description: Sorting method
+ *     responses:
+ *       200:
+ *         description: A paginated list of products
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                 totalCount:
+ *                   type: integer
+ *                 page:
+ *                   type: integer
+ *                 totalPages:
+ *                   type: integer
+ *       500:
+ *         description: Server error
+ */
 // GET: Fetch all products (Public)
 export async function GET(request: Request) {
-  try {
+  return await measureTime("GET /api/products", async () => {
+    try {
     await dbConnect();
     
     const { searchParams } = new URL(request.url);
@@ -35,24 +97,74 @@ export async function GET(request: Request) {
 
     const skip = (page - 1) * limit;
 
+    const isDefaultQuery = !search && (!category || category === "All" || category === "All Categories") && page === 1 && limit === 8 && sort === "newest";
+
+    if (hasRedis && isDefaultQuery) {
+      const cached = await redis.get("products_default_page");
+      if (cached) {
+        return NextResponse.json(cached, { status: 200 });
+      }
+    }
+
     // Fetch products and total count in parallel
     const [products, totalCount] = await Promise.all([
       Product.find(query).sort(sortObj).skip(skip).limit(limit),
       Product.countDocuments(query),
     ]);
 
-    return NextResponse.json({ 
+    const responseData = { 
       success: true, 
       data: products, 
       totalCount,
       page,
       totalPages: Math.ceil(totalCount / limit)
-    }, { status: 200 });
+    };
+
+    if (hasRedis && isDefaultQuery) {
+      await redis.set("products_default_page", responseData, { ex: 3600 });
+    }
+
+    return NextResponse.json(responseData, { status: 200 });
   } catch (error) {
     return NextResponse.json({ success: false, message: "Failed to fetch products." }, { status: 500 });
   }
+  });
 }
 
+/**
+ * @swagger
+ * /api/products:
+ *   post:
+ *     summary: Create a new product (Admin)
+ *     description: Creates a new product and invalidates the product cache.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - price
+ *               - description
+ *               - category
+ *             properties:
+ *               name:
+ *                 type: string
+ *               price:
+ *                 type: number
+ *               description:
+ *                 type: string
+ *               category:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Product created successfully
+ *       500:
+ *         description: Server error
+ */
 // POST: Create a new product (Admin)
 export async function POST(request: Request) {
   try {
@@ -63,6 +175,11 @@ export async function POST(request: Request) {
     // and verify their role === "Admin" before allowing creation.
     
     const product = await Product.create(body);
+
+    if (hasRedis) {
+      await redis.del("products_default_page");
+    }
+
     return NextResponse.json({ success: true, data: product }, { status: 201 });
   } catch (error) {
     return NextResponse.json(

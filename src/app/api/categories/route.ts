@@ -2,11 +2,44 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Category from "@/models/Category";
 import Product from "@/models/Product";
+import { redis, hasRedis } from "@/lib/redis";
+import { measureTime } from "@/lib/measure";
 
+/**
+ * @swagger
+ * /api/categories:
+ *   get:
+ *     summary: Retrieve all categories
+ *     description: Fetch all categories, including a computed product count for each category. Includes caching.
+ *     responses:
+ *       200:
+ *         description: A list of categories with product counts
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *       500:
+ *         description: Server error
+ */
 // GET: Fetch all categories with product count
 export async function GET(request: Request) {
-  try {
-    await dbConnect();
+  return await measureTime("GET /api/categories", async () => {
+    try {
+      if (hasRedis) {
+        const cached = await redis.get("categories_list");
+        if (cached) {
+          return NextResponse.json({ success: true, data: cached }, { status: 200 });
+        }
+      }
+
+      await dbConnect();
 
     let categories = await Category.find({}).sort({ createdAt: -1 });
 
@@ -37,6 +70,11 @@ export async function GET(request: Request) {
       })
     );
 
+    if (hasRedis) {
+      // Cache for 1 hour
+      await redis.set("categories_list", categoriesWithCount, { ex: 3600 });
+    }
+
     return NextResponse.json({ success: true, data: categoriesWithCount }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
@@ -44,8 +82,38 @@ export async function GET(request: Request) {
       { status: 500 }
     );
   }
+  });
 }
 
+/**
+ * @swagger
+ * /api/categories:
+ *   post:
+ *     summary: Create a new category (Admin)
+ *     description: Creates a new category and invalidates the category cache.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Category created successfully
+ *       400:
+ *         description: Category name is required or already exists
+ *       500:
+ *         description: Server error
+ */
 // POST: Create a new category (Admin)
 export async function POST(request: Request) {
   try {
@@ -69,6 +137,10 @@ export async function POST(request: Request) {
       description: description || "",
       image: image || "",
     });
+
+    if (hasRedis) {
+      await redis.del("categories_list");
+    }
 
     return NextResponse.json({ success: true, data: category }, { status: 201 });
   } catch (error) {

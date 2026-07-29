@@ -2,7 +2,25 @@ import { NextResponse } from "next/server";
 import dbConnect from "@/lib/dbConnect";
 import Category from "@/models/Category";
 import Product from "@/models/Product";
+import { redis, hasRedis } from "@/lib/redis";
 
+/**
+ * @swagger
+ * /api/categories/{id}:
+ *   get:
+ *     summary: Retrieve a single category by ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Category details
+ *       404:
+ *         description: Category not found
+ */
 // GET: Fetch a single category by ID
 export async function GET(
   request: Request,
@@ -28,6 +46,38 @@ export async function GET(
   }
 }
 
+/**
+ * @swagger
+ * /api/categories/{id}:
+ *   put:
+ *     summary: Update a category by ID (Admin)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               image:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Category updated successfully
+ *       400:
+ *         description: Category name already exists
+ *       404:
+ *         description: Category not found
+ */
 // PUT: Update a category by ID
 export async function PUT(
   request: Request,
@@ -68,6 +118,10 @@ export async function PUT(
       await Product.updateMany({ category: oldName }, { category: newName });
     }
 
+    if (hasRedis) {
+      await redis.del("categories_list");
+    }
+
     return NextResponse.json({ success: true, data: updatedCategory }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
@@ -77,6 +131,23 @@ export async function PUT(
   }
 }
 
+/**
+ * @swagger
+ * /api/categories/{id}:
+ *   delete:
+ *     summary: Delete a category by ID (Admin)
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Category deleted successfully
+ *       404:
+ *         description: Category not found
+ */
 // DELETE: Delete a category by ID
 export async function DELETE(
   request: Request,
@@ -91,6 +162,10 @@ export async function DELETE(
     }
 
     await Category.findByIdAndDelete(id);
+
+    if (hasRedis) {
+      await redis.del("categories_list");
+    }
 
     return NextResponse.json({ success: true, message: "Category deleted successfully." }, { status: 200 });
   } catch (error) {
