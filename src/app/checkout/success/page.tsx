@@ -57,12 +57,27 @@ export default function CheckoutSuccessPage() {
   }, [sessionId, orderId]);
 
   useEffect(() => {
-    const fetchOrder = async () => {
+    const verifyAndFetchOrder = async () => {
       if (!orderId) {
         setIsLoading(false);
         return;
       }
+      
       try {
+        const paymentIntent = searchParams.get("payment_intent");
+        const redirectStatus = searchParams.get("redirect_status");
+        
+        // 1. If we have a successful payment intent in the URL, eagerly verify it 
+        // to ensure the DB reflects "Paid" even if the webhook was delayed.
+        if (paymentIntent && redirectStatus === "succeeded") {
+          await fetch("/api/checkout/verify", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ paymentIntentId: paymentIntent, orderId })
+          });
+        }
+
+        // 2. Fetch the updated order details
         const res = await fetch(`/api/orders/${orderId}`);
         if (res.ok) {
           const data = await res.json();
@@ -75,8 +90,8 @@ export default function CheckoutSuccessPage() {
       }
     };
     
-    fetchOrder();
-  }, [orderId]);
+    verifyAndFetchOrder();
+  }, [orderId, searchParams]);
 
   const deliveryDateStart = new Date();
   deliveryDateStart.setDate(deliveryDateStart.getDate() + 7);
